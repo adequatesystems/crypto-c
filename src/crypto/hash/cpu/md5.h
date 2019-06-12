@@ -11,7 +11,6 @@
 
 /*************************** HEADER FILES ***************************/
 #include <stddef.h>
-#include <string.h>
 
 /****************************** MACROS ******************************/
 #define MD5_BLOCK_SIZE 16               // MD5 outputs a 16 byte digest
