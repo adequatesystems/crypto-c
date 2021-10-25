@@ -1,5 +1,5 @@
 ##
-# GNUmakefile - Master GNUmakefile for C Hashing Algorithms.
+# GNUmakefile - Master GNUmakefile for C Crypto Algorithms.
 #
 # Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
 # For more information, please refer to ../LICENSE
@@ -13,6 +13,7 @@
 # vv DEVELOPER CONFIGURATION vv
 
 SHELL:= bash
+DEPTH:= 0
 
 # command macros (verbose by default)
 RM:= rm -rf
@@ -53,10 +54,10 @@ BINARIES:= $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%,$(TESTSOURCES))
 BINARYNAMES:= $(patsubst $(BUILDDIR)/%,%,$(BINARIES))
 
 # library and include dependencies
-DEPENDENCIES:= # e.g. ../../path/to/include/dirs
-INCLUDEDIRS:= # e.g. ../../path/to/library/libfile.a
+DEPENDENCIES:= ../../extlibs/lib/libextlibs.a
+INCLUDEDIRS:= ../../extlibs/src
 LIBRARYDIRS:= $(LIBDIR) $(dir $(DEPENDENCIES))
-LIBRARYFLAGS:= -l$(MODULE) $(patsubst lib%.a,-l%,$(notdir $(DEPENDENCIES))) -lm
+LIBRARYFLAGS:= -l$(MODULE) $(patsubst lib%.a,-l%,$(notdir $(DEPENDENCIES)))
 
 # compiler macros
 LDFLAGS:= $(addprefix -L,$(LIBRARYDIRS)) $(LIBRARYFLAGS)
@@ -160,3 +161,6 @@ help:
 	@echo " make test-<test>   	build and run tests matching <test>*"
 	@echo " make help          	prints this usage information"
 	@echo ""
+
+../../extlibs/lib/libextlibs.a:
+	@make library -C ../../extlibs/src
