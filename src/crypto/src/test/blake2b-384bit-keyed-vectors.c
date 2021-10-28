@@ -1,99 +1,81 @@
-/**
- * Blake2b 384-bit (keyed) vector test.
- *   blake2b-384bit-keyed-vectors.c (6 September 2021)
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- *
- * For more information, please refer to ../../LICENSE
- * 
- */
 
+#include <string.h>
+#include "extint.h"
 
-/* _CRT_SECURE_NO_WARNINGS must be defined before includes to be effective */
-#define _CRT_SECURE_NO_WARNINGS  /* Suppresses Windows CRT warnings */
-
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG(fmt, ...)  printf(fmt, ##__VA_ARGS__)
-#else
-#undef DEBUG
-#define DEBUG(fmt, ...)  /* do nothing */
-#endif
+#include "_assert.h"
+#include "../blake2b.h"
 
 #define NUMVECTORS    7
 #define MAXVECTORLEN  81
+#define DIGESTLEN     BLAKE2BLEN384
 
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+/* Test vectors used in RFC 1321 */
+static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
+   "",
+   "a",
+   "abc",
+   "message digest",
+   "abcdefghijklmnopqrstuvwxyz",
+   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+   "1234567890123456789012345678901234567890123456789012345678901234"
+   "5678901234567890"
+};
 
-#include "../blake2b.h"
-
-#define DIGESTLEN     (BLAKE2BLEN384)
-#define DIGESTHEXLEN  ((BLAKE2BLEN384 << 1) | 1)
-
-/* Interpret digest "in" as hexadecimal char array, placed in "out" */
-void digest2hexstr(void *in, size_t inlen, char *out)
-{
-   uint8_t *bp = (uint8_t *) in;
-
-   for (size_t ii = 0; ii < inlen; ii++) {
-      sprintf(&out[ii * 2], "%02x", *bp++);
-   } /* force last character as nul byte character */
-   out[inlen * 2] = '\0';
-}
-
+/* expected results to test vectors */
+static word8 expect[NUMVECTORS][DIGESTLEN] = {
+   {
+      0xb3, 0x28, 0x11, 0x42, 0x33, 0x77, 0xf5, 0x2d, 0x78, 0x62, 0x28,
+      0x6e, 0xe1, 0xa7, 0x2e, 0xe5, 0x40, 0x52, 0x43, 0x80, 0xfd, 0xa1,
+      0x72, 0x4a, 0x6f, 0x25, 0xd7, 0x97, 0x8c, 0x6f, 0xd3, 0x24, 0x4a,
+      0x6c, 0xaf, 0x04, 0x98, 0x81, 0x26, 0x73, 0xc5, 0xe0, 0x5e, 0xf5,
+      0x83, 0x82, 0x51, 0x00
+   }, {
+      0xa3, 0x40, 0xaa, 0xff, 0x16, 0xb6, 0x5d, 0xed, 0x20, 0x3e, 0x44,
+      0x10, 0x21, 0x60, 0x86, 0x16, 0x1a, 0xc5, 0xd5, 0x4f, 0xa0, 0x8f,
+      0x2f, 0xc7, 0x14, 0x14, 0x31, 0x5d, 0xf4, 0xb7, 0x6e, 0x4b, 0x4e,
+      0x9a, 0xb2, 0xc5, 0xa8, 0x7f, 0x79, 0xd0, 0x7d, 0xd3, 0x32, 0x8e,
+      0x8a, 0x16, 0x26, 0x8f
+   }, {
+      0xe3, 0xc9, 0x02, 0x80, 0xc5, 0x34, 0xa4, 0x6f, 0x7d, 0xd2, 0x30,
+      0xcb, 0xe7, 0xf4, 0xfa, 0x62, 0xee, 0x3e, 0x47, 0xa3, 0xf0, 0xad,
+      0xe5, 0xb7, 0x32, 0xae, 0xdb, 0xee, 0xea, 0xee, 0x7b, 0x7b, 0xa4,
+      0xaf, 0x1a, 0x3a, 0x3f, 0xe6, 0x37, 0x26, 0xcd, 0x23, 0xbe, 0xe5,
+      0xe3, 0x64, 0x96, 0xb1
+   }, {
+      0x9b, 0xa1, 0x70, 0x65, 0xeb, 0xe1, 0xbf, 0x63, 0x23, 0xc2, 0x30,
+      0x14, 0x83, 0x09, 0x55, 0x6c, 0x01, 0x71, 0x8c, 0x06, 0x82, 0x27,
+      0xd4, 0xb6, 0xb4, 0xb2, 0xd1, 0x7f, 0x81, 0x02, 0xb6, 0x9a, 0x1f,
+      0xc4, 0x56, 0xc7, 0xe1, 0x30, 0xc0, 0x11, 0x2a, 0xcb, 0x34, 0xb9,
+      0x3b, 0xd7, 0x10, 0x3b
+   }, {
+      0x8f, 0xb5, 0x06, 0x10, 0xeb, 0x28, 0x61, 0x6c, 0xd2, 0x1d, 0x51,
+      0xfa, 0xc1, 0xcd, 0x1b, 0x3d, 0xbb, 0xf9, 0x88, 0x7a, 0x5d, 0x77,
+      0xfd, 0xca, 0xb7, 0x17, 0x12, 0xab, 0xb3, 0x21, 0x07, 0x31, 0x13,
+      0xbe, 0xf5, 0x6a, 0x2e, 0xce, 0x02, 0xa1, 0xec, 0x56, 0xd3, 0x8a,
+      0x7a, 0xd2, 0x4a, 0xaa
+   }, {
+      0xa6, 0xf8, 0x6d, 0x87, 0xaf, 0xd5, 0x7d, 0x94, 0x73, 0x35, 0xd4,
+      0xfe, 0xcc, 0x78, 0x61, 0x13, 0x64, 0x1c, 0xcd, 0xc2, 0xa0, 0xec,
+      0xe2, 0xad, 0x67, 0xca, 0xc9, 0x58, 0xb7, 0xd5, 0x9e, 0x5b, 0x72,
+      0xde, 0xc0, 0x73, 0x37, 0x52, 0x66, 0xab, 0x7f, 0xf1, 0xa7, 0x64,
+      0x0f, 0x5f, 0x6b, 0xb1
+   }, { 0 }  /* empty final hash for failure check */
+};
 
 int main()
-{
-   /* Test vectors used in RFC 1321 */
-   char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
-      "",
-      "a",
-      "abc",
-      "message digest",
-      "abcdefghijklmnopqrstuvwxyz",
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-      "1234567890123456789012345678901234567890123456789012345678901234"
-      "5678901234567890"
-   };
-   /* expected results to test vectors */
-   char results[NUMVECTORS][DIGESTHEXLEN] = {
-      "b32811423377f52d7862286ee1a72ee540524380fda1724a6f25d7978c6fd324"
-      "4a6caf0498812673c5e05ef583825100",
-      "a340aaff16b65ded203e4410216086161ac5d54fa08f2fc71414315df4b76e4b"
-      "4e9ab2c5a87f79d07dd3328e8a16268f",
-      "e3c90280c534a46f7dd230cbe7f4fa62ee3e47a3f0ade5b732aedbeeeaee7b7b"
-      "a4af1a3a3fe63726cd23bee5e36496b1",
-      "9ba17065ebe1bf6323c230148309556c01718c068227d4b6b4b2d17f8102b69a"
-      "1fc456c7e130c0112acb34b93bd7103b",
-      "8fb50610eb28616cd21d51fac1cd1b3dbbf9887a5d77fdcab71712abb3210731"
-      "13bef56a2ece02a1ec56d38a7ad24aaa",
-      "a6f86d87afd57d947335d4fecc786113641ccdc2a0ece2ad67cac958b7d59e5b"
-      "72dec073375266ab7ff1a7640f5f6bb1",
-      "0000000000000000000000000000000000000000000000000000000000000000"
-      "00000000000000000000000000000000"
-   };
-
+{  /* check 384-bit blake2b(), with key, digest results match expected */
    size_t inlen;
-   uint8_t digest[DIGESTLEN];
-   char *in, hexstr[DIGESTHEXLEN];
-   int ecode, ii;
+   word8 digest[DIGESTLEN];
+   char *in;
+   int j;
 
-   for (ecode = ii = 0; ii < NUMVECTORS; ii++) {
-      DEBUG("hashing vector[%d]... ", ii);
-      in = rfc_1321_vectors[ii];
-      inlen = strlen(rfc_1321_vectors[ii]);
+   for (j = 0; j < NUMVECTORS; j++) {
+      in = rfc_1321_vectors[j];
+      inlen = strlen(rfc_1321_vectors[j]);
       memset(digest, 0, DIGESTLEN);
-      blake2b(in, inlen, in, inlen, digest, DIGESTLEN);
-      DEBUG("hash comparison... ");
-      digest2hexstr(digest, DIGESTLEN, hexstr);
-      if (strncmp(hexstr, results[ii], DIGESTHEXLEN)) {
-         DEBUG("fail\n ~      Got: %s\n ~ Expected: %s\n", hexstr, results[ii]);
-         ecode |= 1 << ii;
-      } else { DEBUG("ok\n"); }
+      if (j < (NUMVECTORS - 1)) {
+         ASSERT_EQ(blake2b(in, inlen, in, inlen, digest, DIGESTLEN), 0);
+      } else ASSERT_EQ(blake2b(in, inlen, in, inlen, digest, DIGESTLEN), -1);
+      ASSERT_CMP(digest, expect[j], DIGESTLEN);
    }
-
-   DEBUG("\n");
-   return ecode;
 }

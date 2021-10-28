@@ -1,44 +1,21 @@
-/**
- * Trigg's POW algorithm mining test.
- *   trigg-mining.c (25 August 2021)
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- *
- * For more information, please refer to ../../LICENSE
- * 
- */
 
-
-/* _CRT_SECURE_NO_WARNINGS must be defined before includes to be effective */
-#define _CRT_SECURE_NO_WARNINGS  /* Suppresses Windows CRT warnings */
-
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG(fmt, ...)  printf(fmt, ##__VA_ARGS__)
-#else
-#undef DEBUG
-#define DEBUG(fmt, ...)  /* do nothing */
-#endif
-
-#define MINDIFF     16
-#define MAXDIFF     20
-#define MAXDELTA    10.0f
-#define MAXCHARLEN  256
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <math.h>
 
-#include "rand.h"
+#include "extint.h"
+#include "_assert.h"
 #include "../trigg.h"
 
+#define MINDIFF     16
+#define MAXDIFF     20
+#define MAXDELTA    10.0f
+
 /* Metric prefix array */
-char MetricPrefix[9][3] = { "", "K", "M", "G", "T", "P", "E", "Z", "Y" };
+static char Metric[9][3] = { "", "K", "M", "G", "T", "P", "E", "Z", "Y" };
 
 /* Block 0x1 trailer data taken directly from the Mochimo Blockchain Tfile */
-uint8_t Block1[BTSIZE] = {
+static word8 Block1[BTRAILERSIZE] = {
    0x00, 0x17, 0x0c, 0x67, 0x11, 0xb9, 0xdc, 0x3c, 0xa7, 0x46,
    0xc4, 0x6c, 0xc2, 0x81, 0xbc, 0x69, 0xe3, 0x03, 0xdf, 0xad,
    0x2f, 0x33, 0x3b, 0xa3, 0x97, 0xba, 0x06, 0x1e, 0xcc, 0xef,
@@ -57,73 +34,36 @@ uint8_t Block1[BTSIZE] = {
    0x99, 0x9a, 0xa0, 0x32, 0x55, 0x51, 0xbc, 0xf1, 0x5f, 0x69
 };
 
-/* Interpret digest "in" as hexadecimal char array, placed in "out" */
-void digest2hexstr(void *in, size_t inlen, char *out)
-{
-   uint8_t *bp = (uint8_t *) in;
-
-   for (size_t ii = 0; ii < inlen; ii++) {
-      sprintf(&out[ii * 2], "%02x", *bp++);
-   } /* force last character as nul byte character */
-   out[inlen * 2] = '\0';
-}
-
-
 int main()
 {
    TRIGG_POW T;
    BTRAILER bt;
-   clock_t start, solve;
-   uint8_t diff, digest[HASHLEN];
-   char hexstr[MAXCHARLEN];
+   clock_t solve;
+   word8 diff, digest[SHA256LEN];
    float delta, hps;
-   int ecode, n;
+   int n;
 
-   DEBUG("initializing...\n");
-   srand16((uint32_t) time(NULL), 0, 0);
-   ecode = delta = hps = n = 0;
-   DEBUG("load block trailer from Block1[]...\n");
-   memcpy(&bt, Block1, BTSIZE);
-   start = clock(); /* record start timestamp */
+   delta = hps = n = 0;
+   srand16((word32) time(NULL), 0, 0);
+   memcpy(&bt, Block1, BTRAILERSIZE);
    /* increment difficulty until solve time hits 1 second */
    for (diff = 1; diff < MAXDIFF && delta < MAXDELTA; diff++) {
-      DEBUG("(re)initialize algorithm for diff %u...\n", (unsigned) diff);
       bt.difficulty[0] = T.diff = diff; /* update block trailer with diff */
       solve = clock(); /* record solve timestamp */
       /* initialize Trigg context, adjust diff; solve Trigg; increment hash */
       for(trigg_init(&T, &bt); trigg_solve(&T, bt.nonce); n++);
       /* calculate time taken to produce solve */
       delta = (float) (clock() - solve) / (float) CLOCKS_PER_SEC;
-      /* ensure solution is correct */
-      if (trigg_checkhash(&bt, digest)) {
-         DEBUG("trigg_check() failed, diff= %u\n", T.diff);
-         digest2hexstr(digest, HASHLEN, hexstr);
-         DEBUG(" ~ HASH: %s\n", hexstr);
-         digest2hexstr(bt.nonce, HASHLEN, hexstr);
-         DEBUG(" ~ NONCE: %s\n", hexstr);
-         trigg_expand(bt.nonce, hexstr);
-         DEBUG(" ~ HAIKU:\n\n%s\n", hexstr);
-         ecode = diff;
-         break;
+      /* calculate performance of algorithm */
+      if (delta > 0) {
+         hps = (float) n / delta;
+         n = hps ? (log10f(hps) / 3) : 0;
+         if (n > 0) hps /= powf(2, 10) * n;
+         ASSERT_DEBUG("Diff(%d) perf: ~%.02f %sH/s\n", diff, hps, Metric[n]);
       }
-   }
-   /* calculate time taken to perform tests */
-   delta = (float) (clock() - start) / (float) CLOCKS_PER_SEC;
-   /* calculate performance of algorithm */
-   if (delta > 0) {
-      hps = (float) n / delta;
-      n = hps ? (log10f(hps) / 3) : 0;
-      if (n > 0) hps /= powf(2, 10) * n;
-      DEBUG("\nPerformance: ~%u %sH/s\n", (unsigned) hps, MetricPrefix[n]);
-   } else {
-      DEBUG("\n***Performance calculation results in divide by Zero!\n");
+      /* ensure solution is correct */
+      ASSERT_EQ(trigg_checkhash(&bt, digest), 0);
    }
    /* check difficulty met requirement */
-   if (diff < MINDIFF) {
-      DEBUG("\n***Difficulty requirement (%u) was not met!\n", MINDIFF);
-      ecode |= 0x80;
-   }
-
-   DEBUG("\n");
-   return ecode;
+   ASSERT_GE_MSG(diff, MINDIFF, "should meet minimum diff requirement");
 }

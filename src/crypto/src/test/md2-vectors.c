@@ -1,92 +1,59 @@
-/**
- * MD2 vector test.
- *   md2-vectors.c (8 September 2021)
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- *
- * For more information, please refer to ../../LICENSE
- * 
- */
 
-
-/* _CRT_SECURE_NO_WARNINGS must be defined before includes to be effective */
-#define _CRT_SECURE_NO_WARNINGS  /* Suppresses Windows CRT warnings */
-
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG(fmt, ...)  printf(fmt, ##__VA_ARGS__)
-#else
-#undef DEBUG
-#define DEBUG(fmt, ...)  /* do nothing */
-#endif
+#include "extint.h"
+#include "_assert.h"
+#include "../md2.h"
 
 #define NUMVECTORS    7
 #define MAXVECTORLEN  81
+#define DIGESTLEN     MD2LEN
 
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+/* Test vectors used in RFC 1321 */
+static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
+   "",
+   "a",
+   "abc",
+   "message digest",
+   "abcdefghijklmnopqrstuvwxyz",
+   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+   "1234567890123456789012345678901234567890123456789012345678901234"
+   "5678901234567890"
+};
 
-#include "../md2.h"
-
-#define DIGESTLEN     (MD2LEN)
-#define DIGESTHEXLEN  ((MD2LEN << 1) | 1)
-
-/* Interpret digest "in" as hexadecimal char array, placed in "out" */
-void digest2hexstr(void *in, size_t inlen, char *out)
-{
-   uint8_t *bp = (uint8_t *) in;
-
-   for (size_t ii = 0; ii < inlen; ii++) {
-      sprintf(&out[ii * 2], "%02x", *bp++);
-   } /* force last character as nul byte character */
-   out[inlen * 2] = '\0';
-}
-
+/* expected results to test vectors */
+static word8 expect[NUMVECTORS][DIGESTLEN] = {
+   {
+      0x83, 0x50, 0xe5, 0xa3, 0xe2, 0x4c, 0x15, 0x3d,
+      0xf2, 0x27, 0x5c, 0x9f, 0x80, 0x69, 0x27, 0x73
+   }, {
+      0x32, 0xec, 0x01, 0xec, 0x4a, 0x6d, 0xac, 0x72,
+      0xc0, 0xab, 0x96, 0xfb, 0x34, 0xc0, 0xb5, 0xd1
+   }, {
+      0xda, 0x85, 0x3b, 0x0d, 0x3f, 0x88, 0xd9, 0x9b,
+      0x30, 0x28, 0x3a, 0x69, 0xe6, 0xde, 0xd6, 0xbb
+   }, {
+      0xab, 0x4f, 0x49, 0x6b, 0xfb, 0x2a, 0x53, 0x0b,
+      0x21, 0x9f, 0xf3, 0x30, 0x31, 0xfe, 0x06, 0xb0
+   }, {
+      0x4e, 0x8d, 0xdf, 0xf3, 0x65, 0x02, 0x92, 0xab,
+      0x5a, 0x41, 0x08, 0xc3, 0xaa, 0x47, 0x94, 0x0b
+   }, {
+      0xda, 0x33, 0xde, 0xf2, 0xa4, 0x2d, 0xf1, 0x39,
+      0x75, 0x35, 0x28, 0x46, 0xc3, 0x03, 0x38, 0xcd
+   }, {
+      0xd5, 0x97, 0x6f, 0x79, 0xd8, 0x3d, 0x3a, 0x0d,
+      0xc9, 0x80, 0x6c, 0x3c, 0x66, 0xf3, 0xef, 0xd8
+   }
+};
 
 int main()
-{
-   /* Test vectors used in RFC 1321 */
-   char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
-      "",
-      "a",
-      "abc",
-      "message digest",
-      "abcdefghijklmnopqrstuvwxyz",
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-      "1234567890123456789012345678901234567890123456789012345678901234"
-      "5678901234567890"
-   };
-   /* expected results to test vectors */
-   char results[NUMVECTORS][DIGESTHEXLEN] = {
-      "8350e5a3e24c153df2275c9f80692773",
-      "32ec01ec4a6dac72c0ab96fb34c0b5d1",
-      "da853b0d3f88d99b30283a69e6ded6bb",
-      "ab4f496bfb2a530b219ff33031fe06b0",
-      "4e8ddff3650292ab5a4108c3aa47940b",
-      "da33def2a42df13975352846c30338cd",
-      "d5976f79d83d3a0dc9806c3c66f3efd8"
-   };
-
+{  /* check md2() digest results match expected */
    size_t inlen;
-   uint8_t digest[DIGESTLEN];
-   char *in, hexstr[DIGESTHEXLEN];
-   int ecode, ii;
+   word8 digest[DIGESTLEN];
+   int j;
 
-   for (ecode = ii = 0; ii < NUMVECTORS; ii++) {
-      DEBUG("hashing vector[%d]... ", ii);
-      in = rfc_1321_vectors[ii];
-      inlen = strlen(rfc_1321_vectors[ii]);
-      memset(digest, 0, DIGESTLEN);
-      md2(in, inlen, digest);
-      DEBUG("hash comparison... ");
-      digest2hexstr(digest, DIGESTLEN, hexstr);
-      if (strncmp(hexstr, results[ii], DIGESTHEXLEN)) {
-         DEBUG("fail\n ~      Got: %s\n ~ Expected: %s\n", hexstr, results[ii]);
-         ecode |= 1 << ii;
-      } else { DEBUG("ok\n"); }
+   for (j = 0; j < NUMVECTORS; j++) {
+      inlen = strlen(rfc_1321_vectors[j]);
+      md2(rfc_1321_vectors[j], inlen, digest);
+      ASSERT_CMP(digest, expect[j], DIGESTLEN);
    }
-
-   DEBUG("\n");
-   return ecode;
 }

@@ -1,92 +1,66 @@
-/**
- * SHA3 224-bit vector test.
- *   sha3-224bit-vectors.c (8 September 2021)
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- *
- * For more information, please refer to ../../LICENSE
- * 
- */
 
-
-/* _CRT_SECURE_NO_WARNINGS must be defined before includes to be effective */
-#define _CRT_SECURE_NO_WARNINGS  /* Suppresses Windows CRT warnings */
-
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG(fmt, ...)  printf(fmt, ##__VA_ARGS__)
-#else
-#undef DEBUG
-#define DEBUG(fmt, ...)  /* do nothing */
-#endif
+#include "extint.h"
+#include "_assert.h"
+#include "../sha3.h"
 
 #define NUMVECTORS    7
 #define MAXVECTORLEN  81
+#define DIGESTLEN     SHA3LEN224
 
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+/* Test vectors used in RFC 1321 */
+static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
+   "",
+   "a",
+   "abc",
+   "message digest",
+   "abcdefghijklmnopqrstuvwxyz",
+   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+   "1234567890123456789012345678901234567890123456789012345678901234"
+   "5678901234567890"
+};
 
-#include "../sha3.h"
-
-#define DIGESTLEN     (SHA3LEN224)
-#define DIGESTHEXLEN  ((SHA3LEN224 << 1) | 1)
-
-/* Interpret digest "in" as hexadecimal char array, placed in "out" */
-void digest2hexstr(void *in, size_t inlen, char *out)
-{
-   uint8_t *bp = (uint8_t *) in;
-
-   for (size_t ii = 0; ii < inlen; ii++) {
-      sprintf(&out[ii * 2], "%02x", *bp++);
-   } /* force last character as nul byte character */
-   out[inlen * 2] = '\0';
-}
-
+/* expected results to test vectors */
+static word8 expect[NUMVECTORS][DIGESTLEN] = {
+   {
+      0x6b, 0x4e, 0x03, 0x42, 0x36, 0x67, 0xdb, 0xb7, 0x3b, 0x6e,
+      0x15, 0x45, 0x4f, 0x0e, 0xb1, 0xab, 0xd4, 0x59, 0x7f, 0x9a,
+      0x1b, 0x07, 0x8e, 0x3f, 0x5b, 0x5a, 0x6b, 0xc7
+   }, {
+      0x9e, 0x86, 0xff, 0x69, 0x55, 0x7c, 0xa9, 0x5f, 0x40, 0x5f,
+      0x08, 0x12, 0x69, 0x68, 0x5b, 0x38, 0xe3, 0xa8, 0x19, 0xb3,
+      0x09, 0xee, 0x94, 0x2f, 0x48, 0x2b, 0x6a, 0x8b
+   }, {
+      0xe6, 0x42, 0x82, 0x4c, 0x3f, 0x8c, 0xf2, 0x4a, 0xd0, 0x92,
+      0x34, 0xee, 0x7d, 0x3c, 0x76, 0x6f, 0xc9, 0xa3, 0xa5, 0x16,
+      0x8d, 0x0c, 0x94, 0xad, 0x73, 0xb4, 0x6f, 0xdf
+   }, {
+      0x18, 0x76, 0x8b, 0xb4, 0xc4, 0x8e, 0xb7, 0xfc, 0x88, 0xe5,
+      0xdd, 0xb1, 0x7e, 0xfc, 0xf2, 0x96, 0x4a, 0xbd, 0x77, 0x98,
+      0xa3, 0x9d, 0x86, 0xa4, 0xb4, 0xa1, 0xe4, 0xc8
+   }, {
+      0x5c, 0xde, 0xca, 0x81, 0xe1, 0x23, 0xf8, 0x7c, 0xad, 0x96,
+      0xb9, 0xcb, 0xa9, 0x99, 0xf1, 0x6f, 0x6d, 0x41, 0x54, 0x96,
+      0x08, 0xd4, 0xe0, 0xf4, 0x68, 0x1b, 0x82, 0x39
+   }, {
+      0xa6, 0x7c, 0x28, 0x9b, 0x82, 0x50, 0xa6, 0xf4, 0x37, 0xa2,
+      0x01, 0x37, 0x98, 0x5d, 0x60, 0x55, 0x89, 0xa8, 0xc1, 0x63,
+      0xd4, 0x52, 0x61, 0xb1, 0x54, 0x19, 0x55, 0x6e
+   }, {
+      0x05, 0x26, 0x89, 0x8e, 0x18, 0x58, 0x69, 0xf9, 0x1b, 0x3e,
+      0x2a, 0x76, 0xdd, 0x72, 0xa1, 0x5d, 0xc6, 0x94, 0x0a, 0x67,
+      0xc8, 0x16, 0x4a, 0x04, 0x4c, 0xd2, 0x5c, 0xc8
+   }
+};
 
 int main()
-{
-   /* Test vectors used in RFC 1321 */
-   char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
-      "",
-      "a",
-      "abc",
-      "message digest",
-      "abcdefghijklmnopqrstuvwxyz",
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-      "1234567890123456789012345678901234567890123456789012345678901234"
-      "5678901234567890"
-   };
-   /* expected results to test vectors */
-   char results[NUMVECTORS][DIGESTHEXLEN] = {
-      "6b4e03423667dbb73b6e15454f0eb1abd4597f9a1b078e3f5b5a6bc7",
-      "9e86ff69557ca95f405f081269685b38e3a819b309ee942f482b6a8b",
-      "e642824c3f8cf24ad09234ee7d3c766fc9a3a5168d0c94ad73b46fdf",
-      "18768bb4c48eb7fc88e5ddb17efcf2964abd7798a39d86a4b4a1e4c8",
-      "5cdeca81e123f87cad96b9cba999f16f6d41549608d4e0f4681b8239",
-      "a67c289b8250a6f437a20137985d605589a8c163d45261b15419556e",
-      "0526898e185869f91b3e2a76dd72a15dc6940a67c8164a044cd25cc8"
-   };
-
+{  /* check 224-bit sha3() digest results match expected */
    size_t inlen;
-   uint8_t digest[DIGESTLEN];
-   char *in, hexstr[DIGESTHEXLEN];
-   int ecode, ii;
+   word8 digest[DIGESTLEN];
+   int j;
 
-   for (ecode = ii = 0; ii < NUMVECTORS; ii++) {
-      DEBUG("hashing vector[%d]... ", ii);
-      in = rfc_1321_vectors[ii];
-      inlen = strlen(rfc_1321_vectors[ii]);
-      memset(digest, 0, DIGESTLEN);
-      sha3(in, inlen, digest, DIGESTLEN);
-      DEBUG("hash comparison... ");
-      digest2hexstr(digest, DIGESTLEN, hexstr);
-      if (strncmp(hexstr, results[ii], DIGESTHEXLEN)) {
-         DEBUG("fail\n ~      Got: %s\n ~ Expected: %s\n", hexstr, results[ii]);
-         ecode |= 1 << ii;
-      } else { DEBUG("ok\n"); }
+   for (j = 0; j < NUMVECTORS; j++) {
+      inlen = strlen(rfc_1321_vectors[j]);
+      sha3(rfc_1321_vectors[j], inlen, digest, DIGESTLEN);
+      ASSERT_CMP(digest, expect[j], DIGESTLEN);
    }
-
-   DEBUG("\n");
-   return ecode;
 }

@@ -1,92 +1,66 @@
-/**
- * Keccak 224-bit vector test.
- *   keccak-224bit-vectors.c (8 September 2021)
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- *
- * For more information, please refer to ../../LICENSE
- * 
- */
 
-
-/* _CRT_SECURE_NO_WARNINGS must be defined before includes to be effective */
-#define _CRT_SECURE_NO_WARNINGS  /* Suppresses Windows CRT warnings */
-
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG(fmt, ...)  printf(fmt, ##__VA_ARGS__)
-#else
-#undef DEBUG
-#define DEBUG(fmt, ...)  /* do nothing */
-#endif
+#include "extint.h"
+#include "_assert.h"
+#include "../sha3.h"
 
 #define NUMVECTORS    7
 #define MAXVECTORLEN  81
+#define DIGESTLEN     KECCAKLEN224
 
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+/* Test vectors used in RFC 1321 */
+static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
+   "",
+   "a",
+   "abc",
+   "message digest",
+   "abcdefghijklmnopqrstuvwxyz",
+   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+   "1234567890123456789012345678901234567890123456789012345678901234"
+   "5678901234567890"
+};
 
-#include "../sha3.h"
-
-#define DIGESTLEN     (KECCAKLEN224)
-#define DIGESTHEXLEN  ((KECCAKLEN224 << 1) | 1)
-
-/* Interpret digest "in" as hexadecimal char array, placed in "out" */
-void digest2hexstr(void *in, size_t inlen, char *out)
-{
-   uint8_t *bp = (uint8_t *) in;
-
-   for (size_t ii = 0; ii < inlen; ii++) {
-      sprintf(&out[ii * 2], "%02x", *bp++);
-   } /* force last character as nul byte character */
-   out[inlen * 2] = '\0';
-}
-
+/* expected results to test vectors */
+static word8 expect[NUMVECTORS][DIGESTLEN] = {
+   {
+      0xf7, 0x18, 0x37, 0x50, 0x2b, 0xa8, 0xe1, 0x08, 0x37, 0xbd,
+      0xd8, 0xd3, 0x65, 0xad, 0xb8, 0x55, 0x91, 0x89, 0x56, 0x02,
+      0xfc, 0x55, 0x2b, 0x48, 0xb7, 0x39, 0x0a, 0xbd
+   }, {
+      0x7c, 0xf8, 0x7d, 0x91, 0x2e, 0xe7, 0x08, 0x8d, 0x30, 0xec,
+      0x23, 0xf8, 0xe7, 0x10, 0x0d, 0x93, 0x19, 0xbf, 0xf0, 0x90,
+      0x61, 0x8b, 0x43, 0x9d, 0x3f, 0xe9, 0x13, 0x08
+   }, {
+      0xc3, 0x04, 0x11, 0x76, 0x85, 0x06, 0xeb, 0xe1, 0xc2, 0x87,
+      0x1b, 0x1e, 0xe2, 0xe8, 0x7d, 0x38, 0xdf, 0x34, 0x23, 0x17,
+      0x30, 0x0a, 0x9b, 0x97, 0xa9, 0x5e, 0xc6, 0xa8
+   }, {
+      0xb5, 0x3b, 0x2c, 0xd6, 0x38, 0xf4, 0x40, 0xfa, 0x49, 0x91,
+      0x60, 0x36, 0xac, 0xdb, 0x22, 0x24, 0x56, 0x73, 0x99, 0x2f,
+      0xb1, 0xb1, 0x96, 0x3b, 0x96, 0xfb, 0x9e, 0x93
+   }, {
+      0x16, 0x2b, 0xab, 0x64, 0xdc, 0x3b, 0xa5, 0x94, 0xbd, 0x3b,
+      0x43, 0xfd, 0x8a, 0xbe, 0xc4, 0xaa, 0x03, 0xb3, 0x6c, 0x27,
+      0x84, 0xca, 0xc5, 0x3a, 0x58, 0xf9, 0xb0, 0x76
+   }, {
+      0x4f, 0xb7, 0x2d, 0x7b, 0x6b, 0x24, 0xbd, 0x1f, 0x5d, 0x4b,
+      0x8e, 0xf5, 0x59, 0xfd, 0x91, 0x88, 0xeb, 0x66, 0xca, 0xa0,
+      0x1b, 0xce, 0x34, 0xc6, 0x21, 0xa0, 0x54, 0x12
+   }, {
+      0x74, 0x4c, 0x17, 0x65, 0xa5, 0x30, 0x43, 0xe1, 0x86, 0xbc,
+      0x30, 0xba, 0xb0, 0x7f, 0xa3, 0x79, 0xb4, 0x21, 0xcf, 0x0b,
+      0xca, 0x82, 0x24, 0xcb, 0x83, 0xe5, 0xd4, 0x5b
+   }
+};
 
 int main()
-{
-   /* Test vectors used in RFC 1321 */
-   char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
-      "",
-      "a",
-      "abc",
-      "message digest",
-      "abcdefghijklmnopqrstuvwxyz",
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-      "1234567890123456789012345678901234567890123456789012345678901234"
-      "5678901234567890"
-   };
-   /* expected results to test vectors */
-   char results[NUMVECTORS][DIGESTHEXLEN] = {
-      "f71837502ba8e10837bdd8d365adb85591895602fc552b48b7390abd",
-      "7cf87d912ee7088d30ec23f8e7100d9319bff090618b439d3fe91308",
-      "c30411768506ebe1c2871b1ee2e87d38df342317300a9b97a95ec6a8",
-      "b53b2cd638f440fa49916036acdb22245673992fb1b1963b96fb9e93",
-      "162bab64dc3ba594bd3b43fd8abec4aa03b36c2784cac53a58f9b076",
-      "4fb72d7b6b24bd1f5d4b8ef559fd9188eb66caa01bce34c621a05412",
-      "744c1765a53043e186bc30bab07fa379b421cf0bca8224cb83e5d45b"
-   };
-
+{  /* check 224-bit keccak() digest results match expected */
    size_t inlen;
-   uint8_t digest[DIGESTLEN];
-   char *in, hexstr[DIGESTHEXLEN];
-   int ecode, ii;
+   word8 digest[DIGESTLEN];
+   int j;
 
-   for (ecode = ii = 0; ii < NUMVECTORS; ii++) {
-      DEBUG("hashing vector[%d]... ", ii);
-      in = rfc_1321_vectors[ii];
-      inlen = strlen(rfc_1321_vectors[ii]);
-      memset(digest, 0, DIGESTLEN);
-      keccak(in, inlen, digest, DIGESTLEN);
-      DEBUG("hash comparison... ");
-      digest2hexstr(digest, DIGESTLEN, hexstr);
-      if (strncmp(hexstr, results[ii], DIGESTHEXLEN)) {
-         DEBUG("fail\n ~      Got: %s\n ~ Expected: %s\n", hexstr, results[ii]);
-         ecode |= 1 << ii;
-      } else { DEBUG("ok\n"); }
+   for (j = 0; j < NUMVECTORS; j++) {
+      inlen = strlen(rfc_1321_vectors[j]);
+      keccak(rfc_1321_vectors[j], inlen, digest, DIGESTLEN);
+      ASSERT_CMP(digest, expect[j], DIGESTLEN);
    }
-
-   DEBUG("\n");
-   return ecode;
 }

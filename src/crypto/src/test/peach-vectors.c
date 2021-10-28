@@ -1,38 +1,14 @@
-/**
- * Peach POW algorithm vectors test.
- *   peach-vectors.c (25 August 2021)
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- *
- * For more information, please refer to ../../LICENSE
- * 
- */
 
-
-/* _CRT_SECURE_NO_WARNINGS must be defined before includes to be effective */
-#define _CRT_SECURE_NO_WARNINGS  /* Suppresses Windows CRT warnings */
-
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG(fmt, ...)  printf(fmt, ##__VA_ARGS__)
-#else
-#undef DEBUG
-#define DEBUG(fmt, ...)  /* do nothing */
-#endif
-
-#define NUMVECTORS  5
-#define HEXCHARLEN  65
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include "extint.h"
 
-#include "rand.h"
+#include "_assert.h"
 #include "../peach.h"
 
+#define NUMVECTORS  5
+
 /* Peach test vectors taken directly from the Mochimo Blockchain Tfile */
-uint8_t Pvector[NUMVECTORS][BTSIZE] = {
+static word8 Pvector[NUMVECTORS][BTRAILERSIZE] = {
    {  /* Block 0x12852 (75858) - first Peach block, inevitably pseudo */
       0xca, 0x30, 0x56, 0x33, 0x1e, 0x3c, 0x48, 0x4d, 0xa7, 0xdd,
       0xa2, 0xdd, 0x36, 0x28, 0xaa, 0x12, 0x5d, 0x5d, 0xbb, 0xf5,
@@ -126,50 +102,33 @@ uint8_t Pvector[NUMVECTORS][BTSIZE] = {
 };
 
 /* Known hexadecimal results to Pvectors for peach_checkhash() */
-char Presult[NUMVECTORS][HEXCHARLEN] = {
-   "0000000000000000000000000000000000000000000000000000000000000000",
-   "0000000000000000000000000000000000000000000000000000000000000000",
-   "00000000f5c5a5cef0d97e716beae6e1379d7d06b4e5d908e98b0e4b8ecae2fc",
-   "0000000001de9c4cd96d9dfeeec3e1c75804fa24b67e8088e01de6f718f2301f",
-   "0000000026d2fcb94c597fd23269989cb1798342e46ae85d0414c477a2243a22"
+static word8 Pexpect[NUMVECTORS][SHA256LEN] = {
+   { 0 }, { 0 },  /* first 2 test vectors are pseudoblocks */  {
+      0x00, 0x00, 0x00, 0x00, 0xf5, 0xc5, 0xa5, 0xce, 0xf0, 0xd9, 0x7e,
+      0x71, 0x6b, 0xea, 0xe6, 0xe1, 0x37, 0x9d, 0x7d, 0x06, 0xb4, 0xe5,
+      0xd9, 0x08, 0xe9, 0x8b, 0x0e, 0x4b, 0x8e, 0xca, 0xe2, 0xfc
+   }, {
+      0x00, 0x00, 0x00, 0x00, 0x01, 0xde, 0x9c, 0x4c, 0xd9, 0x6d, 0x9d,
+      0xfe, 0xee, 0xc3, 0xe1, 0xc7, 0x58, 0x04, 0xfa, 0x24, 0xb6, 0x7e,
+      0x80, 0x88, 0xe0, 0x1d, 0xe6, 0xf7, 0x18, 0xf2, 0x30, 0x1f
+   }, {
+      0x00, 0x00, 0x00, 0x00, 0x26, 0xd2, 0xfc, 0xb9, 0x4c, 0x59, 0x7f,
+      0xd2, 0x32, 0x69, 0x98, 0x9c, 0xb1, 0x79, 0x83, 0x42, 0xe4, 0x6a,
+      0xe8, 0x5d, 0x04, 0x14, 0xc4, 0x77, 0xa2, 0x24, 0x3a, 0x22
+   }
 };
 
-/* Interpret digest "in" as hexadecimal char array, placed in "out" */
-void digest2hexstr(void *in, size_t inlen, char *out)
-{
-   uint8_t *bp = (uint8_t *) in;
-
-   for (size_t ii = 0; ii < inlen; ii++) {
-      sprintf(&out[ii * 2], "%02x", *bp++);
-   } /* force last character as nul byte character */
-   out[inlen * 2] = '\0';
-}
-
-
 int main()
-{
+{  /* check peach_checkhash() final hash results match expected */
    BTRAILER bt;
-   uint8_t digest[HASHLEN];
-   char hexstr[HEXCHARLEN];
-   int ecode, ii;
+   word8 digest[SHA256LEN];
+   int j;
 
-   DEBUG("initialize isolated high speed prng with time(NULL)...\n");
-   srand16((uint32_t) time(NULL), 0, 0);
-
-   for (ecode = ii = 0; ii < NUMVECTORS; ii++) {
-      DEBUG("load Pvector[%d]... ", ii);
-      memcpy(&bt, Pvector[ii], BTSIZE);
-      DEBUG("peach_checkhash()... ");
-      memset(digest, 0, HASHLEN);
-      peach_checkhash(&bt, digest);
-      DEBUG("hash comparison... ");
-      digest2hexstr(digest, HASHLEN, hexstr);
-      if (strncmp(hexstr, Presult[ii], HEXCHARLEN)) {
-         DEBUG("fail\n ~      Got: %s\n ~ Expected: %s\n", hexstr, Presult[ii]);
-         ecode |= 1 << ii;
-      } else { DEBUG("ok\n"); }
+   for (j = 0; j < NUMVECTORS; j++) {
+      memset(digest, 0 , SHA256LEN);
+      memcpy(&bt, Pvector[j], BTRAILERSIZE);
+      if (j < 2) ASSERT_EQ(peach_checkhash(&bt, digest), 1);
+      else ASSERT_EQ(peach_checkhash(&bt, digest), 0);
+      ASSERT_CMP(digest, Pexpect[j], SHA256LEN);
    }
-
-   DEBUG("\n");
-   return ecode;
 }

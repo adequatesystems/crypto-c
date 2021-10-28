@@ -1,38 +1,14 @@
-/**
- * Trigg's POW algorithm vectors test.
- *   trigg-vectors.c (25 August 2021)
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- *
- * For more information, please refer to ../../LICENSE
- * 
- */
 
-
-/* _CRT_SECURE_NO_WARNINGS must be defined before includes to be effective */
-#define _CRT_SECURE_NO_WARNINGS  /* Suppresses Windows CRT warnings */
-
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG(fmt, ...)  printf(fmt, ##__VA_ARGS__)
-#else
-#undef DEBUG
-#define DEBUG(fmt, ...)  /* do nothing */
-#endif
-
-#define NUMVECTORS  5
-#define HEXCHARLEN  65
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include "extint.h"
 
-#include "rand.h"
+#include "_assert.h"
 #include "../trigg.h"
 
+#define NUMVECTORS  5
+
 /* Trigg test vectors taken directly from the Mochimo Blockchain Tfile */
-uint8_t Tvector[NUMVECTORS][BTSIZE] = {
+static word8 Tvector[NUMVECTORS][BTRAILERSIZE] = {
     {  /* Block 0x1 (1) */
       0x00, 0x17, 0x0c, 0x67, 0x11, 0xb9, 0xdc, 0x3c, 0xa7, 0x46,
       0xc4, 0x6c, 0xc2, 0x81, 0xbc, 0x69, 0xe3, 0x03, 0xdf, 0xad,
@@ -126,50 +102,40 @@ uint8_t Tvector[NUMVECTORS][BTSIZE] = {
 };
 
 /* Known hexadecimal results to Tvectors for trigg_checkhash() */
-char Tresult[NUMVECTORS][HEXCHARLEN] = {
-   "3e01efe149d943fe310e4c3d7bc9ee57e4f0284cd64841b5bb53cf10e67de263",
-   "0011eccb02ec8080ebbb823de6754709ec8371a91092a62558206dd66a6331a5",
-   "0000000010f48fa0495ab7fd98568f2fd6f1de6163bd624cc1d18c6fa6ecd214",
-   "00000000029171d822e115f76fafbf080b203eeb4244fe673402029ccf608f72",
-   "0000000000001e0b9eaa26d126c6aeb4077164f2a88547f0514b3ea6b1c70a5d"
+static word8 Texpect[NUMVECTORS][SHA256LEN] = {
+   {
+      0x3e, 0x01, 0xef, 0xe1, 0x49, 0xd9, 0x43, 0xfe, 0x31, 0x0e, 0x4c,
+      0x3d, 0x7b, 0xc9, 0xee, 0x57, 0xe4, 0xf0, 0x28, 0x4c, 0xd6, 0x48,
+      0x41, 0xb5, 0xbb, 0x53, 0xcf, 0x10, 0xe6, 0x7d, 0xe2, 0x63
+   }, {
+      0x00, 0x11, 0xec, 0xcb, 0x02, 0xec, 0x80, 0x80, 0xeb, 0xbb, 0x82,
+      0x3d, 0xe6, 0x75, 0x47, 0x09, 0xec, 0x83, 0x71, 0xa9, 0x10, 0x92,
+      0xa6, 0x25, 0x58, 0x20, 0x6d, 0xd6, 0x6a, 0x63, 0x31, 0xa5
+   }, {
+      0x00, 0x00, 0x00, 0x00, 0x10, 0xf4, 0x8f, 0xa0, 0x49, 0x5a, 0xb7,
+      0xfd, 0x98, 0x56, 0x8f, 0x2f, 0xd6, 0xf1, 0xde, 0x61, 0x63, 0xbd,
+      0x62, 0x4c, 0xc1, 0xd1, 0x8c, 0x6f, 0xa6, 0xec, 0xd2, 0x14
+   }, {
+      0x00, 0x00, 0x00, 0x00, 0x02, 0x91, 0x71, 0xd8, 0x22, 0xe1, 0x15,
+      0xf7, 0x6f, 0xaf, 0xbf, 0x08, 0x0b, 0x20, 0x3e, 0xeb, 0x42, 0x44,
+      0xfe, 0x67, 0x34, 0x02, 0x02, 0x9c, 0xcf, 0x60, 0x8f, 0x72
+   }, {
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1e, 0x0b, 0x9e, 0xaa, 0x26,
+      0xd1, 0x26, 0xc6, 0xae, 0xb4, 0x07, 0x71, 0x64, 0xf2, 0xa8, 0x85,
+      0x47, 0xf0, 0x51, 0x4b, 0x3e, 0xa6, 0xb1, 0xc7, 0x0a, 0x5d
+   }
 };
 
-/* Interpret digest "in" as hexadecimal char array, placed in "out" */
-void digest2hexstr(void *in, size_t inlen, char *out)
-{
-   uint8_t *bp = (uint8_t *) in;
-
-   for (size_t ii = 0; ii < inlen; ii++) {
-      sprintf(&out[ii * 2], "%02x", *bp++);
-   } /* force last character as nul byte character */
-   out[inlen * 2] = '\0';
-}
-
-
 int main()
-{
+{  /* check trigg_checkhash() final hash results match expected */
    BTRAILER bt;
-   uint8_t digest[HASHLEN];
-   char hexstr[HEXCHARLEN];
-   int ecode, ii;
+   word8 digest[SHA256LEN];
+   int j;
 
-   DEBUG("initialize isolated high speed prng with time(NULL)...\n");
-   srand16((uint32_t) time(NULL), 0, 0);
-
-   for (ecode = ii = 0; ii < NUMVECTORS; ii++) {
-      DEBUG("load Tvector[%d]... ", ii);
-      memcpy(&bt, Tvector[ii], BTSIZE);
-      DEBUG("trigg_checkhash()... ");
-      memset(digest, 0, HASHLEN);
-      trigg_checkhash(&bt, digest);
-      DEBUG("hash comparison... ");
-      digest2hexstr(digest, HASHLEN, hexstr);
-      if (strncmp(hexstr, Tresult[ii], HEXCHARLEN)) {
-         DEBUG("fail\n ~      Got: %s\n ~ Expected: %s\n", hexstr, Tresult[ii]);
-         ecode |= 1 << ii;
-      } else { DEBUG("ok\n"); }
+   for (j = 0; j < NUMVECTORS; j++) {
+      memset(digest, 0 , SHA256LEN);
+      memcpy(&bt, Tvector[j], BTRAILERSIZE);
+      ASSERT_EQ(trigg_checkhash(&bt, digest), 0);
+      ASSERT_CMP(digest, Texpect[j], SHA256LEN);
    }
-
-   DEBUG("\n");
-   return ecode;
 }

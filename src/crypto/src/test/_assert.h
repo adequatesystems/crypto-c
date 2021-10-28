@@ -61,6 +61,7 @@
             printf("0x%llx, ", (unsigned long long) (ARRAY)[_i]); } \
          printf("}\n"); \
       } while (0)
+   #define ASSERT_DEBUG(...)  PRINT(__VA_ARGS__)
    #define ASSERT_OP2_MSG(OP,A,B,C,MSG) \
       do { \
          int _LEN = (int) strlen(#A); \
@@ -124,6 +125,7 @@
    #define ASSERT_CMP_MSG(A,B,LEN,MSG)  ASSERT(memcmp(A, B, LEN) == 0 && MSG)
    #define ASSERT_ASC_MSG(A,LEN,MSG) \
       for (int _i = 0; _i < (LEN-2); _i++) ASSERT((A)[_i] < (A)[_i+1] && MSG)
+   static inline void ASSERT_DEBUG(char *fmt, ...) { (void)fmt; }
 #endif
 
 
