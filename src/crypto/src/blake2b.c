@@ -11,7 +11,7 @@
  * For more information, please refer to ../LICENSE.UNLICENSE
  *
  * Date: 22 April 2020
- * Revised: 17 August 2021
+ * Revised: 26 October 2021
  *
  * NOTES:
  * - Presently, due to heavy reliance on 64-bit operations, this

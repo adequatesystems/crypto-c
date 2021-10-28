@@ -5,7 +5,7 @@
  * For more information, please refer to ../LICENSE
  *
  * Date: 20 December 2017
- * Revised: 19 August 2021
+ * Revised: 26 October 2021
  *
  * NOTES: Parameters are as follows...
  * Name/s : "XMODEM", "ZMODEM", "CRC-16/ACORN"
