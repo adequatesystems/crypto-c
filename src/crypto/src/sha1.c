@@ -9,65 +9,58 @@
  *
  * For more information, please refer to ../LICENSE.UNLICENSE
  *
- * Copyright (c) 2017-2021 Adequate Systems, LLC. All Rights Reserved.
- * For more information, please refer to ../LICENSE
- *
  * Date: 8 April 2020
- * Revised: 19 August 2021
+ * Revised: 26 October 2021
  *
- * NOTE: This implementation supports SHA1 message digests on x86_64
- * little endian hardware, using modified routines for faster SHA1
- * transformations.
+ * NOTES:
+ * - This 32-bit implementation supports SHA1 message digests on x86
+ *   little endian systems, using modified routines and unrolled
+ *   loops for faster SHA1 transformations.
+ * - This implementation relies on custom datatypes declared within
+ *   a custom library. However, in the absense of such a library,
+ *   functionality may be reinstated by simply redeclaring
+ *   datatypes as appropriate for the target system.
  *
 */
 
-#ifndef _SHA1_C_
-#define _SHA1_C_  /* include guard */
+#ifndef _CRYPTO_SHA1_C_
+#define _CRYPTO_SHA1_C_  /* include guard */
 
 
 #include "sha1.h"
 
-/* SHA1 transformation */
-void sha1_transform(SHA1_CTX *ctx, const uint8_t data[])
+/* swap bytes of a 32-bit word using an 8-bit word pointer */
+static word32 bswap32from8p(const word8 bp[])
 {
-   static uint32_t k[4] = { 0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6 };
-   uint32_t a, b, c, d, e, i, t, m[80];
+   return ( ((word32) bp[0] << 24) | ((word32) bp[1] << 16) |
+            ((word32) bp[2] << 8) | ((word32) bp[3]) );
+}  /* end bswap32from8p() */
+
+/* SHA1 transformation */
+void sha1_transform(SHA1_CTX *ctx, const word8 data[])
+{
+   static word32 k[4] = { 0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6 };
+   word32 a, b, c, d, e, i, t, m[80];
 
    /* Since this implementation uses little endian byte ordering and
     * SHA uses big endian, reverse all the bytes upon input, and
     * re-reverse them on output */
-   m[0] = ((uint32_t) data[0] << 24) + ((uint32_t) data[1] << 16) +
-          ((uint32_t) data[2] << 8) + ((uint32_t) data[3]);
-   m[1] = ((uint32_t) data[4] << 24) + ((uint32_t) data[5] << 16) +
-          ((uint32_t) data[6] << 8) + ((uint32_t) data[7]);
-   m[2] = ((uint32_t) data[8] << 24) + ((uint32_t) data[9] << 16) +
-          ((uint32_t) data[10] << 8) + ((uint32_t) data[11]);
-   m[3] = ((uint32_t) data[12] << 24) + ((uint32_t) data[13] << 16) +
-          ((uint32_t) data[14] << 8) + ((uint32_t) data[15]);
-   m[4] = ((uint32_t) data[16] << 24) + ((uint32_t) data[17] << 16) +
-          ((uint32_t) data[18] << 8) + ((uint32_t) data[19]);
-   m[5] = ((uint32_t) data[20] << 24) + ((uint32_t) data[21] << 16) +
-          ((uint32_t) data[22] << 8) + ((uint32_t) data[23]);
-   m[6] = ((uint32_t) data[24] << 24) + ((uint32_t) data[25] << 16) +
-          ((uint32_t) data[26] << 8) + ((uint32_t) data[27]);
-   m[7] = ((uint32_t) data[28] << 24) + ((uint32_t) data[29] << 16) +
-          ((uint32_t) data[30] << 8) + ((uint32_t) data[31]);
-   m[8] = ((uint32_t) data[32] << 24) + ((uint32_t) data[33] << 16) +
-          ((uint32_t) data[34] << 8) + ((uint32_t) data[35]);
-   m[9] = ((uint32_t) data[36] << 24) + ((uint32_t) data[37] << 16) +
-          ((uint32_t) data[38] << 8) + ((uint32_t) data[39]);
-   m[10] = ((uint32_t) data[40] << 24) + ((uint32_t) data[41] << 16) +
-           ((uint32_t) data[42] << 8) + ((uint32_t) data[43]);
-   m[11] = ((uint32_t) data[44] << 24) + ((uint32_t) data[45] << 16) +
-           ((uint32_t) data[46] << 8) + ((uint32_t) data[47]);
-   m[12] = ((uint32_t) data[48] << 24) + ((uint32_t) data[49] << 16) +
-           ((uint32_t) data[50] << 8) + ((uint32_t) data[51]);
-   m[13] = ((uint32_t) data[52] << 24) + ((uint32_t) data[53] << 16) +
-           ((uint32_t) data[54] << 8) + ((uint32_t) data[55]);
-   m[14] = ((uint32_t) data[56] << 24) + ((uint32_t) data[57] << 16) +
-           ((uint32_t) data[58] << 8) + ((uint32_t) data[59]);
-   m[15] = ((uint32_t) data[60] << 24) + ((uint32_t) data[61] << 16) +
-           ((uint32_t) data[62] << 8) + ((uint32_t) data[63]);
+   m[0] = bswap32from8p(&data[0]);
+   m[1] = bswap32from8p(&data[4]);
+   m[2] = bswap32from8p(&data[8]);
+   m[3] = bswap32from8p(&data[12]);
+   m[4] = bswap32from8p(&data[16]);
+   m[5] = bswap32from8p(&data[20]);
+   m[6] = bswap32from8p(&data[24]);
+   m[7] = bswap32from8p(&data[28]);
+   m[8] = bswap32from8p(&data[32]);
+   m[9] = bswap32from8p(&data[36]);
+   m[10] = bswap32from8p(&data[40]);
+   m[11] = bswap32from8p(&data[44]);
+   m[12] = bswap32from8p(&data[48]);
+   m[13] = bswap32from8p(&data[52]);
+   m[14] = bswap32from8p(&data[56]);
+   m[15] = bswap32from8p(&data[60]);
 
    m[16] = (m[13] ^ m[8] ^ m[2] ^ m[0]);
    m[16] = (m[16] << 1) | (m[16] >> 31);
@@ -243,40 +236,43 @@ void sha1_transform(SHA1_CTX *ctx, const uint8_t data[])
    ctx->state[2] += c;
    ctx->state[3] += d;
    ctx->state[4] += e;
-}
+}  /* end sha1_transform() */
 
 /* Initialize the hashing context `ctx` */
 void sha1_init(SHA1_CTX *ctx)
 {
    ctx->datalen = 0;
-   ctx->bitlen = 0;
+   ctx->bitlen[0] = ctx->bitlen[1] = 0;
    ctx->state[0] = 0x67452301;
    ctx->state[1] = 0xEFCDAB89;
    ctx->state[2] = 0x98BADCFE;
    ctx->state[3] = 0x10325476;
    ctx->state[4] = 0xc3d2e1f0;
-}
+}  /* end sha1_init() */
 
 /* Add `inlen` bytes from `in` into the hash */
 void sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen)
 {
    size_t i;
+   word32 old;
 
    for (i = 0; i < inlen; ++i) {
-      ctx->data[ctx->datalen] = ((const uint8_t *) in)[i];
+      ctx->data[ctx->datalen] = ((const word8 *) in)[i];
       ctx->datalen++;
       if (ctx->datalen == 64) {
          sha1_transform(ctx, ctx->data);
-         ctx->bitlen += 512;
          ctx->datalen = 0;
+         old = ctx->bitlen[0];
+         ctx->bitlen[0] += 512;
+         if(ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
       }
    }
-}
+}  /* end sha1_update() */
 
 /* Generate the message digest and place in `out` */
 void sha1_final(SHA1_CTX *ctx, void *out)
 {
-   uint32_t i;
+   word32 i, old;
 
    i = ctx->datalen;
 
@@ -292,46 +288,42 @@ void sha1_final(SHA1_CTX *ctx, void *out)
          ctx->data[i++] = 0x00;
       }
       sha1_transform(ctx, ctx->data);
-      memset(ctx->data, 0, 56);
+      ((word32 *) ctx->data)[0] = 0;
+      ((word32 *) ctx->data)[1] = 0;
+      ((word32 *) ctx->data)[2] = 0;
+      ((word32 *) ctx->data)[3] = 0;
+      ((word32 *) ctx->data)[4] = 0;
+      ((word32 *) ctx->data)[5] = 0;
+      ((word32 *) ctx->data)[6] = 0;
+      ((word32 *) ctx->data)[7] = 0;
+      ((word32 *) ctx->data)[8] = 0;
+      ((word32 *) ctx->data)[9] = 0;
+      ((word32 *) ctx->data)[10] = 0;
+      ((word32 *) ctx->data)[11] = 0;
+      ((word32 *) ctx->data)[12] = 0;
+      ((word32 *) ctx->data)[13] = 0;
    }
 
    /* Append to the padding the total message's length in bits and
     * transform (big endian). */
-   ctx->bitlen += ctx->datalen << 3;
-   ctx->data[63] = (uint8_t) (ctx->bitlen);
-   ctx->data[62] = (uint8_t) (ctx->bitlen >> 8);
-   ctx->data[61] = (uint8_t) (ctx->bitlen >> 16);
-   ctx->data[60] = (uint8_t) (ctx->bitlen >> 24);
-   ctx->data[59] = (uint8_t) (ctx->bitlen >> 32);
-   ctx->data[58] = (uint8_t) (ctx->bitlen >> 40);
-   ctx->data[57] = (uint8_t) (ctx->bitlen >> 48);
-   ctx->data[56] = (uint8_t) (ctx->bitlen >> 56);
+   old = ctx->bitlen[0];
+   ctx->bitlen[0] += (word32) ctx->datalen << 3;
+   if(ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
+   /* immitate bswap64() for bitlen */
+   ((word32 *) ctx->data)[15] = bswap32from8p((word8 *) &ctx->bitlen[0]);
+   ((word32 *) ctx->data)[14] = bswap32from8p((word8 *) &ctx->bitlen[1]);
    sha1_transform(ctx, ctx->data);
 
    /* Since this implementation uses little endian byte ordering and
     * SHA uses big endian, reverse all the bytes when copying the
     * final state to the output hash. */
-   ((uint8_t *) out)[0] = (ctx->state[0] >> 24) & 0x000000ff;
-   ((uint8_t *) out)[1] = (ctx->state[0] >> 16) & 0x000000ff;
-   ((uint8_t *) out)[2] = (ctx->state[0] >> 8) & 0x000000ff;
-   ((uint8_t *) out)[3] = (ctx->state[0]) & 0x000000ff;
-   ((uint8_t *) out)[4] = (ctx->state[1] >> 24) & 0x000000ff;
-   ((uint8_t *) out)[5] = (ctx->state[1] >> 16) & 0x000000ff;
-   ((uint8_t *) out)[6] = (ctx->state[1] >> 8) & 0x000000ff;
-   ((uint8_t *) out)[7] = (ctx->state[1]) & 0x000000ff;
-   ((uint8_t *) out)[8] = (ctx->state[2] >> 24) & 0x000000ff;
-   ((uint8_t *) out)[9] = (ctx->state[2] >> 16) & 0x000000ff;
-   ((uint8_t *) out)[10] = (ctx->state[2] >> 8) & 0x000000ff;
-   ((uint8_t *) out)[11] = (ctx->state[2]) & 0x000000ff;
-   ((uint8_t *) out)[12] = (ctx->state[3] >> 24) & 0x000000ff;
-   ((uint8_t *) out)[13] = (ctx->state[3] >> 16) & 0x000000ff;
-   ((uint8_t *) out)[14] = (ctx->state[3] >> 8) & 0x000000ff;
-   ((uint8_t *) out)[15] = (ctx->state[3]) & 0x000000ff;
-   ((uint8_t *) out)[16] = (ctx->state[4] >> 24) & 0x000000ff;
-   ((uint8_t *) out)[17] = (ctx->state[4] >> 16) & 0x000000ff;
-   ((uint8_t *) out)[18] = (ctx->state[4] >> 8) & 0x000000ff;
-   ((uint8_t *) out)[19] = (ctx->state[4]) & 0x000000ff;
-}
+   ((word32 *) out)[0] = bswap32from8p((word8 *) &ctx->state[0]);
+   ((word32 *) out)[1] = bswap32from8p((word8 *) &ctx->state[1]);
+   ((word32 *) out)[2] = bswap32from8p((word8 *) &ctx->state[2]);
+   ((word32 *) out)[3] = bswap32from8p((word8 *) &ctx->state[3]);
+   ((word32 *) out)[4] = bswap32from8p((word8 *) &ctx->state[4]);
+   ((word32 *) out)[5] = bswap32from8p((word8 *) &ctx->state[5]);
+}  /* end sha1_final() */
 
 /* Convenient all-in-one SHA1 computation */
 void sha1(const void *in, size_t inlen, void *out)
@@ -341,7 +333,7 @@ void sha1(const void *in, size_t inlen, void *out)
    sha1_init(&ctx);
    sha1_update(&ctx, in, inlen);
    sha1_final(&ctx, out);
-}
+}  /* end sha1() */
 
 
-#endif  /* end _SHA1_C_ */
+#endif  /* end _CRYPTO_SHA1_C_ */

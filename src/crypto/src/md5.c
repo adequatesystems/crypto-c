@@ -10,25 +10,30 @@
  * For more information, please refer to ../LICENSE.UNLICENSE
  *
  * Date: 8 April 2020
- * Revised: 19 August 2021
+ * Revised: 26 October 2021
  *
- * NOTE: This implementation supports MD5 message digests on x86_64
- * little endian hardware, using modified routines for faster MD5
- * transformations.
+ * NOTES:
+ * - This 32-bit implementation supports 128-bit message digests on
+ *   x86 little endian systems, using modified routines and unrolled
+ *   loops for faster MD5 transformations.
+ * - This implementation relies on custom datatypes declared within
+ *   a custom library. However, in the absense of such a library,
+ *   functionality may be reinstated by simply redeclaring
+ *   datatypes as appropriate for the target system.
  *
 */
 
-#ifndef _MD5_C_
-#define _MD5_C_  /* include guard */
+#ifndef _CRYPTO_MD5_C_
+#define _CRYPTO_MD5_C_  /* include guard */
 
 
 #include "md5.h"
 
 /* MD5 transformation */
-void md5_transform(MD5_CTX *ctx, const uint8_t data[])
+void md5_transform(MD5_CTX *ctx, const word8 data[])
 {
-   uint32_t *m = (uint32_t *) data;
-   uint32_t a, b, c, d;
+   word32 *m = (word32 *) data;
+   word32 a, b, c, d;
 
    a = ctx->state[0];
    b = ctx->state[1];
@@ -107,43 +112,42 @@ void md5_transform(MD5_CTX *ctx, const uint8_t data[])
    ctx->state[1] += b;
    ctx->state[2] += c;
    ctx->state[3] += d;
-}
+}  /* end md5_transform() */
 
 /* Initialize the hashing context `ctx` */
 void md5_init(MD5_CTX *ctx)
 {
    ctx->datalen = 0;
-   ctx->bitlen = 0;
+   ctx->bitlen[0] = ctx->bitlen[1] = 0;
    ctx->state[0] = 0x67452301;
    ctx->state[1] = 0xEFCDAB89;
    ctx->state[2] = 0x98BADCFE;
    ctx->state[3] = 0x10325476;
-}
+}  /* end md5_init() */
 
 /* Add `inlen` bytes from `in` into the hash */
 void md5_update(MD5_CTX *ctx, const void *in, size_t inlen)
 {
    size_t i;
+   word32 old;
 
    for (i = 0; i < inlen; ++i) {
-      ctx->data[ctx->datalen] = ((const uint8_t *) in)[i];
+      ctx->data[ctx->datalen] = ((const word8 *) in)[i];
       ctx->datalen++;
       if (ctx->datalen == 64) {
          md5_transform(ctx, ctx->data);
-         ctx->bitlen += 512;
          ctx->datalen = 0;
+         old = ctx->bitlen[0];
+         ctx->bitlen[0] += 512;
+         if(ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
       }
    }
-}
+}  /* end md5_update() */
 
 /* Generate the message digest and place in `out` */
 void md5_final(MD5_CTX *ctx, void *out)
 {
-   uint64_t *qout, *qstate;
-   uint32_t i;
-
-   qout = (uint64_t *) out;
-   qstate = (uint64_t *) ctx->state;
+   word32 i, old;
 
    i = ctx->datalen;
 
@@ -159,18 +163,36 @@ void md5_final(MD5_CTX *ctx, void *out)
          ctx->data[i++] = 0x00;
       }
       md5_transform(ctx, ctx->data);
-      memset(ctx->data, 0, 56);
+      ((word32 *) ctx->data)[0] = 0;
+      ((word32 *) ctx->data)[1] = 0;
+      ((word32 *) ctx->data)[2] = 0;
+      ((word32 *) ctx->data)[3] = 0;
+      ((word32 *) ctx->data)[4] = 0;
+      ((word32 *) ctx->data)[5] = 0;
+      ((word32 *) ctx->data)[6] = 0;
+      ((word32 *) ctx->data)[7] = 0;
+      ((word32 *) ctx->data)[8] = 0;
+      ((word32 *) ctx->data)[9] = 0;
+      ((word32 *) ctx->data)[10] = 0;
+      ((word32 *) ctx->data)[11] = 0;
+      ((word32 *) ctx->data)[12] = 0;
+      ((word32 *) ctx->data)[13] = 0;
    }
 
    /* Append to the padding the total message's length in bits and
     * transform. */
-   ctx->bitlen += ctx->datalen << 3;
-   *((uint64_t *) &ctx->data[56]) = ctx->bitlen;
+   old = ctx->bitlen[0];
+   ctx->bitlen[0] += ctx->datalen << 3;
+   if(ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
+   ((word32 *) ctx->data)[14] = ctx->bitlen[0];
+   ((word32 *) ctx->data)[15] = ctx->bitlen[1];
    md5_transform(ctx, ctx->data);
 
-   qout[0] = qstate[0];
-   qout[1] = qstate[1];
-}
+	((word32 *) out)[0] = ctx->state[0];
+   ((word32 *) out)[1] = ctx->state[1];
+	((word32 *) out)[2] = ctx->state[2];
+   ((word32 *) out)[3] = ctx->state[3];
+}  /* end md5_final() */
 
 /* Convenient all-in-one MD5 computation */
 void md5(const void *in, size_t inlen, void *out)
@@ -180,7 +202,7 @@ void md5(const void *in, size_t inlen, void *out)
    md5_init(&ctx);
    md5_update(&ctx, in, inlen);
    md5_final(&ctx, out);
-}
+}  /* end md5() */
 
 
-#endif  /* end _MD5_C_ */
+#endif  /* end _CRYPTO_MD5_C_ */

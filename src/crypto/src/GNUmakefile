@@ -60,7 +60,7 @@ LIBRARYDIRS:= $(LIBDIR) $(dir $(DEPENDENCIES))
 LIBRARYFLAGS:= -l$(MODULE) $(patsubst lib%.a,-l%,$(notdir $(DEPENDENCIES)))
 
 # compiler macros
-LDFLAGS:= $(addprefix -L,$(LIBRARYDIRS)) $(LIBRARYFLAGS)
+LDFLAGS:= $(addprefix -L,$(LIBRARYDIRS)) $(LIBRARYFLAGS) -lm
 CCFLAGS:= -Werror -Wall -Wextra $(addprefix -I,$(INCLUDEDIRS))
 CC:= gcc $(CFLAGS) # CFLAGS is reserved for the user; make "CFLAGS=-DDEBUG -O3"
 

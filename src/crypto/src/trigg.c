@@ -1,12 +1,11 @@
 /**
  * trigg.c - Trigg's Proof-of-Work algorithm
  *
- * Copyright (c) 2018-2021 by Adequate Systems, LLC.  All Rights Reserved.
- *
+ * Copyright (c) 2018-2021 by Adequate Systems, LLC.  All Rights Reserved
  * For more information, please refer to ../LICENSE
  *
  * Date: 13 October 2018
- * Revised: 27 August 2021
+ * Revised: 26 October 2021
  *
  * Emulate a PDP-10 running MACLISP (circa. 1971)...
  *
@@ -21,22 +20,14 @@
  *    on sunrise air--
  *    drowned
  *
- * DEPENDENCIES: (referenced as EXTERNAL in GNUmakefile)
- * Repository submodule, c-hashing-algorithms as ../../hash;
- *    ../../hash/src/sha256.c  - 256-bit Secure Hash Algorithm
- *
- * and when ENABLE_THREADSAFE is defined...
- * Repository submodule, c-utilities as ../../util;
- *    ../../util/src/thread.h - multiplatform threading
- *
 */
 
-#ifndef _POW_TRIGG_C_
-#define _POW_TRIGG_C_  /* include guard */
+#ifndef _CRYPTO_TRIGG_C_
+#define _CRYPTO_TRIGG_C_  /* include guard */
 
 
 #include "trigg.h"
-#include "rand.h"
+#include <string.h>  /* for memcpy() */
 
 static DICT Dict[MAXDICT] = {
 /* Adverbs and function words */
@@ -318,7 +309,7 @@ static DICT Dict[MAXDICT] = {
 };  /* end Dict[] */
 
 /* Case frames for the semantic grammar with a vibe inspired by Basho... */
-static uint32_t Frame[NFRAMES][MAXH] = {
+static word32 Frame[NFRAMES][MAXH] = {
    {
       F_PREP, F_ADJ, F_MASS, S_NL,            /* on a quiet moor */
       F_NPL, S_NL,                            /* raindrops       */
@@ -369,18 +360,18 @@ static uint32_t Frame[NFRAMES][MAXH] = {
       F_PREP, F_TIMED, F_MASS, S_MD, S_NL,    /* in afternoon mist-- */
       F_ADJ                                   /* sad                 */
    }, /* ! increment NFRAMES if adding more frames... */
-};
+};  /* end Frame[][] */
 
 /* Generate a tokenized haiku into `out` using the embedded prng. */
 void *trigg_generate(void *out)
 {
-   uint32_t *fp;
-   uint8_t *tp;
+   word32 *fp;
+   word8 *tp;
    int j, widx;
 
    /* choose a random haiku frame to fill */
    fp = &Frame[rand16() % NFRAMES][0];
-   for (j = 0, tp = (uint8_t *) out; j < MAXH; j++, fp++, tp++) {
+   for (j = 0, tp = (word8 *) out; j < MAXH; j++, fp++, tp++) {
       if (*fp == 0) {
          /* zero fill to end of available token space */
          *tp = 0;
@@ -394,21 +385,21 @@ void *trigg_generate(void *out)
             widx = rand16() & MAXDICT_M1;
          } while ((Dict[widx].fe & *fp) == 0);
       }
-      *tp = (uint8_t) widx;
+      *tp = (word8) widx;
    }
 
    return out;
-}
+}  /* end trigg_generate() */
 
 /* Expand a haiku to character format.
  * It must have the correct syntax and vibe. */
 char *trigg_expand(void *nonce, void *haiku)
 {
-   uint8_t *np, *bp, *bpe, *wp;
+   word8 *np, *bp, *bpe, *wp;
    int i;
 
-   np = (uint8_t *) nonce;
-   bp = (uint8_t *) haiku;
+   np = (word8 *) nonce;
+   bp = (word8 *) haiku;
    bpe = bp + HAIKUCHARLEN;
    /* step through all nonce values */
    for (i = 0; i < MAXH; i++, np++) {
@@ -419,27 +410,27 @@ char *trigg_expand(void *nonce, void *haiku)
       if (bp[-1] != '\n') *(bp++) = ' ';
    }
    /* zero fill remaining character space */
-   i = (bpe - bp) & 7;
+   i = (bpe - bp) & 3;
    while (i--) *(bp++) = 0;  /* 8-bit fill */
-   while (bp < bpe) {  /* 64-bit fill */
-      *((uint64_t *) bp) = 0;
-      bp += 8;
+   while (bp < bpe) {
+      *((word32 *) bp) = 0;
+      bp += 4;
    }
 
    return (char *) haiku;
-}
+}  /* end trigg_expand() */
 
 /* Evaluate the TRIGG chain by using a heuristic estimate of the
  * final solution cost (Nilsson, 1971). Evaluate the relative
  * distance within the TRIGG chain to validate proof of work.
  * Return VEOK if passed, else VERROR. */
-int trigg_eval(void *hash, uint8_t diff)
+int trigg_eval(void *hash, word8 diff)
 {
-   uint8_t *bp, n;
+   word8 *bp, n;
 
    n = diff >> 3;
    /* coarse check required bytes are zero */
-   for (bp = (uint8_t *) hash; n; n--) {
+   for (bp = (word8 *) hash; n; n--) {
       if(*(bp++) != 0) return VERROR;
    }
    if ((diff & 7) == 0) return VEOK;
@@ -449,19 +440,19 @@ int trigg_eval(void *hash, uint8_t diff)
    }
 
    return VEOK;
-}
+}  /* end trigg_eval() */
 
 /* Check haiku syntax against semantic grammar.
  * It must have the correct syntax, semantics, and vibe.
  * Return VEOK on correct syntax, else VERROR. */
 int trigg_syntax(void *nonce)
 {
-   uint32_t sf[MAXH], *fp;
-   uint8_t *np;
+   word32 sf[MAXH], *fp;
+   word8 *np;
    int j;
 
    /* load semantic frame associated with nonce */
-   for (j = 0, np = (uint8_t *) nonce; j < MAXH; j++) sf[j] = Dict[np[j]].fe;
+   for (j = 0, np = (word8 *) nonce; j < MAXH; j++) sf[j] = Dict[np[j]].fe;
    /* check input for respective semantic features, use unification on sets. */
    for (fp = &Frame[0][0]; fp < &Frame[NFRAMES][0]; fp += MAXH) {
       for (j = 0; j < MAXH; j++) {
@@ -479,17 +470,16 @@ int trigg_syntax(void *nonce)
    }
 
    return VERROR;
-}
+}  /* end trigg_syntax() */
 
 /* Check proof of work. The haiku must be syntactically correct
  * and have the right vibe. Also, entropy MUST match difficulty.
  * If non-NULL, place final hash in `out` on success.
  * Return VEOK on success, else VERROR. */
-#define trigg_check(btp)  trigg_checkhash(btp, NULL)
 int trigg_checkhash(BTRAILER *bt, void *out)
 {
    SHA256_CTX ictx;
-   uint8_t haiku[HAIKUCHARLEN], hash[SHA256LEN];
+   word8 haiku[HAIKUCHARLEN], hash[SHA256LEN];
 
    /* check syntax, semantics, and vibe... */
    if (trigg_syntax(bt->nonce) == VERROR) return VERROR;
@@ -498,7 +488,7 @@ int trigg_checkhash(BTRAILER *bt, void *out)
    trigg_expand(bt->nonce, haiku);
    /* obtain entropy */
    sha256_init(&ictx);
-   sha256_update(&ictx, bt->mroot, HASHLEN);
+   sha256_update(&ictx, bt->mroot, SHA256LEN);
    sha256_update(&ictx, haiku, HAIKUCHARLEN);
    sha256_update(&ictx, bt->nonce + 16, 16);
    sha256_update(&ictx, bt->bnum, 8);
@@ -507,17 +497,17 @@ int trigg_checkhash(BTRAILER *bt, void *out)
    if (out != NULL) memcpy(out, hash, SHA256LEN);
    /* return evaluation */
    return trigg_eval(hash, bt->difficulty[0]);
-}
+}  /* end trigg_checkhash() */
 
 /* Prepare a TRIGG context for solving. */
 void trigg_init(TRIGG_POW *T, BTRAILER *bt)
 {
    /* add merkle root and bnum to Tchain */
-   memcpy(T->mroot, bt->mroot, HASHLEN);
+   memcpy(T->mroot, bt->mroot, SHA256LEN);
    memcpy(T->bnum, bt->bnum, 8);
    /* place required difficulty in diff */
    T->diff = bt->difficulty[0];
-}
+}  /* end trigg_init() */
 
 /* Try solve for a tokenized haiku as nonce output for proof of work.
  * Create the haiku inside the TRIGG chain using a semantic grammar
@@ -527,7 +517,7 @@ void trigg_init(TRIGG_POW *T, BTRAILER *bt)
  * Return VEOK on success, else VERROR. */
 int trigg_solve(TRIGG_POW *T, void *out)
 {
-   uint8_t hash[SHA256LEN];
+   word8 hash[SHA256LEN];
 
    /* generate (full) nonce */
    trigg_generate(T->nonce2);
@@ -539,14 +529,14 @@ int trigg_solve(TRIGG_POW *T, void *out)
    /* evaluate result against required difficulty */
    if (trigg_eval(hash, T->diff) == VEOK) {
       /* copy successful (full) nonce to `out` */
-      uint8_t *bp = (uint8_t *) out;
+      word8 *bp = (word8 *) out;
       memcpy(bp, T->nonce1, 16);
       memcpy(bp + 16, T->nonce2, 16);
       return VEOK;
    }
 
    return VERROR;
-}
+}  /* end trigg_solve() */
 
 
-#endif  /* end _POW_TRIGG_C_ */
+#endif  /* end _CRYPTO_TRIGG_C_ */

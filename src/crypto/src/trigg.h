@@ -5,56 +5,16 @@
  * For more information, please refer to ../LICENSE
  *
  * Date: 5 May 2020
- * Revised: 27 August 2021
+ * Revised: 26 October 2021
  *
 */
 
-#ifndef _POW_TRIGG_H_
-#define _POW_TRIGG_H_  /* include guard */
+#ifndef _CRYPTO_TRIGG_H_
+#define _CRYPTO_TRIGG_H_  /* include guard */
 
-#include <stdint.h>
+
+#include "extint.h"  /* for word types */
 #include "sha256.h"
-
-/* ============================================================= */
-#ifdef ENABLE_THREADSAFE /* for multithreading safe capabilities */
-
-#include "thread.h"
-
-/* determine if system is capable of reading 32-bits in one operation */
-#if (INTPTR_MAX < INT32_MAX)
-/* The above preprocessor conditional determines if the system is capable of
- * reading 32-bits of data in a single operation. In such a case, obtaining
- * the random value within Trigg_seed at any given time cannot be guarenteed
- * consistant. As such, a mutex will be required for the read operation. */
-
-/* Removeable function redefinitions for reads only (active) */
-#define trigg_rand_unlock_rd32  mutex_unlock(&Trigg_rand_mutex)
-#define trigg_rand_lock_rd32    mutex_lock(&Trigg_rand_mutex)
-
-#else
-
-#define trigg_rand_unlock_rd32()  /* do nothing */
-#define trigg_rand_lock_rd32()    /* do nothing */
-
-#endif 
-
-/* Removeable function redefinitions (active) */
-#define trigg_rand_unlock()     mutex_unlock(&Trigg_rand_mutex)
-#define trigg_rand_lock()       mutex_lock(&Trigg_rand_mutex)
-
-/* Restricted use Mutex guard for number generator */
-static volatile Mutex Trigg_rand_mutex;
-
-#else
-
-#define trigg_rand_unlock_rd32()  /* do nothing */
-#define trigg_rand_lock_rd32()    /* do nothing */
-#define trigg_rand_unlock()       /* do nothing */
-#define trigg_rand_lock()         /* do nothing */
-
-#endif  /* end ... else ... ENABLE_THREADSAFE */
-/* ========================================== */
-
 
 /* The features for the semantic grammar are
  * adapted from systemic grammar (Winograd, 1972). */
@@ -103,6 +63,7 @@ static volatile Mutex Trigg_rand_mutex;
 #define S_ABOVE       ( F_XLIT + 16 )
 #define S_BELOW       ( F_XLIT + 17 )
 
+/* Trigg specific parameters */
 #define TCHAINLEN     312
 #define HAIKUCHARLEN  256
 #define MAXDICT       256
@@ -110,91 +71,61 @@ static volatile Mutex Trigg_rand_mutex;
 #define MAXH          16
 #define NFRAMES       10
 
-#ifndef HASHLEN
-#define HASHLEN  32
-#endif
+/* Dictionary entry with semantic grammar features */
+typedef struct {
+  word8 tok[12];  /* word token */
+  word32 fe;      /* semantic features */
+} DICT;
 
+/* Trigg algorithm context */
+typedef struct {
+   /* TRIGG chain... */
+   word8 mroot[SHA256LEN];     /* merkle root from block trailer */
+   word8 haiku[HAIKUCHARLEN];  /* expanded haiku */
+   word8 nonce2[16];           /* tokenized haiku (secondary): */
+   word8 bnum[8];              /* block number */
+   /* ... end TRIGG chain */
+   word8 nonce1[16];           /* tokenized haiku (primary): */
+   word8 diff;                 /* the block diff */
+} TRIGG_POW;  /* ... end Trigg POW struct */
+
+/* Mochimo specific configuration */
 #ifndef VEOK
 #define VEOK     0
 #endif
-
 #ifndef VERROR
 #define VERROR   1
 #endif
+#ifndef BTRAILER
+#define BTRAILERSIZE  160
+typedef struct {  /* The block trailer struct... */
+   word8 phash[SHA256LEN];  /* previous block hash (32) */
+   word8 bnum[8];           /* this block number */
+   word8 mfee[8];           /* minimum transaction fee */
+   word8 tcount[4];         /* transaction count */
+   word8 time0[4];          /* to compute next difficulty */
+   word8 difficulty[4];     /* difficulty of block */
+   word8 mroot[SHA256LEN];  /* hash of all TXQENTRY's */
+   word8 nonce[SHA256LEN];  /* haiku */
+   word8 stime[4];          /* unsigned solve time GMT seconds */
+   word8 bhash[SHA256LEN];  /* hash of all block less bhash[] */
+} BTRAILER;  /* ... end block trailer struct */
+#endif
 
+/* Check Trigg's Proof of Work without passing the final hash */
+#define trigg_check(btp)  trigg_checkhash(btp, NULL)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef BTSIZE
-#define BTSIZE  160
-typedef struct {  /* The block trailer struct... */
-   uint8_t phash[HASHLEN];  /* previous block hash (32) */
-   uint8_t bnum[8];         /* this block number */
-   uint8_t mfee[8];         /* minimum transaction fee */
-   uint8_t tcount[4];       /* transaction count */
-   uint8_t time0[4];        /* to compute next difficulty */
-   uint8_t difficulty[4];   /* difficulty of block */
-   uint8_t mroot[HASHLEN];  /* hash of all TXQENTRY's */
-   uint8_t nonce[HASHLEN];  /* haiku */
-   uint8_t stime[4];        /* unsigned solve time GMT seconds */
-   uint8_t bhash[HASHLEN];  /* hash of all block less bhash[] */
-} BTRAILER;
-#endif  /* ... end block trailer struct */
-
-/* Dictionary entry with semantic grammar features */
-typedef struct {
-  uint8_t tok[12];  /* word token */
-  uint32_t fe;      /* semantic features */
-} DICT;
-
-/* Generate a tokenized haiku into `out` using the embedded prng. */
+/* Function prototypes for trigg.c. */
 void *trigg_generate(void *out);
-
-/* Expand a haiku to character format.
- * It must have the correct syntax and vibe. */
 char *trigg_expand(void *nonce, void *haiku);
-
-/* Evaluate the TRIGG chain by using a heuristic estimate of the
- * final solution cost (Nilsson, 1971). Evaluate the relative
- * distance within the TRIGG chain to validate proof of work.
- * Return VEOK if solved, else VERROR. */
-int trigg_eval(void *hash, uint8_t diff);
-
-/* Check haiku syntax against semantic grammar.
- * It must have the correct syntax, semantics, and vibe.
- * Return VEOK on correct syntax, else VERROR. */
+int trigg_eval(void *hash, word8 diff);
 int trigg_syntax(void *nonce);
-
-/* Check proof of work. The haiku must be syntactically correct
- * and have the right vibe. Also, entropy MUST match difficulty.
- * If non-NULL, place final hash in `out` on success.
- * Return VEOK on success, else VERROR. */
-#define trigg_check(btp)  trigg_checkhash(btp, NULL)
 int trigg_checkhash(BTRAILER *bt, void *out);
-
-/* Trigg algorithm context */
-typedef struct {
-   /* TRIGG chain... */
-   uint8_t mroot[HASHLEN];       /* merkle root from block trailer */
-   uint8_t haiku[HAIKUCHARLEN];  /* expanded haiku */
-   uint8_t nonce2[16];           /* tokenized haiku (secondary): */
-   uint8_t bnum[8];              /* block number */
-   /* ... end TRIGG chain */
-   uint8_t nonce1[16];           /* tokenized haiku (primary): */
-   uint8_t diff;                 /* the block diff */
-} TRIGG_POW;
-
-/* Prepare a TRIGG context for solving. */
 void trigg_init(TRIGG_POW *T, BTRAILER *bt);
-
-/* Generate a tokenized haiku as nonce output for proof of work.
- * Create the haiku inside the TRIGG chain using a semantic grammar
- * (Burton, 1976). The output must pass syntax checks, the entropy
- * check, and have the right vibe. Entropy is always preserved at
- * high difficulty levels. Place nonce into `out` on success.
- * Return VEOK on success, else VERROR. */
 int trigg_solve(TRIGG_POW *T, void *out);
 
 #ifdef __cplusplus
@@ -202,4 +133,4 @@ int trigg_solve(TRIGG_POW *T, void *out);
 #endif
 
 
-#endif  /* end _POW_TRIGG_H_ */
+#endif  /* end _CRYPTO_TRIGG_H_ */
