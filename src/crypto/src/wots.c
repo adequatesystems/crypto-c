@@ -39,14 +39,6 @@
 #define XMSS_HASH_PADDING_F   0
 #define XMSS_HASH_PADDING_PRF 3
 
-/* Wots specific paramters */
-#define PARAMSN      32
-#define WOTSW        16
-#define WOTSLOGW     4
-#define WOTSLEN      (WOTSLEN1 + WOTSLEN2)
-#define WOTSLEN1     (8 * PARAMSN / WOTSLOGW)
-#define WOTSLEN2     3
-
 /* Core hashing function - sha256 */
 #define core_hash(out, in, inlen) sha256(in, inlen, out)
 

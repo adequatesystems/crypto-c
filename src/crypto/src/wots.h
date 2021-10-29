@@ -15,7 +15,13 @@
 
 #include "extint.h"  /* for word types */
 
-/* Final wots+ output size */
+/* Wots specific paramters */
+#define PARAMSN      32
+#define WOTSW        16
+#define WOTSLOGW     4
+#define WOTSLEN2     3
+#define WOTSLEN1     (8 * PARAMSN / WOTSLOGW)
+#define WOTSLEN      (WOTSLEN1 + WOTSLEN2)
 #define WOTSSIGBYTES (WOTSLEN * PARAMSN)
 
 #ifdef __cplusplus

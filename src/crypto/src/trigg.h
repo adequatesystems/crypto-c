@@ -96,8 +96,8 @@ typedef struct {
 #ifndef VERROR
 #define VERROR   1
 #endif
-#ifndef BTRAILER
-#define BTRAILERSIZE  160
+#ifndef BTSIZE
+#define BTSIZE  160
 typedef struct {  /* The block trailer struct... */
    word8 phash[SHA256LEN];  /* previous block hash (32) */
    word8 bnum[8];           /* this block number */
