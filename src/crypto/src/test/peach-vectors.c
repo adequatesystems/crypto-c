@@ -8,7 +8,7 @@
 #define NUMVECTORS  5
 
 /* Peach test vectors taken directly from the Mochimo Blockchain Tfile */
-static word8 Pvector[NUMVECTORS][BTRAILERSIZE] = {
+static word8 Pvector[NUMVECTORS][BTSIZE] = {
    {  /* Block 0x12852 (75858) - first Peach block, inevitably pseudo */
       0xca, 0x30, 0x56, 0x33, 0x1e, 0x3c, 0x48, 0x4d, 0xa7, 0xdd,
       0xa2, 0xdd, 0x36, 0x28, 0xaa, 0x12, 0x5d, 0x5d, 0xbb, 0xf5,
@@ -126,7 +126,7 @@ int main()
 
    for (j = 0; j < NUMVECTORS; j++) {
       memset(digest, 0 , SHA256LEN);
-      memcpy(&bt, Pvector[j], BTRAILERSIZE);
+      memcpy(&bt, Pvector[j], BTSIZE);
       if (j < 2) ASSERT_EQ(peach_checkhash(&bt, digest), 1);
       else ASSERT_EQ(peach_checkhash(&bt, digest), 0);
       ASSERT_CMP(digest, Pexpect[j], SHA256LEN);

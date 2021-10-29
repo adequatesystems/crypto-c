@@ -15,7 +15,7 @@
 static char Metric[9][3] = { "", "K", "M", "G", "T", "P", "E", "Z", "Y" };
 
 /* Block 0x1 trailer data taken directly from the Mochimo Blockchain Tfile */
-static word8 Block1[BTRAILERSIZE] = {
+static word8 Block1[BTSIZE] = {
    0x00, 0x17, 0x0c, 0x67, 0x11, 0xb9, 0xdc, 0x3c, 0xa7, 0x46,
    0xc4, 0x6c, 0xc2, 0x81, 0xbc, 0x69, 0xe3, 0x03, 0xdf, 0xad,
    0x2f, 0x33, 0x3b, 0xa3, 0x97, 0xba, 0x06, 0x1e, 0xcc, 0xef,
@@ -45,7 +45,7 @@ int main()
 
    delta = hps = n = 0;
    srand16((word32) time(NULL), 0, 0);
-   memcpy(&bt, Block1, BTRAILERSIZE);
+   memcpy(&bt, Block1, BTSIZE);
    /* increment difficulty until solve time hits 1 second */
    for (diff = 1; diff < MAXDIFF && delta < MAXDELTA; diff++) {
       bt.difficulty[0] = P.diff = diff; /* update block trailer with diff */

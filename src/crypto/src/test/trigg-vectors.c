@@ -8,7 +8,7 @@
 #define NUMVECTORS  5
 
 /* Trigg test vectors taken directly from the Mochimo Blockchain Tfile */
-static word8 Tvector[NUMVECTORS][BTRAILERSIZE] = {
+static word8 Tvector[NUMVECTORS][BTSIZE] = {
     {  /* Block 0x1 (1) */
       0x00, 0x17, 0x0c, 0x67, 0x11, 0xb9, 0xdc, 0x3c, 0xa7, 0x46,
       0xc4, 0x6c, 0xc2, 0x81, 0xbc, 0x69, 0xe3, 0x03, 0xdf, 0xad,
@@ -134,7 +134,7 @@ int main()
 
    for (j = 0; j < NUMVECTORS; j++) {
       memset(digest, 0 , SHA256LEN);
-      memcpy(&bt, Tvector[j], BTRAILERSIZE);
+      memcpy(&bt, Tvector[j], BTSIZE);
       ASSERT_EQ(trigg_checkhash(&bt, digest), 0);
       ASSERT_CMP(digest, Texpect[j], SHA256LEN);
    }
