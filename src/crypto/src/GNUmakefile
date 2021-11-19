@@ -32,8 +32,10 @@ SRCDIR = $(ROOTDIR)/src
 # NOTE: elaborate makefile commands, for embedded make calls
 MODULE:= $(notdir $(realpath $(dir $(lastword $(MAKEFILE_LIST)))$(ROOTDIR)))
 LIBRARY:= $(LIBDIR)/lib$(MODULE).a
+COVERAGE:= $(OUTDIR)/coverage.info
 
 # test sources, objects, depends, infos, names and components
+TESTCOVERAGE:= $(OUTDIR)/coverage_test.info
 TESTSOURCES:= $(sort $(wildcard $(SRCDIR)/test/*.c))
 TESTOBJECTS:= $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(TESTSOURCES))
 TESTDEPENDS:= $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.d,$(TESTSOURCES))
@@ -41,6 +43,7 @@ TESTNAMES:= $(patsubst $(SRCDIR)/test/%.c,%,$(TESTSOURCES))
 TESTCOMPS:= $(shell echo $(TESTSOURCES) | sed 's/\s/\n/g' | \
 	sed -E 's/\S*\/([^-]*)[-.]+\S*/\1/g' | sort -u)
 # base sources, objects and depends
+BASECOVERAGE:= $(OUTDIR)/coverage_base.info
 BASESOURCES:= $(sort $(wildcard $(SRCDIR)/*.c))
 BASEOBJECTS:= $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(BASESOURCES))
 BASEDEPENDS:= $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.d,$(BASESOURCES))
@@ -68,7 +71,7 @@ CC:= gcc $(CFLAGS) # CFLAGS is reserved for the user; make "CFLAGS=-DDEBUG -O3"
 ####################################
 
 .SUFFIXES: # disables predefined rules
-.PHONY: all clean coverage library test help # ALWAYS execute
+.PHONY: all clean coverage library report test help # ALWAYS execute
 
 # DEFAULT RULE: build all objects, within build directory
 all: $(BASEOBJECTS)
@@ -81,21 +84,15 @@ clean:
 
 # build test coverage
 coverage:
-	@make clean all --no-print-directory "CFLAGS=--coverage -O0"
-	@lcov -c -i -d $(BUILDDIR) -o coverage_base.info
-	@make clean test --no-print-directory "CFLAGS=--coverage -O0"
-	@lcov -c -d $(BUILDDIR) -o coverage_test.info
-	@make clean --no-print-directory
-	@lcov -a coverage_base.info -a coverage_test.info -o coverage.info || \
-		cp coverage_base.info coverage.info
-	@lcov -r coverage.info '*/test/*' -o coverage.info
-	@$(RM) coverage_base.info coverage_test.info
-	@$(foreach DIR,$(INCLUDEDIRS),if test $(DEPTH) -gt 0; then \
-		make coverage -C $(DIR) DEPTH=$$(($(DEPTH) - 1)); fi; )
+	@make $(COVERAGE) --no-print-directory
 
 # build module library, within lib directory
 library:
 	@make $(LIBRARY) --no-print-directory
+
+# build local html coverage report from coverage data
+report: $(COVERAGE)
+	@genhtml $(COVERAGE) --output-directory ../out
 
 # build and run all tests
 test: $(LIBRARY) $(DEPENDENCIES)
@@ -127,6 +124,21 @@ $(LIBRARY): $(BASEOBJECTS)
 	@$(MKDIR) $(dir $@)
 	ar rcs $(LIBRARY) $(BASEOBJECTS)
 
+# build coverage file, within out directory
+$(COVERAGE):
+	@$(MKDIR) $(OUTDIR)
+	@$(RM) $(BUILDDIR) $(LIBDIR)
+	@make all --no-print-directory "CFLAGS=$(CFLAGS) --coverage -O0"
+	@lcov -c -i -d $(BUILDDIR) -o $(BASECOVERAGE)
+	@make test --no-print-directory "CFLAGS=$(CFLAGS) --coverage -O0"
+	@lcov -c -d $(BUILDDIR) -o $(TESTCOVERAGE)
+	@lcov -a $(BASECOVERAGE) -a $(TESTCOVERAGE) -o $(COVERAGE) || \
+		cp $(BASECOVERAGE) $(COVERAGE)
+	@lcov -r $(COVERAGE) '*/test/*' -o $(COVERAGE)
+	@$(RM) $(BASECOVERAGE) $(TESTCOVERAGE) $(BUILDDIR) $(LIBDIR)
+	@$(foreach DIR,$(INCLUDEDIRS),if test $(DEPTH) -gt 0; then \
+		make coverage -C $(DIR) DEPTH=$$(($(DEPTH) - 1)); fi; )
+
 # build binaries, within build directory, from associated objects
 $(BINARYNAMES): %: # redirect
 	@make $(BUILDDIR)/$@ --no-print-directory
@@ -154,7 +166,6 @@ help:
 	@echo " make               	build all objects"
 	@echo " make <file>.o      	build individual objects"
 	@echo " make clean         	removes build directories"
-	@echo " make covempty      	build all (empty) coverage files"
 	@echo " make coverage      	build all coverage files"
 	@echo " make library       	build a library file containing all objects"
 	@echo " make test          	build and run all tests"
