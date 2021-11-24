@@ -14,6 +14,7 @@
 
 
 #include "extint.h"  /* for word types */
+#include "extlib.h"  /* for rand16() */
 #include "sha256.h"
 
 /* The features for the semantic grammar are
