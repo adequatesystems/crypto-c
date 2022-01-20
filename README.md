@@ -18,35 +18,7 @@
 
 Originally based on various contributions released into the Public Domain, this repository contains Cryptographic C/C++/CUDA support intended for continued use in the Open Source community.
 
-## Usage
-*<sup>Due to the nature of contributions from various origins, ensure you understand the information in the [License](#License) section before use.</sup>*
-
-The Crypto C/C++ Library was designed to be included in other projects as a [Git Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules). For C projects utilizing a similar structure and makefile, it is recommended to add submodules to the `include/` directory of "superproject".
-
-*If the "superproject" DOES NOT utilize a similar structure and makefile, you may have to include additional commands in your build process to build submodule files.*
-
-### Add Crypto C as Submodule to project-repo
-```sh
-cd project-repo
-git submodule add https://github.com/adequatesystems/crypto-c include/crypto-c
-git commit -m "include crypto-c submodule"
-```
-
-### Update Crypto C Submodule to latest revision
-```sh
-cd project-repo/include/crypto-c
-git pull && git commit -m "update crypto-c submodule to latest revision"
-```
-
-### Change Crypto C Submodule to specific hash or version tag
-```sh
-cd project-repo/include/crypto-c
-git fetch
-git checkout <hash or version tag>
-git commit -m "checkout crypto-c submodule to <hash or version tag>"
-```
-
-### Use in code
+### Usage
 Generally, hashing functions may be used by declaring an algorithms "context", and calling initial, update and final hash functions as required, OR; by simply calling the convenient "all-in-one" function that handles the algorithm's steps internally.
 
 For example, the popular SHA256 algorithm may be used with a single call:
@@ -75,6 +47,34 @@ void thrice_hash(void *data, size_t datalen, void *out)
 ```
 
 Most hashing algorithms follow the same syntax. For specific usage information, see the [documentation](https://adequatesystems.github.io/crypto-c/).
+
+## Installation
+*<sup>Due to the nature of contributions from various origins, ensure you understand the information in the [License](#License) section before use.</sup>*
+
+The Crypto C/C++ Library was designed to be included in other projects as a [Git Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules). For C projects utilizing a similar structure and makefile, it is recommended to add submodules to the `include/` directory of "superproject".
+
+*If the "superproject" DOES NOT utilize a similar structure and makefile, you may have to include additional commands in your build process to build submodule files.*
+
+### Add Crypto C as Submodule to project-repo
+```sh
+cd project-repo
+git submodule add https://github.com/adequatesystems/crypto-c include/crypto-c
+git commit -m "include crypto-c submodule"
+```
+
+### Update Crypto C Submodule to latest revision
+```sh
+cd project-repo/include/crypto-c
+git pull && git commit -m "update crypto-c submodule to latest revision"
+```
+
+### Change Crypto C Submodule to specific hash or version tag
+```sh
+cd project-repo/include/crypto-c
+git fetch
+git checkout <hash or version tag>
+git commit -m "checkout crypto-c submodule to <hash or version tag>"
+```
 
 ## License
 The Makefile and Extended C/C++ library used for convenient building and testing of cryptographic algorithms is licensed separately to this repository. See <https://github.com/adequatesystems/extended-c/> for more information on that license.
