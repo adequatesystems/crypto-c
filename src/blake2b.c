@@ -1,47 +1,49 @@
 /**
- * blake2b.c - Blake2b hash function support
- *
- * Based on Dr. Markku-Juhani O. Saarinen's (mjos@iki.fi)
- * "somewhat smaller" BLAKE2 implemetation,
- *    <https://github.com/mjosaarinen/blake2_mjosref>
- * which was released into the Public Domain under the Creative
- * Commons Zero (CC0) v1.0 Universal license and is therefore used
- * with permission, and with much gratitude.  \(^-^)/
- *
- * For more information, please refer to ../LICENSE.UNLICENSE
- *
- * Date: 22 April 2020
- * Revised: 26 October 2021
- *
- * NOTES:
- * - Presently, due to heavy reliance on 64-bit operations, this
- *   implementation CANNOT RUN on systems that rely on C89 compliance.
- * - This implementation supports the Blake2b algorithm for 256, 384
- *   and 512 bit message digests on x86_64 little endian hardware,
- *   using modified routines for faster Blake2b compressions.
- * - This implementation removes the 128-bit "total bytes" context
- *   variable and operations in favour of a 64-bit alternate. To
- *   restore the 128-bit functionality, simply remove the comment
- *   notation throughout this file and it's associated header file.
- *
+ * @private
+ * @headerfile blake2b.h <blake2b.h>
+ * @copyright This file is released into the Public Domain under
+ * the Creative Commons Zero v1.0 Universal license.
 */
 
-#ifndef _CRYPTO_BLAKE2B_C_
-#define _CRYPTO_BLAKE2B_C_  /* include guard */
+/* include guard */
+#ifndef CRYPTO_BLAKE2B_C
+#define CRYPTO_BLAKE2B_C
 
 
 #include "blake2b.h"
+#include <string.h>  /* for memory handling */
 
-/* Blake2b initialization vector */
-static const word64 Blake2b_iv[8] = {
-   0x6A09E667F3BCC908, 0xBB67AE8584CAA73B,
+/* Number of Blake2b rounds */
+#define BLAKE2BROUNDS  12
+
+/* G Mixing function */
+#define B2B_G(a, b, c, d, x, y)  \
+   v[a] = v[a] + v[b] + x;          \
+   v[d] = ror64(v[d] ^ v[a], 32);   \
+   v[c] = v[c] + v[d];              \
+   v[b] = ror64(v[b] ^ v[c], 24);   \
+   v[a] = v[a] + v[b] + y;          \
+   v[d] = ror64(v[d] ^ v[a], 16);   \
+   v[c] = v[c] + v[d];              \
+   v[b] = ror64(v[b] ^ v[c], 63);
+
+/**
+ * @private
+ * Blake2b initialization vector. Used to initialize the BLAKE2B_CTX
+ * context before hashing and during compression rounds.
+*/
+ALIGN(32) static const uint64_t Blake2b_iv[8] = {
+   0x6A09E667F3BCC908ULL, 0xBB67AE8584CAA73B,
    0x3C6EF372FE94F82B, 0xA54FF53A5F1D36F1,
    0x510E527FADE682D1, 0x9B05688C2B3E6C1F,
    0x1F83D9ABFB41BD6B, 0x5BE0CD19137E2179
 };
 
-/* Blake2b compression Sigma */
-static const word8 Sigma[12][16] = {
+/**
+ * @private
+ * Blake2b compression Sigma. Used in compression rounds.
+*/
+ALIGN(32) static const uint8_t Sigma[12][16] = {
    { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
    { 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 },
    { 11, 8, 12, 0, 5, 2, 15, 13, 10, 14, 3, 6, 7, 1, 9, 4 },
@@ -56,10 +58,15 @@ static const word8 Sigma[12][16] = {
    { 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 }
 };
 
-/* Compression function, `last` flag indicates last block. */
-static void blake2b_compress(BLAKE2B_CTX *ctx, int last)
+/**
+ * @private
+ * Blake2b compression rounds.
+ * @param ctx Pointer to Blake2b context
+ * @param last Flag indicating the final compression
+*/
+HOST_DEVICE_FN static void blake2b_compress(BLAKE2B_CTX *ctx, int last)
 {
-   word64 v[16];
+   ALIGN(8) uint64_t v[16];
    int i;
 
    v[0] = ctx->h[0];
@@ -74,18 +81,12 @@ static void blake2b_compress(BLAKE2B_CTX *ctx, int last)
    v[9] = Blake2b_iv[1];
    v[10] = Blake2b_iv[2];
    v[11] = Blake2b_iv[3];
-   v[12] = Blake2b_iv[4];
-   v[13] = Blake2b_iv[5];
-   v[14] = Blake2b_iv[6];
+   v[12] = Blake2b_iv[4] ^ ctx->t[0];
+   v[13] = Blake2b_iv[5] ^ ctx->t[1];
+   v[14] = last ? ~Blake2b_iv[6] : Blake2b_iv[6];
    v[15] = Blake2b_iv[7];
 
-   v[12] ^= ctx->t/* [0] */;
-   /* v[13] ^= ctx->t[1]; */
-   if (last) {
-      v[14] = ~v[14];
-   }
-
-   for (i = 0; i < BLAKE2BROUNDS; i++) {
+   for(i = 0; i < BLAKE2BROUNDS; i++) {
       B2B_G( 0, 4,  8, 12, ctx->in.q[Sigma[i][ 0]], ctx->in.q[Sigma[i][ 1]]);
       B2B_G( 1, 5,  9, 13, ctx->in.q[Sigma[i][ 2]], ctx->in.q[Sigma[i][ 3]]);
       B2B_G( 2, 6, 10, 14, ctx->in.q[Sigma[i][ 4]], ctx->in.q[Sigma[i][ 5]]);
@@ -106,49 +107,65 @@ static void blake2b_compress(BLAKE2B_CTX *ctx, int last)
    ctx->h[7] ^= v[7] ^ v[15];
 }  /* end blake2b_compress() */
 
-/* Add `inlen` bytes from `in` into the hash */
-void blake2b_update(BLAKE2B_CTX *ctx, const void *in, size_t inlen)
+/**
+ * Add @a inlen bytes from @a in to a Blake2b context for hashing.
+ * @param ctx Pointer to Blake2b context
+ * @param in Pointer to data to hash
+ * @param inlen Length of @a in data, in bytes
+*/
+HOST_DEVICE_FN void blake2b_update(
+   BLAKE2B_CTX *ctx, const void *in, size_t inlen)
 {
-   size_t i;
+   size_t i, n;
 
-   for (i = 0; i < inlen; i++) {
+   for(i = n = 0; inlen; i += n, inlen -= n) {
       if (ctx->c == 128) {
-         ctx->t/* [0] */ += ctx->c;
-         /* if (ctx->t[0] < ctx->c) ctx->t[1]++; */
+         ctx->t[0] += ctx->c;
+         if (ctx->t[0] < ctx->c) ctx->t[1]++;
          blake2b_compress(ctx, 0);
          ctx->c = 0;
       }
-      ctx->in.b[ctx->c++] = ((const word8 *) in)[i];
+      /* copy memory in chunks */
+      n = (ctx->c + inlen) > 128 ? 128 - ctx->c : inlen;
+      memcpy(ctx->in.b + ctx->c, (const uint8_t *) in + i, n);
+      ctx->c += n;
    }
 }  /* end blake2b_update() */
 
-/* Initialize the hashing context `ctx` with optional key `key`.
- * Set outlen= 32/48/64 for digest bit lengths 256/384/512 respectively.
- * For "no key" usage, set key= NULL and keylen= 0. */
-int blake2b_init(BLAKE2B_CTX *ctx, const void *key, int keylen, int outlen)
+/**
+ * Initialize a Blake2b context with optional @a key.
+ * To hash without a key, specify `NULL` and `0` for @a key and
+ * @a keylen, respectively.
+ * @param ctx Pointer to Blake2b context
+ * @param key Pointer to optional "key" input
+ * @param keylen Length of optional @a key input, in bytes
+ * @param outlen Byte length of desired digest
+ * @returns 0 on success, else if initialization fails (-1).
+ * @note Blake2b initialization can fail if @a keylen is greater
+ * than 64 or outlen is not a supported digest length. Supported
+ * lengths include: 32 (256-bits), 48 (384-bits) or 64 (512-bits).
+*/
+HOST_DEVICE_FN int blake2b_init(
+   BLAKE2B_CTX *ctx, const void *key, int keylen, int outlen)
 {
-   int i;
+   if (keylen > 64) return -1;
+   if (outlen != 32 && outlen != 48 && outlen != 64) return -1;
 
-   if ((outlen != 32 && outlen != 48 && outlen != 64) || keylen > 64) {
-      return -1;
-   }
-
-   for (i = 0; i < 8; i++) {
-      ctx->h[i] = Blake2b_iv[i];
-   }
-   ctx->h[0] ^= 0x01010000 ^ (keylen << 8) ^ outlen;
-
-   ctx->t/* [0] */ = 0;
-   /* ctx->t[1] = 0; */
    ctx->c = 0;
-   ctx->outlen = outlen;
+   ctx->t[0] = 0;
+   ctx->t[1] = 0;
+   ctx->outlen = (uint64_t) outlen;
+   ctx->h[0] = Blake2b_iv[0] ^ 0x01010000 ^ (keylen << 8) ^ outlen;
+   ctx->h[1] = Blake2b_iv[1];
+   ctx->h[2] = Blake2b_iv[2];
+   ctx->h[3] = Blake2b_iv[3];
+   ctx->h[4] = Blake2b_iv[4];
+   ctx->h[5] = Blake2b_iv[5];
+   ctx->h[6] = Blake2b_iv[6];
+   ctx->h[7] = Blake2b_iv[7];
 
-   for (i = keylen; i & 0x07; i++) {
-      ctx->in.b[i] = 0;
-   }
-   for (i >>= 3; i < 16; i++) {
-      ctx->in.q[i] = 0;
-   }
+   /* zero remaining input buffer */
+   memset(&ctx->in.b[keylen], 0, 128 - keylen);
 
    if (keylen > 0) {
       blake2b_update(ctx, key, keylen);
@@ -158,42 +175,41 @@ int blake2b_init(BLAKE2B_CTX *ctx, const void *key, int keylen, int outlen)
    return 0;
 }  /* end blake2b_init() */
 
-/* Generate the message digest and place in `out` */
-void blake2b_final(BLAKE2B_CTX *ctx, void *out)
+/**
+ * Finalize a Blake2b message digest.
+ * Generate the Blake2b message digest and place in @a out.
+ * @param ctx Pointer to Blake2b context
+ * @param out Pointer to location to place the message digest
+*/
+HOST_DEVICE_FN void blake2b_final(BLAKE2B_CTX *ctx, void *out)
 {
-   size_t i;
+   ctx->t[0] += ctx->c;
+   if (ctx->t[0] < ctx->c) ctx->t[1]++;
 
-   ctx->t/* [0] */ += ctx->c;
-   /* if (ctx->t[0] < ctx->c) ctx->t[1]++; */
+   /* zero remainder of input buffer */
+   if (ctx->c < 128) memset(&ctx->in.b[ctx->c], 0, 128 - ctx->c);
 
-   for (i = ctx->c; i & 7; i++) {
-      ctx->in.b[i] = 0;
-   }
-   for (i >>= 3; i < 16; i++) {
-      ctx->in.q[i] = 0;
-   }
-
+   /* final compression */
    blake2b_compress(ctx, 1);
 
-   /* 256-bit digest */
-   ((word64 *) out)[0] = ctx->h[0];
-   ((word64 *) out)[1] = ctx->h[1];
-   ((word64 *) out)[2] = ctx->h[2];
-   ((word64 *) out)[3] = ctx->h[3];
-   if (ctx->outlen <= 32) return;
-
-   /* 384-bit digest */
-   ((word64 *) out)[4] = ctx->h[4];
-   ((word64 *) out)[5] = ctx->h[5];
-   if (ctx->outlen <= 48) return;
-
-   /* 512-bit digest */
-   ((word64 *) out)[6] = ctx->h[6];
-   ((word64 *) out)[7] = ctx->h[7];
+   /* copy digest to out */
+   memcpy(out, ctx->h, ctx->outlen);
 }  /* end blake2b_final() */
 
-/* Convenient all-in-one Blake2b computation */
-int blake2b(const void *in, size_t inlen, const void *key, int keylen,
+/**
+ * Convenient all-in-one Blake2b computation.
+ * Performs blake2b_init(), blake2b_update() and blake2b_final(),
+ * and places the resulting hash in @a out.
+ * @param in Pointer to data to hash
+ * @param inlen Length of @a in data, in bytes
+ * @param key Pointer to optional "key" input
+ * @param keylen Length of optional @a key input, in bytes
+ * @param out Pointer to location to place the message digest
+ * @param outlen Length* of desired message digest, in bytes<br/>
+ * <sup>_*compatible message digest lengths are 32, 48 and 64_</sup>
+*/
+HOST_DEVICE_FN int blake2b(
+   const void *in, size_t inlen, const void *key, int keylen,
    void *out, int outlen)
 {
    BLAKE2B_CTX ctx;
@@ -207,5 +223,5 @@ int blake2b(const void *in, size_t inlen, const void *key, int keylen,
    return 0;
 }  /* end blake2b() */
 
-
-#endif  /* end _CRYPTO_BLAKE2B_C_ */
+/* end include guard */
+#endif
