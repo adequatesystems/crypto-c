@@ -1,6 +1,6 @@
 
-#include "extint.h"
-#include "_assert.h"
+#include <stdint.h>
+#include "extassert.h"
 #include "../sha3.h"
 
 #define NUMVECTORS    7
@@ -20,7 +20,7 @@ static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
 };
 
 /* expected results to test vectors */
-static word8 expect[NUMVECTORS][DIGESTLEN] = {
+static uint8_t expect[NUMVECTORS][DIGESTLEN] = {
    {
       0xf7, 0x18, 0x37, 0x50, 0x2b, 0xa8, 0xe1, 0x08, 0x37, 0xbd,
       0xd8, 0xd3, 0x65, 0xad, 0xb8, 0x55, 0x91, 0x89, 0x56, 0x02,
@@ -55,7 +55,7 @@ static word8 expect[NUMVECTORS][DIGESTLEN] = {
 int main()
 {  /* check 224-bit keccak() digest results match expected */
    size_t inlen;
-   word8 digest[DIGESTLEN];
+   uint8_t digest[DIGESTLEN];
    int j;
 
    for (j = 0; j < NUMVECTORS; j++) {

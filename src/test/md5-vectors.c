@@ -1,6 +1,6 @@
 
-#include "extint.h"
-#include "_assert.h"
+#include <stdint.h>
+#include "extassert.h"
 #include "../md5.h"
 
 #define NUMVECTORS    7
@@ -20,7 +20,7 @@ static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
 };
 
 /* expected results to test vectors */
-static word8 expect[NUMVECTORS][DIGESTLEN] = {
+static uint8_t expect[NUMVECTORS][DIGESTLEN] = {
    {
       0xd4, 0x1d, 0x8c, 0xd9, 0x8f, 0x00, 0xb2, 0x04,
       0xe9, 0x80, 0x09, 0x98, 0xec, 0xf8, 0x42, 0x7e
@@ -48,7 +48,7 @@ static word8 expect[NUMVECTORS][DIGESTLEN] = {
 int main()
 {  /* check md5() digest results match expected */
    size_t inlen;
-   word8 digest[DIGESTLEN];
+   uint8_t digest[DIGESTLEN];
    int j;
 
    for (j = 0; j < NUMVECTORS; j++) {

@@ -1,6 +1,6 @@
 
-#include "extint.h"
-#include "_assert.h"
+#include <stdint.h>
+#include "extassert.h"
 #include "../sha256.h"
 
 #define NUMVECTORS    7
@@ -55,7 +55,7 @@ static char expect[NUMVECTORS][DIGESTLEN] = {
 int main()
 {  /* check sha256() digest results match expected */
    size_t inlen;
-   word8 digest[DIGESTLEN];
+   uint8_t digest[DIGESTLEN];
    int j;
 
    for (j = 0; j < NUMVECTORS; j++) {

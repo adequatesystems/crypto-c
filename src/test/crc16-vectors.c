@@ -1,6 +1,6 @@
 
-#include "extint.h"
-#include "_assert.h"
+#include <stdint.h>
+#include "extassert.h"
 #include "../crc16.h"
 
 #define NUMVECTORS    7
@@ -19,7 +19,7 @@ static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
 };
 
 /* expected results to test vectors */
-static word16 expect[NUMVECTORS] = {
+static uint16_t expect[NUMVECTORS] = {
    0, 0x7c87, 0x9dd6, 0x9ba6, 0x63ac, 0x7db0, 0xe73a
 };
 

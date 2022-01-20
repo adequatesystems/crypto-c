@@ -1,8 +1,8 @@
 
 #include <string.h>
-#include "extint.h"
+#include <stdint.h>
 
-#include "_assert.h"
+#include "extassert.h"
 #include "../blake2b.h"
 
 #define NUMVECTORS    7
@@ -22,7 +22,7 @@ static char rfc_1321_vectors[NUMVECTORS][MAXVECTORLEN] = {
 };
 
 /* expected results to test vectors */
-static word8 expect[NUMVECTORS][DIGESTLEN] = {
+static uint8_t expect[NUMVECTORS][DIGESTLEN] = {
    {
       0xb3, 0x28, 0x11, 0x42, 0x33, 0x77, 0xf5, 0x2d, 0x78, 0x62, 0x28,
       0x6e, 0xe1, 0xa7, 0x2e, 0xe5, 0x40, 0x52, 0x43, 0x80, 0xfd, 0xa1,
@@ -65,7 +65,7 @@ static word8 expect[NUMVECTORS][DIGESTLEN] = {
 int main()
 {  /* check 384-bit blake2b(), with key, digest results match expected */
    size_t inlen;
-   word8 digest[DIGESTLEN];
+   uint8_t digest[DIGESTLEN];
    char *in;
    int j;
 
