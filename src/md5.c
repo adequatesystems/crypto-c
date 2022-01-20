@@ -1,39 +1,39 @@
 /**
- * md5.c - MD5 hash function support
- *
- * Based on Brad Conte's (brad@bradconte.com) basic implementations
- * of cryptography algorithms,
- *    <https://github.com/B-Con/crypto-algorithms>
- * which was released into the Public Domain and is therefore used
- * with permission, and with much gratitude.  \(^-^)/
- *
- * For more information, please refer to ../LICENSE.UNLICENSE
- *
- * Date: 8 April 2020
- * Revised: 26 October 2021
- *
- * NOTES:
- * - This 32-bit implementation supports 128-bit message digests on
- *   x86 little endian systems, using modified routines and unrolled
- *   loops for faster MD5 transformations.
- * - This implementation relies on custom datatypes declared within
- *   a custom library. However, in the absense of such a library,
- *   functionality may be reinstated by simply redeclaring
- *   datatypes as appropriate for the target system.
- *
+ * @private
+ * @headerfile md2.h <md2.h>
+ * @copyright This file is released into the Public Domain under
+ * the Creative Commons Zero v1.0 Universal license.
 */
 
-#ifndef _CRYPTO_MD5_C_
-#define _CRYPTO_MD5_C_  /* include guard */
+/* include guard */
+#ifndef CRYPTO_MD5_C
+#define CRYPTO_MD5_C
 
 
 #include "md5.h"
+#include <string.h>  /* for memory handling */
 
-/* MD5 transformation */
-void md5_transform(MD5_CTX *ctx, const word8 data[])
+/* MD5 specific routines */
+#define F(x,y,z)  ( (x & y) | (~x & z) )
+#define G(x,y,z)  ( (x & z) | (y & ~z) )
+#define H(x,y,z)  ( x ^ y ^ z )
+#define I(x,y,z)  ( y ^ (x | ~z) )
+
+#define FF(a,b,c,d,m,s,t)  { a += F(b,c,d) + m + t; a = b + rol32(a,s); }
+#define GG(a,b,c,d,m,s,t)  { a += G(b,c,d) + m + t; a = b + rol32(a,s); }
+#define HH(a,b,c,d,m,s,t)  { a += H(b,c,d) + m + t; a = b + rol32(a,s); }
+#define II(a,b,c,d,m,s,t)  { a += I(b,c,d) + m + t; a = b + rol32(a,s); }
+
+/**
+ * @private
+ * MD5 transformation rounds.
+ * @param ctx Pointer to MD5 context
+ * @param data Pointer to input to be transformed
+*/
+HOST_DEVICE_FN void md5_transform(MD5_CTX *ctx, const uint8_t data[])
 {
-   word32 *m = (word32 *) data;
-   word32 a, b, c, d;
+   ALIGN(8) uint32_t a, b, c, d;
+   uint32_t *m = (uint32_t *) data;
 
    a = ctx->state[0];
    b = ctx->state[1];
@@ -114,8 +114,11 @@ void md5_transform(MD5_CTX *ctx, const word8 data[])
    ctx->state[3] += d;
 }  /* end md5_transform() */
 
-/* Initialize the hashing context `ctx` */
-void md5_init(MD5_CTX *ctx)
+/**
+ * Initialize a MD5 context.
+ * @param ctx Pointer to MD5 context
+*/
+HOST_DEVICE_FN void md5_init(MD5_CTX *ctx)
 {
    ctx->datalen = 0;
    ctx->bitlen[0] = ctx->bitlen[1] = 0;
@@ -125,77 +128,79 @@ void md5_init(MD5_CTX *ctx)
    ctx->state[3] = 0x10325476;
 }  /* end md5_init() */
 
-/* Add `inlen` bytes from `in` into the hash */
-void md5_update(MD5_CTX *ctx, const void *in, size_t inlen)
+/**
+ * Add @a inlen bytes from @a in to a MD5 context for hashing.
+ * @param ctx Pointer to MD5 context
+ * @param in Pointer to data to hash
+ * @param inlen Length of @a in data, in bytes
+*/
+HOST_DEVICE_FN void md5_update(MD5_CTX *ctx, const void *in, size_t inlen)
 {
-   size_t i;
-   word32 old;
+   size_t i, n;
+   uint32_t old;
 
-   for (i = 0; i < inlen; ++i) {
-      ctx->data[ctx->datalen] = ((const word8 *) in)[i];
-      ctx->datalen++;
+   for(i = n = 0; inlen; i += n, inlen -= n) {
+      /* copy memory to input buffer in chunks */
+      n = (ctx->datalen + inlen) > 64 ? 64 - ctx->datalen : inlen;
+      memcpy(ctx->data + ctx->datalen, (const uint8_t *) in + i, n);
+      ctx->datalen += n;
+      /* process input buffer */
       if (ctx->datalen == 64) {
          md5_transform(ctx, ctx->data);
          ctx->datalen = 0;
          old = ctx->bitlen[0];
          ctx->bitlen[0] += 512;
-         if(ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
+         if (ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
       }
    }
 }  /* end md5_update() */
 
-/* Generate the message digest and place in `out` */
-void md5_final(MD5_CTX *ctx, void *out)
+/**
+ * Finalize a MD5 message digest.
+ * Generate the MD5 message digest and place in @a out.
+ * @param ctx Pointer to MD5 context
+ * @param out Pointer to location to place the message digest
+*/
+HOST_DEVICE_FN void md5_final(MD5_CTX *ctx, void *out)
 {
-   word32 i, old;
+   uint32_t i, old;
 
    i = ctx->datalen;
 
    /* Pad whatever data is left in the buffer. */
    if (ctx->datalen < 56) {
       ctx->data[i++] = 0x80;
-      while (i < 56) {
-         ctx->data[i++] = 0x00;
-      }
+      memset(ctx->data + i, 0, 64 - i);
    } else if (ctx->datalen >= 56) {
       ctx->data[i++] = 0x80;
-      while(i < 64) {
-         ctx->data[i++] = 0x00;
-      }
+      if (i < 64) memset(ctx->data + i, 0, 64 - i);
       md5_transform(ctx, ctx->data);
-      ((word32 *) ctx->data)[0] = 0;
-      ((word32 *) ctx->data)[1] = 0;
-      ((word32 *) ctx->data)[2] = 0;
-      ((word32 *) ctx->data)[3] = 0;
-      ((word32 *) ctx->data)[4] = 0;
-      ((word32 *) ctx->data)[5] = 0;
-      ((word32 *) ctx->data)[6] = 0;
-      ((word32 *) ctx->data)[7] = 0;
-      ((word32 *) ctx->data)[8] = 0;
-      ((word32 *) ctx->data)[9] = 0;
-      ((word32 *) ctx->data)[10] = 0;
-      ((word32 *) ctx->data)[11] = 0;
-      ((word32 *) ctx->data)[12] = 0;
-      ((word32 *) ctx->data)[13] = 0;
+      memset(ctx->data, 0, 56);
    }
 
-   /* Append to the padding the total message's length in bits and
-    * transform. */
+   /* Append to the padding the total message's length in bits */
    old = ctx->bitlen[0];
    ctx->bitlen[0] += ctx->datalen << 3;
-   if(ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
-   ((word32 *) ctx->data)[14] = ctx->bitlen[0];
-   ((word32 *) ctx->data)[15] = ctx->bitlen[1];
+   if (ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
+   ((uint32_t *) ctx->data)[14] = ctx->bitlen[0];
+   ((uint32_t *) ctx->data)[15] = ctx->bitlen[1];
+
+   /* perform final transform */
    md5_transform(ctx, ctx->data);
 
-	((word32 *) out)[0] = ctx->state[0];
-   ((word32 *) out)[1] = ctx->state[1];
-	((word32 *) out)[2] = ctx->state[2];
-   ((word32 *) out)[3] = ctx->state[3];
+   /* copy digest to out */
+   memcpy(out, ctx->state, MD5LEN);
 }  /* end md5_final() */
 
-/* Convenient all-in-one MD5 computation */
-void md5(const void *in, size_t inlen, void *out)
+/**
+ * Convenient all-in-one MD5 computation.
+ * Performs md5_init(), md5_update() and md5_final(),
+ * and places the resulting hash in @a out.
+ * @param in Pointer to data to hash
+ * @param inlen Length of @a in data, in bytes
+ * @param out Pointer to location to place the message digest
+*/
+HOST_DEVICE_FN void md5(const void *in, size_t inlen, void *out)
 {
    MD5_CTX ctx;
 
@@ -204,5 +209,5 @@ void md5(const void *in, size_t inlen, void *out)
    md5_final(&ctx, out);
 }  /* end md5() */
 
-
-#endif  /* end _CRYPTO_MD5_C_ */
+/* end include guard */
+#endif
