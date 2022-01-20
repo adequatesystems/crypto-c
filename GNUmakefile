@@ -103,14 +103,14 @@ deepclean: clean
 library: $(LIBRARY)
 
 # build all libraries (incl. submodules); redirect
-libraries: $(LIBRARY) $(LIBRARIES)
+libraries: $(LIBRARIES) $(LIBRARY)
 
 # build local html coverage report from coverage data
 report: $(COVERAGE)
 	genhtml $(COVERAGE) --output-directory $(BUILDDIR)
 
 # build and run all tests
-test: $(TESTOBJECTS) $(LIBRARY) $(LIBRARIES)
+test: $(LIBRARIES) $(LIBRARY) $(TESTOBJECTS)
 	@if test -d $(BUILDDIR); then find $(BUILDDIR) -name *.fail -delete; fi
 	@echo -e "\n[========] Found $(words $(TESTNAMES)) tests" \
 		"for $(words $(TESTCOMPS)) components in \"$(MODULE)\""
@@ -123,7 +123,7 @@ test: $(TESTOBJECTS) $(LIBRARY) $(LIBRARIES)
 	 exit $$FAILS
 
 # build and run specific tests matching pattern
-test-%: $(LIBRARY) $(LIBRARIES)
+test-%: $(LIBRARIES) $(LIBRARY)
 	@echo -e "\n[--------] Performing $(words $(filter $*%,$(TESTNAMES)))" \
 		"tests matching \"$*\""
 	@$(foreach TEST,\
@@ -155,9 +155,9 @@ $(COVERAGE):
 		make coverage -C $(INC) DEPTH=$$(($(DEPTH) - 1)); fi; )
 
 # build binaries, within build directory, from associated objects
-$(BUILDDIR)/%: $(BUILDDIR)/%.o $(LIBRARY) $(LIBRARIES)
+$(BUILDDIR)/%: $(LIBRARIES) $(LIBRARY) $(BUILDDIR)/%.o
 	@$(MKDIR) $(dir $@)
-	$(CC) $< -o $@ $(LDFLAGS)
+	$(CC) $(BUILDDIR)/$*.o -o $@ $(LDFLAGS)
 
 # build objects, within build directory, from associated sources
 $(BUILDDIR)/%.o: $(SOURCEDIR)/%.c
