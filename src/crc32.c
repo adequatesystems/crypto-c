@@ -1,31 +1,22 @@
 /**
- * crc32.c - CRC32 Hash function support
- *
- * Copyright (c) 2017-2021 Adequate Systems, LLC. All Rights Reserved.
- * For more information, please refer to ../LICENSE
- *
- * Date: 20 December 2017
- * Revised: 26 October 2021
- *
- * NOTES: Parameters are as follows...
- * Name/s : "CRC-32"
- * Check  : 0xCBF43926 (crc32 of "123456789")
- * Poly   : 0x04C11DB7
- * Init   : 0xffffffff
- * RefIn  : true
- * RefOut : true
- * XorOut : 0xffffffff
- *
+ * @private
+ * @headerfile crc32.h <crc32.h>
+ * @copyright This file is released into the Public Domain under
+ * the Creative Commons Zero v1.0 Universal license.
 */
 
-#ifndef _CRYPTO_CRC32_C_
-#define _CRYPTO_CRC32_C_  /* include guard */
+/* include guard */
+#ifndef CRYPTO_CRC32_C
+#define CRYPTO_CRC32_C
 
 
 #include "crc32.h"
 
-/* 32-bit CRC table */
-static const word32 Crc32table[] = {
+/**
+ * @private
+ * 32-bit CRC table
+*/
+ALIGN(32) static const uint32_t Crc32table[] = {
    0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419,
    0x706AF48F, 0xE963A535, 0x9E6495A3, 0x0EDB8832, 0x79DCB8A4,
    0xE0D5E91E, 0x97D2D988, 0x09B64C2B, 0x7EB17CBD, 0xE7B82D07,
@@ -80,18 +71,23 @@ static const word32 Crc32table[] = {
    0x2D02EF8D
 };
 
-/* Compute crc32 on buff */
-word32 crc32(void *in, size_t inlen)
+/**
+ * Compute CRC32 on @a inlen bytes of @a in.
+ * @param in Pointer to data to hash
+ * @param inlen Length in bytes of @a in data
+ * @returns 32-bit unsigned integer result of CRC32 hash.
+*/
+HOST_DEVICE_FN uint32_t crc32(void *in, size_t inlen)
 {
-   word32 crc = 0xffffffff;
-   word8 *bp;
+   uint32_t crc = 0xffffffff;
+   uint8_t *bp;
 
-   for(bp = (word8 *) in; inlen; inlen--, bp++) {
-      crc = Crc32table[(word8) crc ^ *bp] ^ (crc >> 8);
+   for(bp = (uint8_t *) in; inlen; inlen--, bp++) {
+      crc = Crc32table[(uint8_t) crc ^ *bp] ^ (crc >> 8);
    }
 
    return ~crc;
 } /* end crc32() */
 
-
-#endif /*  _CRYPTO_CRC32_C */
+/* end include guard */
+#endif

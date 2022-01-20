@@ -1,34 +1,40 @@
 /**
- * crc16.h - CRC16 Hash function support header.
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- * For more information, please refer to ../LICENSE
- *
- * Date: 19 August 2021
- * Revised: 26 October 2021
- *
+ * @file crc16.h
+ * @brief CRC16 hash function support.
+ * @details
+ * Param  | Value
+ * ------ | -----
+ * Alias  | "XMODEM", "ZMODEM", "CRC-16/ACORN"
+ * Check  | 0x31c3 (crc16 of "123456789")
+ * Poly   | 0x1021
+ * Init   | 0x0000
+ * RefIn  | false
+ * RefOut | false
+ * XorOut | 0x0000
+ * @copyright This file is released into the Public Domain under
+ * the Creative Commons Zero v1.0 Universal license.
 */
 
-#ifndef _CRYPTO_CRC16_H_
-#define _CRYPTO_CRC16_H_  /* include guard */
+/* include guard */
+#ifndef CRYPTO_CRC16_H
+#define CRYPTO_CRC16_H
 
 
-#include <stddef.h>  /* for size_t */
-#include "extint.h"  /* for word types */
+#include "utildev.h"
 
-/* CRC16 specific parameters */
-#define CRC16LEN  2
+#define CRC16LEN  2  /**< 16-bit CRC16 digest length in bytes */
 
+/* C/C++ compatible function prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Function prototypes for crc16.c */
-word16 crc16(void *in, size_t inlen);
+HOST_DEVICE_FN uint16_t crc16(void *in, size_t inlen);
 
+/* end extern "C" {} for C++ */
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif  /* end _CRYPTO_CRC16_H_ */
+/* end include guard */
+#endif

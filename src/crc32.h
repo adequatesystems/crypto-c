@@ -1,34 +1,40 @@
 /**
- * crc32.h - CRC32 hash function support header
- *
- * Copyright (c) 2021 Adequate Systems, LLC. All Rights Reserved.
- * For more information, please refer to ../LICENSE
- *
- * Date: 19 August 2021
- * Revised: 26 October 2021
- *
+ * @file crc32.h
+ * @brief CRC32 hash function support.
+ * @details
+ * Param  | Value
+ * ------ | -----
+ * Alias  | "CRC-32"
+ * Check  | 0xCBF43926 (crc32 of "123456789")
+ * Poly   | 0x04C11DB7
+ * Init   | 0xffffffff
+ * RefIn  | true
+ * RefOut | true
+ * XorOut | 0xffffffff
+ * @copyright This file is released into the Public Domain under
+ * the Creative Commons Zero v1.0 Universal license.
 */
 
-#ifndef _CRYPTO_CRC32_H_
-#define _CRYPTO_CRC32_H_  /* include guard */
+/* include guard */
+#ifndef CRYPTO_CRC32_H
+#define CRYPTO_CRC32_H
 
 
-#include <stddef.h>  /* for size_t */
-#include "extint.h"  /* for word types */
+#include "utildev.h"
 
-/* CRC32 specific parameters */
-#define CRC32LEN  4
+#define CRC32LEN  4  /**< CRC32 message digest length, in bytes */
 
+/* C/C++ compatible function prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Function prototypes for crc32.c */
-word32 crc32(void *in, size_t inlen);
+HOST_DEVICE_FN uint32_t crc32(void *in, size_t inlen);
 
+/* end extern "C" {} for C++ */
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif  /* end _CRYPTO_CRC32_H_ */
+/* end include guard */
+#endif
