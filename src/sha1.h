@@ -1,49 +1,53 @@
 /**
- * sha1.h - SHA1 hash function support header
- *
- * For more information, please refer to ./sha1.c
- *
- * Date: 8 April 2020
- * Revised: 26 October 2021
- *
+ * @file sha1.h
+ * @brief SHA1 hash function support.
+ * @details This file is based on Brad Conte's basic
+ * implementations of cryptography algorithms...
+ * > <https://github.com/B-Con/crypto-algorithms>
+ * ... and alterations to the transform function were based on
+ * Steve Reid's SHA1 implementation...
+ * > <https://github.com/clibs/sha1>
+ * ... both of which were released into the Public Domain.
+ * @copyright This file is released into the Public Domain under
+ * the Creative Commons Zero v1.0 Universal license.
 */
 
-#ifndef _CRYPTO_SHA1_H_
-#define _CRYPTO_SHA1_H_  /* include guard */
+/* include guard */
+#ifndef CRYPTO_SHA1_H
+#define CRYPTO_SHA1_H
 
 
-#include <stddef.h>  /* for size_t */
-#include "extint.h"  /* for word types */
+#include "utildev.h"
 
-/* 32-bit rotate left definition */
-#ifndef ROTL32
-#define ROTL32(a,b)  ( ((a) << (b)) | ((a) >> (32-(b))) )
-#endif
+#define SHA1LEN   20 /**< SHA1 message digest length, in bytes */
 
-/* SHA1 specific parameters */
-#define SHA1LEN  20
-
-/* SHA1 context */
 typedef struct {
-   word8 data[64];
-   word32 datalen;
-   word32 bitlen[2];
-   word32 state[5];
-} SHA1_CTX;
+   uint8_t data[64];    /**< Input buffer */
+   uint32_t bitlen[2];  /**< Total bit length of updated input */
+   uint32_t state[5];   /**< Internal hashing state */
+   uint32_t datalen;    /**< Length of buffered input */
+   /**
+    * 256-bit alignment padding. Does nothing beyond ensuring
+    * a list of contexts that begin 256-bit aligned, remain
+    * similarly aligned for every item in said list.
+   */
+   uint32_t balign256[3];
+} SHA1_CTX;  /**< SHA1 Context */
 
+/* C/C++ compatible function prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Function prototypes for sha1.c */
-void sha1_init(SHA1_CTX *ctx);
-void sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen);
-void sha1_final(SHA1_CTX *ctx, void *out);
-void sha1(const void *in, size_t inlen, void *out);
+HOST_DEVICE_FN void sha1_init(SHA1_CTX *ctx);
+HOST_DEVICE_FN void sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen);
+HOST_DEVICE_FN void sha1_final(SHA1_CTX *ctx, void *out);
+HOST_DEVICE_FN void sha1(const void *in, size_t inlen, void *out);
 
+/* end extern "C" {} for C++ */
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif  /* end _CRYPTO_SHA1_H_ */
+/* end include guard */
+#endif
