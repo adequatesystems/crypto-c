@@ -1,14 +1,9 @@
 ##
-# GNUmakefile - C/C++ GNU makefile
+# GNUmakefile - C/C++ makefile for GNU Make
 # Copyright 2021-2022 Adequate Systems, LLC. All Rights Reserved.
 #
 
-DEPTH:= 0
 SHELL:= bash
-
-# command macros
-MKDIR = mkdir -p
-RM = rm -rf
 
 # directory macros
 BINDIR = bin
@@ -63,7 +58,7 @@ CC:= gcc $(CFLAGS) # CFLAGS is reserved for additional input
 ##########################
 
 .SUFFIXES: # disable rules predefined by MAKE
-.PHONY: help all clean coverage cuda deepclean library libraries report test
+.PHONY: help all clean cleanall coverage cuda docs library libraries report test
 
 help: # default rule prints help information
 	@echo ""
@@ -71,9 +66,10 @@ help: # default rule prints help information
 	@echo "   make               prints this usage information"
 	@echo "   make all           build all object files"
 	@echo "   make clean         removes build directory and files"
+	@echo "   make cleanall      removes (all) build directories and files"
 	@echo "   make coverage      build test coverage file"
 	@echo "   make cuda          build cuda compatible object files"
-	@echo "   make deepclean     removes (all) build directories and files"
+	@echo "   make docs          build documentation files"
 	@echo "   make library       build a library file containing all objects"
 	@echo "   make libraries     build all library files required for binaries"
 	@echo "   make report        build html report from test coverage"
@@ -86,18 +82,23 @@ all: $(BASEOBJECTS)
 
 # remove build directory and files
 clean:
-	@$(RM) $(BUILDDIR)
+	@rm -rf $(BUILDDIR)
 
-# build test coverage; redirect
+# remove all build directories and files; recursive
+cleanall: clean
+	@$(foreach DIR,$(INCLUDES),make cleanall -C $(DIR); )
+
+# build test coverage (requires lcov); redirect
 coverage: $(COVERAGE)
 
 # build CUDA compatible object files; recursive
 cuda:
 	@make all "CC=$(NVCC)" "CCFLAGS=$(NVFLAGS)" --no-print-directory
 
-# remove all build directories and files; recursive
-deepclean: clean
-	@$(foreach DIR,$(INCLUDES),make deepclean -C $(DIR); )
+# build documentation files under docs/ (requires doxygen)
+docs:
+	@mkdir -p docs
+	doxygen .github/docs/config
 
 # build library file; redirect
 library: $(LIBRARY)
@@ -134,7 +135,7 @@ test-%: $(LIBRARIES) $(LIBRARY)
 
 # build module library, within lib directory, from all base objects
 $(LIBRARY): $(BASEOBJECTS)
-	@$(MKDIR) $(dir $@)
+	@mkdir -p $(dir $@)
 	ar rcs $(LIBRARY) $(BASEOBJECTS)
 
 $(LIBRARIES): %:
@@ -149,19 +150,19 @@ $(COVERAGE):
 	lcov -c -d $(BUILDDIR) -o $(COVERAGE)_test
 	lcov -a $(COVERAGE)_base -a $(COVERAGE)_test -o $(COVERAGE) || \
 		cp $(COVERAGE)_base $(COVERAGE)
-	$(RM) $(COVERAGE)_base $(COVERAGE)_test
+	rm -rf $(COVERAGE)_base $(COVERAGE)_test
 	lcov -r $(COVERAGE) '*/$(TESTSOURCEDIR)/*' -o $(COVERAGE)
 	@$(foreach INC,$(INCLUDEDIRS),if test $(DEPTH) -gt 0; then \
 		make coverage -C $(INC) DEPTH=$$(($(DEPTH) - 1)); fi; )
 
 # build binaries, within build directory, from associated objects
 $(BUILDDIR)/%: $(LIBRARIES) $(LIBRARY) $(BUILDDIR)/%.o
-	@$(MKDIR) $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(BUILDDIR)/$*.o -o $@ $(LDFLAGS)
 
 # build objects, within build directory, from associated sources
 $(BUILDDIR)/%.o: $(SOURCEDIR)/%.c
-	@$(MKDIR) $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) -MMD -MP -c $(abspath $<) -o $@ $(CCFLAGS)
 
 # include depends rules created during "build object file" process
