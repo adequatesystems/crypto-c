@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['q_0',['q',['../struct_b_l_a_k_e2_b___c_t_x.html#a8665685ba6715dce72c4724c47e36638',1,'BLAKE2B_CTX::q()'],['../struct_s_h_a3___c_t_x.html#a57cbde9358e676c4adeeacd180aa9abf',1,'SHA3_CTX::q()']]]
+  ['readme_55',['README',['../index.html',1,'']]],
+  ['rol32_56',['rol32',['../utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b',1,'utildev.h']]],
+  ['rol64_57',['rol64',['../utildev_8h.html#a2de78941db7508d687124d99f75f804b',1,'utildev.h']]],
+  ['ror32_58',['ror32',['../utildev_8h.html#a8088d28bca3cbb1770bb7e052230fd20',1,'utildev.h']]],
+  ['ror64_59',['ror64',['../utildev_8h.html#a974e579f5a25d31888bfe9b54f06f645',1,'utildev.h']]],
+  ['rsiz_60',['rsiz',['../struct_s_h_a3___c_t_x.html#a83b2be3e9f415a7831d811388bbca146',1,'SHA3_CTX']]]
 ];
