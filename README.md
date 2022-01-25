@@ -1,7 +1,7 @@
 \mainpage README
 <h1 align="center">
    <a href="http://adequate.biz">
-      <img alt="Adequate Systems" src="https://raw.githubusercontent.com/adequatesystems/crypto-c/main/docs/adq.svg" /></a>
+      <img alt="Adequate Systems" src="https://raw.githubusercontent.com/adequatesystems/.github/main/media/adqlogo_banner.svg" /></a>
    <br/>Crypto C/C++ Library<br/>
    <a href="https://github.com/adequatesystems/crypto-c/actions/workflows/tests.yaml">
       <img src="https://github.com/adequatesystems/crypto-c/actions/workflows/tests.yaml/badge.svg" alt="tests status" /></a>
