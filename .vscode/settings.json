@@ -1,6 +1,0 @@
-{
-   "C_Cpp.default.includePath": [
-      "./src/",
-      "./include/extended-c/src"
-   ]
-}
