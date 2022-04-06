@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C/C++ Project Name: sha256.h File Reference</title>
+<title>CRYPTO-C: sha256.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,9 +27,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">C/C++ Project Name<span id="projectnumber">&#160;v1.0.0</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.0</span>
    </div>
-   <div id="projectbrief">C/C++ Project Description</div>
+   <div id="projectbrief">C/C++ Documentation</div>
   </td>
  </tr>
  </tbody>
@@ -86,15 +86,16 @@ $(document).ready(function(){initNavTree('sha256_8h.html',''); initResizable(); 
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">sha256.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="sha256_8h_source.html">Go to the source code of this file.</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &quot;<a class="el" href="utildev_8h_source.html">utildev.h</a>&quot;</code><br />
+</div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >SHA256 hash function support. </p>
 <p >This file is based on Brad Conte's basic implementations of cryptography algorithms... </p><blockquote class="doxtable">
 <p >&zwj;<a href="https://github.com/B-Con/crypto-algorithms">https://github.com/B-Con/crypto-algorithms</a> </p>
@@ -104,11 +105,6 @@ $(document).ready(function(){initNavTree('sha256_8h.html',''); initResizable(); 
 </blockquote>
 <p>... both of which were released into the Public Domain. </p><dl class="section copyright"><dt>Copyright</dt><dd>This file is released into the Public Domain under the Creative Commons Zero v1.0 Universal license. </dd></dl>
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a02a36b52d125a1e2fedd4fdc3ca511d6"><td class="memItemLeft" align="right" valign="top"><a id="a02a36b52d125a1e2fedd4fdc3ca511d6" name="a02a36b52d125a1e2fedd4fdc3ca511d6"></a>
@@ -116,30 +112,35 @@ Macros</h2></td></tr>
 <tr class="memdesc:a02a36b52d125a1e2fedd4fdc3ca511d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">SHA256 message digest length, in bytes. <br /></td></tr>
 <tr class="separator:a02a36b52d125a1e2fedd4fdc3ca511d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9110e8c286e09dc44c32fe37abc4ad20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#a9110e8c286e09dc44c32fe37abc4ad20">sha256_init</a> (<a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *ctx)</td></tr>
-<tr class="memdesc:a9110e8c286e09dc44c32fe37abc4ad20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a SHA256 context.  <a href="sha256_8h.html#a9110e8c286e09dc44c32fe37abc4ad20">More...</a><br /></td></tr>
-<tr class="separator:a9110e8c286e09dc44c32fe37abc4ad20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3ba5993fbaf5dc2c5e894ba4f385b59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#ae3ba5993fbaf5dc2c5e894ba4f385b59">sha256_update</a> (<a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
-<tr class="memdesc:ae3ba5993fbaf5dc2c5e894ba4f385b59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a SHA256 context for hashing.  <a href="sha256_8h.html#ae3ba5993fbaf5dc2c5e894ba4f385b59">More...</a><br /></td></tr>
-<tr class="separator:ae3ba5993fbaf5dc2c5e894ba4f385b59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0043065a7b795bbb31522df84f273a8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#a0043065a7b795bbb31522df84f273a8f">sha256_final</a> (<a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *ctx, void *out)</td></tr>
-<tr class="memdesc:a0043065a7b795bbb31522df84f273a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a SHA256 message digest.  <a href="sha256_8h.html#a0043065a7b795bbb31522df84f273a8f">More...</a><br /></td></tr>
-<tr class="separator:a0043065a7b795bbb31522df84f273a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a515d271c1119df1cb30faa40f5208a02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#a515d271c1119df1cb30faa40f5208a02">sha256</a> (const void *in, size_t inlen, void *out)</td></tr>
-<tr class="memdesc:a515d271c1119df1cb30faa40f5208a02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one SHA256 computation.  <a href="sha256_8h.html#a515d271c1119df1cb30faa40f5208a02">More...</a><br /></td></tr>
-<tr class="separator:a515d271c1119df1cb30faa40f5208a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade6fde6ef9ea137449d72891931c77ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#ade6fde6ef9ea137449d72891931c77ef">sha256_init</a> (<a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *ctx)</td></tr>
+<tr class="memdesc:ade6fde6ef9ea137449d72891931c77ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a SHA256 context.  <a href="sha256_8h.html#ade6fde6ef9ea137449d72891931c77ef">More...</a><br /></td></tr>
+<tr class="separator:ade6fde6ef9ea137449d72891931c77ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4b9a7aacc055d5330daa9ef4b3fdafa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#ae4b9a7aacc055d5330daa9ef4b3fdafa">sha256_update</a> (<a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
+<tr class="memdesc:ae4b9a7aacc055d5330daa9ef4b3fdafa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a SHA256 context for hashing.  <a href="sha256_8h.html#ae4b9a7aacc055d5330daa9ef4b3fdafa">More...</a><br /></td></tr>
+<tr class="separator:ae4b9a7aacc055d5330daa9ef4b3fdafa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85586cf965e69f9da0fd261b2b619d45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#a85586cf965e69f9da0fd261b2b619d45">sha256_final</a> (<a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *ctx, void *out)</td></tr>
+<tr class="memdesc:a85586cf965e69f9da0fd261b2b619d45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a SHA256 message digest.  <a href="sha256_8h.html#a85586cf965e69f9da0fd261b2b619d45">More...</a><br /></td></tr>
+<tr class="separator:a85586cf965e69f9da0fd261b2b619d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67294934931ccf0b101f3738da523057"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha256_8h.html#a67294934931ccf0b101f3738da523057">sha256</a> (const void *in, size_t inlen, void *out)</td></tr>
+<tr class="memdesc:a67294934931ccf0b101f3738da523057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one SHA256 computation.  <a href="sha256_8h.html#a67294934931ccf0b101f3738da523057">More...</a><br /></td></tr>
+<tr class="separator:a67294934931ccf0b101f3738da523057"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a515d271c1119df1cb30faa40f5208a02" name="a515d271c1119df1cb30faa40f5208a02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a515d271c1119df1cb30faa40f5208a02">&#9670;&nbsp;</a></span>sha256()</h2>
+<a id="a67294934931ccf0b101f3738da523057" name="a67294934931ccf0b101f3738da523057"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67294934931ccf0b101f3738da523057">&#9670;&nbsp;</a></span>sha256()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void sha256 </td>
+          <td class="memname">void sha256 </td>
           <td>(</td>
           <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -165,7 +166,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convenient all-in-one SHA256 computation. </p>
-<p >Performs <a class="el" href="sha256_8h.html#a9110e8c286e09dc44c32fe37abc4ad20" title="Initialize a SHA256 context.">sha256_init()</a>, <a class="el" href="sha256_8h.html#ae3ba5993fbaf5dc2c5e894ba4f385b59" title="Add inlen bytes from in to a SHA256 context for hashing.">sha256_update()</a> and <a class="el" href="sha256_8h.html#a0043065a7b795bbb31522df84f273a8f" title="Finalize a SHA256 message digest.">sha256_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Performs <a class="el" href="sha256_8h.html#ade6fde6ef9ea137449d72891931c77ef" title="Initialize a SHA256 context.">sha256_init()</a>, <a class="el" href="sha256_8h.html#ae4b9a7aacc055d5330daa9ef4b3fdafa" title="Add inlen bytes from in to a SHA256 context for hashing.">sha256_update()</a> and <a class="el" href="sha256_8h.html#a85586cf965e69f9da0fd261b2b619d45" title="Finalize a SHA256 message digest.">sha256_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>Pointer to data to hash </td></tr>
     <tr><td class="paramname">inlen</td><td>Length of <em>in</em> data, in bytes </td></tr>
@@ -176,14 +177,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0043065a7b795bbb31522df84f273a8f" name="a0043065a7b795bbb31522df84f273a8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0043065a7b795bbb31522df84f273a8f">&#9670;&nbsp;</a></span>sha256_final()</h2>
+<a id="a85586cf965e69f9da0fd261b2b619d45" name="a85586cf965e69f9da0fd261b2b619d45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85586cf965e69f9da0fd261b2b619d45">&#9670;&nbsp;</a></span>sha256_final()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void sha256_final </td>
+          <td class="memname">void sha256_final </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>
@@ -213,14 +214,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9110e8c286e09dc44c32fe37abc4ad20" name="a9110e8c286e09dc44c32fe37abc4ad20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9110e8c286e09dc44c32fe37abc4ad20">&#9670;&nbsp;</a></span>sha256_init()</h2>
+<a id="ade6fde6ef9ea137449d72891931c77ef" name="ade6fde6ef9ea137449d72891931c77ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade6fde6ef9ea137449d72891931c77ef">&#9670;&nbsp;</a></span>sha256_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void sha256_init </td>
+          <td class="memname">void sha256_init </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em></td><td>)</td>
@@ -239,14 +240,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae3ba5993fbaf5dc2c5e894ba4f385b59" name="ae3ba5993fbaf5dc2c5e894ba4f385b59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3ba5993fbaf5dc2c5e894ba4f385b59">&#9670;&nbsp;</a></span>sha256_update()</h2>
+<a id="ae4b9a7aacc055d5330daa9ef4b3fdafa" name="ae4b9a7aacc055d5330daa9ef4b3fdafa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4b9a7aacc055d5330daa9ef4b3fdafa">&#9670;&nbsp;</a></span>sha256_update()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void sha256_update </td>
+          <td class="memname">void sha256_update </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>

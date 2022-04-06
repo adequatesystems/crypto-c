@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C/C++ Project Name: utildev.h File Reference</title>
+<title>CRYPTO-C: utildev.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,9 +27,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">C/C++ Project Name<span id="projectnumber">&#160;v1.0.0</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.0</span>
    </div>
-   <div id="projectbrief">C/C++ Project Description</div>
+   <div id="projectbrief">C/C++ Documentation</div>
   </td>
  </tr>
  </tbody>
@@ -92,7 +92,9 @@ $(document).ready(function(){initNavTree('utildev_8h.html',''); initResizable();
 <div class="contents">
 
 <p><a href="utildev_8h_source.html">Go to the source code of this file.</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+</div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Device utilities and includes support. </p>
 <p >Provides utilities and includes for device architectures. </p><table class="markdownTable">
 <tr class="markdownTableHead">
@@ -108,13 +110,7 @@ $(document).ready(function(){initNavTree('utildev_8h.html',''); initResizable();
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:abe7f8cd9a0ce69b71567a3870415be66"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utildev_8h.html#abe7f8cd9a0ce69b71567a3870415be66">ALIGN</a>(x)&#160;&#160;&#160;CRYPTO_ALIGN(x)</td></tr>
-<tr class="memdesc:abe7f8cd9a0ce69b71567a3870415be66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare variable alignment of <em>x</em> bytes.  <a href="utildev_8h.html#abe7f8cd9a0ce69b71567a3870415be66">More...</a><br /></td></tr>
-<tr class="separator:abe7f8cd9a0ce69b71567a3870415be66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a081a0945313fea91e93571507cb8d7e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a>&#160;&#160;&#160;CRYPTO_HOST_DEVICE_FN</td></tr>
-<tr class="memdesc:a081a0945313fea91e93571507cb8d7e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare function as capable of both "host" and "device" execution.  <a href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">More...</a><br /></td></tr>
-<tr class="separator:a081a0945313fea91e93571507cb8d7e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e376c247d19427f3c01311e816f2574"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utildev_8h.html#a3e376c247d19427f3c01311e816f2574">bswap32</a>(x)&#160;&#160;&#160;CRYPTO_BSWAP32(x)</td></tr>
+<tr class="memitem:a3e376c247d19427f3c01311e816f2574"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utildev_8h.html#a3e376c247d19427f3c01311e816f2574">bswap32</a>(x)&#160;&#160;&#160;      ( (<a class="el" href="utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b">rol32</a>(x, 24) &amp; 0xFF00FF00) | (<a class="el" href="utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b">rol32</a>(x, 8) &amp; 0x00FF00FF) )</td></tr>
 <tr class="memdesc:a3e376c247d19427f3c01311e816f2574"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap the byte order of a 32-bit word.  <a href="utildev_8h.html#a3e376c247d19427f3c01311e816f2574">More...</a><br /></td></tr>
 <tr class="separator:a3e376c247d19427f3c01311e816f2574"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9b5cddcc2a2da7348b3040c3896804b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b">rol32</a>(x,  n)&#160;&#160;&#160;( ((x) &lt;&lt; (n)) | ((x) &gt;&gt; (32 - (n))) )</td></tr>
@@ -160,35 +156,6 @@ Macros</h2></td></tr>
 <tr class="separator:aceec0309f0a3d73b861a0b8a02d1a5e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="abe7f8cd9a0ce69b71567a3870415be66" name="abe7f8cd9a0ce69b71567a3870415be66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe7f8cd9a0ce69b71567a3870415be66">&#9670;&nbsp;</a></span>ALIGN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ALIGN</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;CRYPTO_ALIGN(x)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Declare variable alignment of <em>x</em> bytes. </p>
-<p >Used during the declaration of a variable, indicates to the device compiler that a variable should be aligned to the byte value represented by <em>x</em>. <br  />
-For example, to declare a 32 byte aligned integer constant: </p><div class="fragment"><div class="line"><a class="code hl_define" href="utildev_8h.html#abe7f8cd9a0ce69b71567a3870415be66">ALIGN</a>(32) const <span class="keywordtype">int</span> aligned_integer = 123; </div>
-<div class="ttc" id="autildev_8h_html_abe7f8cd9a0ce69b71567a3870415be66"><div class="ttname"><a href="utildev_8h.html#abe7f8cd9a0ce69b71567a3870415be66">ALIGN</a></div><div class="ttdeci">#define ALIGN(x)</div><div class="ttdoc">Declare variable alignment of x bytes.</div><div class="ttdef"><b>Definition:</b> utildev.h:81</div></div>
-</div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x</td><td>byte value to align variable to </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a3e376c247d19427f3c01311e816f2574" name="a3e376c247d19427f3c01311e816f2574"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3e376c247d19427f3c01311e816f2574">&#9670;&nbsp;</a></span>bswap32</h2>
 
@@ -200,13 +167,13 @@ For example, to declare a 32 byte aligned integer constant: </p><div class="frag
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;CRYPTO_BSWAP32(x)</td>
+          <td>&#160;&#160;&#160;      ( (<a class="el" href="utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b">rol32</a>(x, 24) &amp; 0xFF00FF00) | (<a class="el" href="utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b">rol32</a>(x, 8) &amp; 0x00FF00FF) )</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Swap the byte order of a 32-bit word. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p >Alternate expansion for <code>nvcc</code>: <code>__byte_perm(x, 0, 0x0123)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>32-bit word to be swapped </td></tr>
   </table>
@@ -214,25 +181,6 @@ For example, to declare a 32 byte aligned integer constant: </p><div class="frag
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>32-bit word with swapped byte ordering. </dd></dl>
 
-</div>
-</div>
-<a id="a081a0945313fea91e93571507cb8d7e4" name="a081a0945313fea91e93571507cb8d7e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a081a0945313fea91e93571507cb8d7e4">&#9670;&nbsp;</a></span>HOST_DEVICE_FN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define HOST_DEVICE_FN&#160;&#160;&#160;CRYPTO_HOST_DEVICE_FN</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Declare function as capable of both "host" and "device" execution. </p>
-<p >Used during the declaration of a function, indicates to the device compiler that a function is capable of both "host" and "device" execution.<br  />
-For example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> <span class="keywordtype">int</span> multiarch_function(<span class="keywordtype">int</span> x); </div>
-<div class="ttc" id="autildev_8h_html_a081a0945313fea91e93571507cb8d7e4"><div class="ttname"><a href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a></div><div class="ttdeci">#define HOST_DEVICE_FN</div><div class="ttdoc">Declare function as capable of both &quot;host&quot; and &quot;device&quot; execution.</div><div class="ttdef"><b>Definition:</b> utildev.h:90</div></div>
-</div><!-- fragment --> 
 </div>
 </div>
 <a id="ad9b5cddcc2a2da7348b3040c3896804b" name="ad9b5cddcc2a2da7348b3040c3896804b"></a>

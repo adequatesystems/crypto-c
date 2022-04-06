@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['keccaklen224_0',['KECCAKLEN224',['../sha3_8h.html#a8b1462e88784891b709a99b74839e427',1,'sha3.h']]],
-  ['keccaklen256_1',['KECCAKLEN256',['../sha3_8h.html#a5df112bfb98d8915ca08140c7902faef',1,'sha3.h']]],
-  ['keccaklen384_2',['KECCAKLEN384',['../sha3_8h.html#ac508d2ec504e73e65fce15ae46993628',1,'sha3.h']]],
-  ['keccaklen512_3',['KECCAKLEN512',['../sha3_8h.html#ac23418b8c41ee832bfd3d06050460ee0',1,'sha3.h']]]
+  ['rol32_0',['rol32',['../utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b',1,'utildev.h']]],
+  ['rol64_1',['rol64',['../utildev_8h.html#a2de78941db7508d687124d99f75f804b',1,'utildev.h']]],
+  ['ror32_2',['ror32',['../utildev_8h.html#a8088d28bca3cbb1770bb7e052230fd20',1,'utildev.h']]],
+  ['ror64_3',['ror64',['../utildev_8h.html#a974e579f5a25d31888bfe9b54f06f645',1,'utildev.h']]]
 ];

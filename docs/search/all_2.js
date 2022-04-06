@@ -1,13 +1,10 @@
 var searchData=
 [
-  ['c_0',['c',['../struct_b_l_a_k_e2_b___c_t_x.html#ac0abe12146ab4394bf65e09035ef054c',1,'BLAKE2B_CTX']]],
-  ['c_2fc_2b_2b_20project_20name_1',['C/C++ Project Name',['../index.html',1,'']]],
-  ['checksum_2',['checksum',['../struct_m_d2___c_t_x.html#ade3964576deb15c07bc01d5d01fe6285',1,'MD2_CTX']]],
-  ['crc16_3',['crc16',['../crc16_8h.html#af7dcb9b67063d7f2fe2f2b8773cd4898',1,'crc16.c']]],
-  ['crc16_2eh_4',['crc16.h',['../crc16_8h.html',1,'']]],
-  ['crc16len_5',['CRC16LEN',['../crc16_8h.html#af259b75bcd0389bdb1a1e2b110a6d82a',1,'crc16.h']]],
-  ['crc32_6',['crc32',['../crc32_8h.html#a9779709fb3bfac88a96a8229d06790b0',1,'crc32.c']]],
-  ['crc32_2eh_7',['crc32.h',['../crc32_8h.html',1,'']]],
-  ['crc32len_8',['CRC32LEN',['../crc32_8h.html#a6be6c6eede8d53f7cad852117656c239',1,'crc32.h']]],
-  ['creative_20commons_20legal_20code_9',['Creative Commons Legal Code',['../md__l_i_c_e_n_s_e.html',1,'']]]
+  ['data_0',['data',['../struct_m_d2___c_t_x.html#a2ddb79fb93f7d950e5cc9059ad5f7e02',1,'MD2_CTX::data()'],['../struct_m_d5___c_t_x.html#a6fcedd1c789a695a3a181a7a6624d368',1,'MD5_CTX::data()'],['../struct_s_h_a1___c_t_x.html#a6fcedd1c789a695a3a181a7a6624d368',1,'SHA1_CTX::data()'],['../struct_s_h_a256___c_t_x.html#a6fcedd1c789a695a3a181a7a6624d368',1,'SHA256_CTX::data()']]],
+  ['datalen_1',['datalen',['../struct_m_d2___c_t_x.html#a20ef2f8b0dc25d28c0c76be72919a60a',1,'MD2_CTX::datalen()'],['../struct_m_d5___c_t_x.html#a20ef2f8b0dc25d28c0c76be72919a60a',1,'MD5_CTX::datalen()'],['../struct_s_h_a1___c_t_x.html#a20ef2f8b0dc25d28c0c76be72919a60a',1,'SHA1_CTX::datalen()'],['../struct_s_h_a256___c_t_x.html#a20ef2f8b0dc25d28c0c76be72919a60a',1,'SHA256_CTX::datalen()']]],
+  ['dev_5ffail_2',['DEV_FAIL',['../utildev_8h.html#a673913134197387c6523b1dc0f2b58d8',1,'utildev.h']]],
+  ['dev_5fidle_3',['DEV_IDLE',['../utildev_8h.html#a6f821c66a608d5628538df4c12dcf4b9',1,'utildev.h']]],
+  ['dev_5finit_4',['DEV_INIT',['../utildev_8h.html#a74ae6ab732e26d66ce10bdbfc4e4c11f',1,'utildev.h']]],
+  ['dev_5fnull_5',['DEV_NULL',['../utildev_8h.html#a8a3ec48b54d63808ed4c386c320fed47',1,'utildev.h']]],
+  ['dev_5fwork_6',['DEV_WORK',['../utildev_8h.html#aceec0309f0a3d73b861a0b8a02d1a5e2',1,'utildev.h']]]
 ];

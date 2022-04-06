@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C/C++ Project Name: blake2b.h File Reference</title>
+<title>CRYPTO-C: blake2b.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,9 +27,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">C/C++ Project Name<span id="projectnumber">&#160;v1.0.0</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.0</span>
    </div>
-   <div id="projectbrief">C/C++ Project Description</div>
+   <div id="projectbrief">C/C++ Documentation</div>
   </td>
  </tr>
  </tbody>
@@ -86,15 +86,16 @@ $(document).ready(function(){initNavTree('blake2b_8h.html',''); initResizable();
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">blake2b.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="blake2b_8h_source.html">Go to the source code of this file.</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &quot;<a class="el" href="utildev_8h_source.html">utildev.h</a>&quot;</code><br />
+</div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Blake2b hash function support. </p>
 <p >This file is based on Dr. Markku-Juhani O. Saarinen's "somewhat smaller" BLAKE2 implemetation... </p><blockquote class="doxtable">
 <p >&zwj;<a href="https://github.com/mjosaarinen/blake2_mjosref">https://github.com/mjosaarinen/blake2_mjosref</a><br  />
@@ -102,11 +103,6 @@ $(document).ready(function(){initNavTree('blake2b_8h.html',''); initResizable();
 </blockquote>
 <p>... which was released into the Public Domain under the Creative Commons Zero v1.0 Universal license. </p><dl class="section copyright"><dt>Copyright</dt><dd>This file is released into the Public Domain under the Creative Commons Zero v1.0 Universal license. </dd></dl>
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a86ec7691bac0ff5337541a1f28c22e95"><td class="memItemLeft" align="right" valign="top"><a id="a86ec7691bac0ff5337541a1f28c22e95" name="a86ec7691bac0ff5337541a1f28c22e95"></a>
@@ -122,30 +118,35 @@ Macros</h2></td></tr>
 <tr class="memdesc:a29b31bebda43ba269b93b5a3f2564644"><td class="mdescLeft">&#160;</td><td class="mdescRight">512-bit Blake2b digest length in bytes <br /></td></tr>
 <tr class="separator:a29b31bebda43ba269b93b5a3f2564644"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aea25cf4ad87a0c92d944f59f0f691c13"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#aea25cf4ad87a0c92d944f59f0f691c13">blake2b_init</a> (<a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *ctx, const void *key, int keylen, int outlen)</td></tr>
-<tr class="memdesc:aea25cf4ad87a0c92d944f59f0f691c13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Blake2b context with optional <em>key</em>.  <a href="blake2b_8h.html#aea25cf4ad87a0c92d944f59f0f691c13">More...</a><br /></td></tr>
-<tr class="separator:aea25cf4ad87a0c92d944f59f0f691c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8e8185a2a6d805fd2230bf566dbf289"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#aa8e8185a2a6d805fd2230bf566dbf289">blake2b_update</a> (<a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
-<tr class="memdesc:aa8e8185a2a6d805fd2230bf566dbf289"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a Blake2b context for hashing.  <a href="blake2b_8h.html#aa8e8185a2a6d805fd2230bf566dbf289">More...</a><br /></td></tr>
-<tr class="separator:aa8e8185a2a6d805fd2230bf566dbf289"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad9cff142f3624fcf319403d0510d0f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#aad9cff142f3624fcf319403d0510d0f8">blake2b_final</a> (<a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *ctx, void *out)</td></tr>
-<tr class="memdesc:aad9cff142f3624fcf319403d0510d0f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a Blake2b message digest.  <a href="blake2b_8h.html#aad9cff142f3624fcf319403d0510d0f8">More...</a><br /></td></tr>
-<tr class="separator:aad9cff142f3624fcf319403d0510d0f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0960966e46fb3cab5b8d4a280f0c785c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#a0960966e46fb3cab5b8d4a280f0c785c">blake2b</a> (const void *in, size_t inlen, const void *key, int keylen, void *out, int outlen)</td></tr>
-<tr class="memdesc:a0960966e46fb3cab5b8d4a280f0c785c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one Blake2b computation.  <a href="blake2b_8h.html#a0960966e46fb3cab5b8d4a280f0c785c">More...</a><br /></td></tr>
-<tr class="separator:a0960966e46fb3cab5b8d4a280f0c785c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e35140fbe95cb275198b0a5acc3af93"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#a8e35140fbe95cb275198b0a5acc3af93">blake2b_init</a> (<a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *ctx, const void *key, int keylen, int outlen)</td></tr>
+<tr class="memdesc:a8e35140fbe95cb275198b0a5acc3af93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Blake2b context with optional <em>key</em>.  <a href="blake2b_8h.html#a8e35140fbe95cb275198b0a5acc3af93">More...</a><br /></td></tr>
+<tr class="separator:a8e35140fbe95cb275198b0a5acc3af93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94cbc99bde5d00f8612fa4e01b077078"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#a94cbc99bde5d00f8612fa4e01b077078">blake2b_update</a> (<a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
+<tr class="memdesc:a94cbc99bde5d00f8612fa4e01b077078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a Blake2b context for hashing.  <a href="blake2b_8h.html#a94cbc99bde5d00f8612fa4e01b077078">More...</a><br /></td></tr>
+<tr class="separator:a94cbc99bde5d00f8612fa4e01b077078"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add0ff2e3849633cfbece53b37a9e0f6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#add0ff2e3849633cfbece53b37a9e0f6f">blake2b_final</a> (<a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *ctx, void *out)</td></tr>
+<tr class="memdesc:add0ff2e3849633cfbece53b37a9e0f6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a Blake2b message digest.  <a href="blake2b_8h.html#add0ff2e3849633cfbece53b37a9e0f6f">More...</a><br /></td></tr>
+<tr class="separator:add0ff2e3849633cfbece53b37a9e0f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa98dd6f77cba39f7569c7593456c98ff"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blake2b_8h.html#aa98dd6f77cba39f7569c7593456c98ff">blake2b</a> (const void *in, size_t inlen, const void *key, int keylen, void *out, int outlen)</td></tr>
+<tr class="memdesc:aa98dd6f77cba39f7569c7593456c98ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one Blake2b computation.  <a href="blake2b_8h.html#aa98dd6f77cba39f7569c7593456c98ff">More...</a><br /></td></tr>
+<tr class="separator:aa98dd6f77cba39f7569c7593456c98ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a0960966e46fb3cab5b8d4a280f0c785c" name="a0960966e46fb3cab5b8d4a280f0c785c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0960966e46fb3cab5b8d4a280f0c785c">&#9670;&nbsp;</a></span>blake2b()</h2>
+<a id="aa98dd6f77cba39f7569c7593456c98ff" name="aa98dd6f77cba39f7569c7593456c98ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa98dd6f77cba39f7569c7593456c98ff">&#9670;&nbsp;</a></span>blake2b()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> int blake2b </td>
+          <td class="memname">int blake2b </td>
           <td>(</td>
           <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -189,7 +190,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convenient all-in-one Blake2b computation. </p>
-<p >Performs <a class="el" href="blake2b_8h.html#aea25cf4ad87a0c92d944f59f0f691c13" title="Initialize a Blake2b context with optional key.">blake2b_init()</a>, <a class="el" href="blake2b_8h.html#aa8e8185a2a6d805fd2230bf566dbf289" title="Add inlen bytes from in to a Blake2b context for hashing.">blake2b_update()</a> and <a class="el" href="blake2b_8h.html#aad9cff142f3624fcf319403d0510d0f8" title="Finalize a Blake2b message digest.">blake2b_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Performs <a class="el" href="blake2b_8h.html#a8e35140fbe95cb275198b0a5acc3af93" title="Initialize a Blake2b context with optional key.">blake2b_init()</a>, <a class="el" href="blake2b_8h.html#a94cbc99bde5d00f8612fa4e01b077078" title="Add inlen bytes from in to a Blake2b context for hashing.">blake2b_update()</a> and <a class="el" href="blake2b_8h.html#add0ff2e3849633cfbece53b37a9e0f6f" title="Finalize a Blake2b message digest.">blake2b_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>Pointer to data to hash </td></tr>
     <tr><td class="paramname">inlen</td><td>Length of <em>in</em> data, in bytes </td></tr>
@@ -204,14 +205,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aad9cff142f3624fcf319403d0510d0f8" name="aad9cff142f3624fcf319403d0510d0f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad9cff142f3624fcf319403d0510d0f8">&#9670;&nbsp;</a></span>blake2b_final()</h2>
+<a id="add0ff2e3849633cfbece53b37a9e0f6f" name="add0ff2e3849633cfbece53b37a9e0f6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add0ff2e3849633cfbece53b37a9e0f6f">&#9670;&nbsp;</a></span>blake2b_final()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void blake2b_final </td>
+          <td class="memname">void blake2b_final </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>
@@ -241,14 +242,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aea25cf4ad87a0c92d944f59f0f691c13" name="aea25cf4ad87a0c92d944f59f0f691c13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea25cf4ad87a0c92d944f59f0f691c13">&#9670;&nbsp;</a></span>blake2b_init()</h2>
+<a id="a8e35140fbe95cb275198b0a5acc3af93" name="a8e35140fbe95cb275198b0a5acc3af93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e35140fbe95cb275198b0a5acc3af93">&#9670;&nbsp;</a></span>blake2b_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> int blake2b_init </td>
+          <td class="memname">int blake2b_init </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>
@@ -294,14 +295,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa8e8185a2a6d805fd2230bf566dbf289" name="aa8e8185a2a6d805fd2230bf566dbf289"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8e8185a2a6d805fd2230bf566dbf289">&#9670;&nbsp;</a></span>blake2b_update()</h2>
+<a id="a94cbc99bde5d00f8612fa4e01b077078" name="a94cbc99bde5d00f8612fa4e01b077078"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94cbc99bde5d00f8612fa4e01b077078">&#9670;&nbsp;</a></span>blake2b_update()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void blake2b_update </td>
+          <td class="memname">void blake2b_update </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_b_l_a_k_e2_b___c_t_x.html">BLAKE2B_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>

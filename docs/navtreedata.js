@@ -24,21 +24,31 @@
 */
 var NAVTREE =
 [
-  [ "C/C++ Project Name", "index.html", [
-    [ "Creative Commons Legal Code", "md__l_i_c_e_n_s_e.html", [
-      [ "Module Installation", "index.html#autotoc_md8", [
-        [ "Usage", "index.html#autotoc_md7", null ],
-        [ "Add Crypto C as Submodule", "index.html#autotoc_md9", null ],
-        [ "Update Crypto C Submodule to latest revision", "index.html#autotoc_md10", null ],
-        [ "Change Crypto C Submodule to specific hash or version tag", "index.html#autotoc_md11", null ]
+  [ "CRYPTO-C", "index.html", [
+    [ "Changelog", "md__c_h_a_n_g_e_l_o_g.html", [
+      [ "Module Installation", "index.html#autotoc_md15", [
+        [ "Usage", "index.html#autotoc_md14", null ],
+        [ "Add Crypto C as Submodule", "index.html#autotoc_md16", null ],
+        [ "Update Crypto C Submodule to latest revision", "index.html#autotoc_md17", null ],
+        [ "Change Crypto C Submodule to specific hash or version tag", "index.html#autotoc_md18", null ]
       ] ],
-      [ "License", "index.html#autotoc_md12", null ],
-      [ "CC0 1.0 Universal", "md__l_i_c_e_n_s_e.html#autotoc_md1", null ],
-      [ "Statement of Purpose", "md__l_i_c_e_n_s_e.html#autotoc_md2", null ],
-      [ "1. Copyright and Related Rights.", "md__l_i_c_e_n_s_e.html#autotoc_md3", null ],
-      [ "2. Waiver.", "md__l_i_c_e_n_s_e.html#autotoc_md4", null ],
-      [ "3. Public License Fallback.", "md__l_i_c_e_n_s_e.html#autotoc_md5", null ],
-      [ "4. Limitations and Disclaimers.", "md__l_i_c_e_n_s_e.html#autotoc_md6", null ]
+      [ "License", "index.html#autotoc_md19", null ],
+      [ "<a href=\"https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.1.0...HEAD\"", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md1", null ],
+      [ "<a href=\"https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.0.0...crypto-c-1.1.0\" >1.1.0</a> - 2022-04-06", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md2", [
+        [ "Added", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md3", null ],
+        [ "Changed", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md4", null ]
+      ] ],
+      [ "<a href=\"https://github.com/adequatesystems/crypto-c/releases/tag/crypto-c-1.0.0\" >1.0.0</a> - 2022-01-26", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md5", [
+        [ "Added", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md6", null ]
+      ] ]
+    ] ],
+    [ "Creative Commons Legal Code", "md__l_i_c_e_n_s_e.html", [
+      [ "CC0 1.0 Universal", "md__l_i_c_e_n_s_e.html#autotoc_md8", null ],
+      [ "Statement of Purpose", "md__l_i_c_e_n_s_e.html#autotoc_md9", null ],
+      [ "1. Copyright and Related Rights.", "md__l_i_c_e_n_s_e.html#autotoc_md10", null ],
+      [ "2. Waiver.", "md__l_i_c_e_n_s_e.html#autotoc_md11", null ],
+      [ "3. Public License Fallback.", "md__l_i_c_e_n_s_e.html#autotoc_md12", null ],
+      [ "4. Limitations and Disclaimers.", "md__l_i_c_e_n_s_e.html#autotoc_md13", null ]
     ] ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
@@ -53,7 +63,6 @@ var NAVTREE =
       [ "Globals", "globals.html", [
         [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
-        [ "Typedefs", "globals_type.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]

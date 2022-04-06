@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C/C++ Project Name: sha3.h File Reference</title>
+<title>CRYPTO-C: sha3.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,9 +27,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">C/C++ Project Name<span id="projectnumber">&#160;v1.0.0</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.0</span>
    </div>
-   <div id="projectbrief">C/C++ Project Description</div>
+   <div id="projectbrief">C/C++ Documentation</div>
   </td>
  </tr>
  </tbody>
@@ -86,15 +86,16 @@ $(document).ready(function(){initNavTree('sha3_8h.html',''); initResizable(); })
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">sha3.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="sha3_8h_source.html">Go to the source code of this file.</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &quot;<a class="el" href="utildev_8h_source.html">utildev.h</a>&quot;</code><br />
+</div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >SHA3 hash function support. </p>
 <p >This file is based on Dr. Markku-Juhani O. Saarinen's "cooked up" compact and readable keccak implemetation... </p><blockquote class="doxtable">
 <p >&zwj;<a href="https://github.com/mjosaarinen/tiny_sha3">https://github.com/mjosaarinen/tiny_sha3</a> </p>
@@ -117,11 +118,6 @@ $(document).ready(function(){initNavTree('sha3_8h.html',''); initResizable(); })
 </ul>
 <p >THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_h_a3___c_t_x.html">SHA3_CTX</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a0949d434e43741d18bbfc2433b6c25f7"><td class="memItemLeft" align="right" valign="top"><a id="a0949d434e43741d18bbfc2433b6c25f7" name="a0949d434e43741d18bbfc2433b6c25f7"></a>
@@ -157,13 +153,382 @@ Macros</h2></td></tr>
 <tr class="memdesc:ac23418b8c41ee832bfd3d06050460ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">KECCAK 512-bit digest length, in bytes. <br /></td></tr>
 <tr class="separator:ac23418b8c41ee832bfd3d06050460ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ade793df032beeeabcba8421a45662fe3"><td class="memItemLeft" align="right" valign="top"><a id="ade793df032beeeabcba8421a45662fe3" name="ade793df032beeeabcba8421a45662fe3"></a>
-typedef <a class="el" href="struct_s_h_a3___c_t_x.html">SHA3_CTX</a>&#160;</td><td class="memItemRight" valign="bottom"><b>KECCAK_CTX</b></td></tr>
-<tr class="memdesc:ade793df032beeeabcba8421a45662fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">KECCAK context. <br /></td></tr>
-<tr class="separator:ade793df032beeeabcba8421a45662fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SHA3/Keccak hashing context.  <a href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a5170f85cd0b33c67b3294cbee8f1ce28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#a5170f85cd0b33c67b3294cbee8f1ce28">sha3_init</a> (<a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *ctx, int outlen)</td></tr>
+<tr class="memdesc:a5170f85cd0b33c67b3294cbee8f1ce28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a SHA3 context.  <a href="sha3_8h.html#a5170f85cd0b33c67b3294cbee8f1ce28">More...</a><br /></td></tr>
+<tr class="separator:a5170f85cd0b33c67b3294cbee8f1ce28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ab1403eec14b3230c2bd9c27eb6d53f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#a9ab1403eec14b3230c2bd9c27eb6d53f">sha3_update</a> (<a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
+<tr class="memdesc:a9ab1403eec14b3230c2bd9c27eb6d53f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a SHA3 context for hashing.  <a href="sha3_8h.html#a9ab1403eec14b3230c2bd9c27eb6d53f">More...</a><br /></td></tr>
+<tr class="separator:a9ab1403eec14b3230c2bd9c27eb6d53f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c8c96f652e22778b062b09cf2952356"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#a7c8c96f652e22778b062b09cf2952356">sha3_final</a> (<a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *ctx, void *out)</td></tr>
+<tr class="memdesc:a7c8c96f652e22778b062b09cf2952356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a SHA3 message digest.  <a href="sha3_8h.html#a7c8c96f652e22778b062b09cf2952356">More...</a><br /></td></tr>
+<tr class="separator:a7c8c96f652e22778b062b09cf2952356"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8970650f106b7f64957887be1e05c340"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#a8970650f106b7f64957887be1e05c340">sha3</a> (const void *in, size_t inlen, void *out, int outlen)</td></tr>
+<tr class="memdesc:a8970650f106b7f64957887be1e05c340"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one SHA3 computation.  <a href="sha3_8h.html#a8970650f106b7f64957887be1e05c340">More...</a><br /></td></tr>
+<tr class="separator:a8970650f106b7f64957887be1e05c340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9944106d177c63b95d70149b8f1c1fcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#a9944106d177c63b95d70149b8f1c1fcc">keccak_init</a> (<a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *ctx, int outlen)</td></tr>
+<tr class="memdesc:a9944106d177c63b95d70149b8f1c1fcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Keccak context.  <a href="sha3_8h.html#a9944106d177c63b95d70149b8f1c1fcc">More...</a><br /></td></tr>
+<tr class="separator:a9944106d177c63b95d70149b8f1c1fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaabbe3530e50e84e07fc1aca987d5d2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#aaabbe3530e50e84e07fc1aca987d5d2b">keccak_update</a> (<a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
+<tr class="memdesc:aaabbe3530e50e84e07fc1aca987d5d2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a Keccak context for hashing.  <a href="sha3_8h.html#aaabbe3530e50e84e07fc1aca987d5d2b">More...</a><br /></td></tr>
+<tr class="separator:aaabbe3530e50e84e07fc1aca987d5d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d335390fc03f93071dc633917207e41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#a6d335390fc03f93071dc633917207e41">keccak_final</a> (<a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *ctx, void *out)</td></tr>
+<tr class="memdesc:a6d335390fc03f93071dc633917207e41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a Keccak message digest.  <a href="sha3_8h.html#a6d335390fc03f93071dc633917207e41">More...</a><br /></td></tr>
+<tr class="separator:a6d335390fc03f93071dc633917207e41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c92758b444475cba4609646a46f3ca4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sha3_8h.html#a6c92758b444475cba4609646a46f3ca4">keccak</a> (const void *in, size_t inlen, void *out, int outlen)</td></tr>
+<tr class="memdesc:a6c92758b444475cba4609646a46f3ca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one Keccak computation.  <a href="sha3_8h.html#a6c92758b444475cba4609646a46f3ca4">More...</a><br /></td></tr>
+<tr class="separator:a6c92758b444475cba4609646a46f3ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a6c92758b444475cba4609646a46f3ca4" name="a6c92758b444475cba4609646a46f3ca4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c92758b444475cba4609646a46f3ca4">&#9670;&nbsp;</a></span>keccak()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void keccak </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inlen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>outlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convenient all-in-one Keccak computation. </p>
+<p >Performs <a class="el" href="sha3_8h.html#a9944106d177c63b95d70149b8f1c1fcc" title="Initialize a Keccak context.">keccak_init()</a>, <a class="el" href="sha3_8h.html#aaabbe3530e50e84e07fc1aca987d5d2b" title="Add inlen bytes from in to a Keccak context for hashing.">keccak_update()</a> and <a class="el" href="sha3_8h.html#a6d335390fc03f93071dc633917207e41" title="Finalize a Keccak message digest.">keccak_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>Pointer to data to hash </td></tr>
+    <tr><td class="paramname">inlen</td><td>Length of <em>in</em> data, in bytes </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to location to place the message digest </td></tr>
+    <tr><td class="paramname">outlen</td><td>Length* of desired message digest, in bytes<br  />
+ <sup><em>*compatible message digest lengths are 28, 32, 48 and 64</em></sup> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6d335390fc03f93071dc633917207e41" name="a6d335390fc03f93071dc633917207e41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d335390fc03f93071dc633917207e41">&#9670;&nbsp;</a></span>keccak_final()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void keccak_final </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalize a Keccak message digest. </p>
+<p >Generate the Keccak message digest and place in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to Keccak context </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to location to place the message digest </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9944106d177c63b95d70149b8f1c1fcc" name="a9944106d177c63b95d70149b8f1c1fcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9944106d177c63b95d70149b8f1c1fcc">&#9670;&nbsp;</a></span>keccak_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void keccak_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>outlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize a Keccak context. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to Keccak context </td></tr>
+    <tr><td class="paramname">outlen</td><td>Length* of desired message digest, in bytes<br  />
+ <sup><em>*compatible message digest lengths are 28, 32, 48 and 64</em></sup> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaabbe3530e50e84e07fc1aca987d5d2b" name="aaabbe3530e50e84e07fc1aca987d5d2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaabbe3530e50e84e07fc1aca987d5d2b">&#9670;&nbsp;</a></span>keccak_update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void keccak_update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add <em>inlen</em> bytes from <em>in</em> to a Keccak context for hashing. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to Keccak context </td></tr>
+    <tr><td class="paramname">in</td><td>Pointer to data to hash </td></tr>
+    <tr><td class="paramname">inlen</td><td>Length of <em>in</em> data, in bytes </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8970650f106b7f64957887be1e05c340" name="a8970650f106b7f64957887be1e05c340"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8970650f106b7f64957887be1e05c340">&#9670;&nbsp;</a></span>sha3()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sha3 </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inlen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>outlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convenient all-in-one SHA3 computation. </p>
+<p >Performs <a class="el" href="sha3_8h.html#a5170f85cd0b33c67b3294cbee8f1ce28" title="Initialize a SHA3 context.">sha3_init()</a>, <a class="el" href="sha3_8h.html#a9ab1403eec14b3230c2bd9c27eb6d53f" title="Add inlen bytes from in to a SHA3 context for hashing.">sha3_update()</a> and <a class="el" href="sha3_8h.html#a7c8c96f652e22778b062b09cf2952356" title="Finalize a SHA3 message digest.">sha3_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>Pointer to data to hash </td></tr>
+    <tr><td class="paramname">inlen</td><td>Length of <em>in</em> data, in bytes </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to location to place the message digest </td></tr>
+    <tr><td class="paramname">outlen</td><td>Length* of desired message digest, in bytes<br  />
+ <sup><em>*compatible message digest lengths are 28, 32, 48 and 64</em></sup> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7c8c96f652e22778b062b09cf2952356" name="a7c8c96f652e22778b062b09cf2952356"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c8c96f652e22778b062b09cf2952356">&#9670;&nbsp;</a></span>sha3_final()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sha3_final </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalize a SHA3 message digest. </p>
+<p >Generate the SHA3 message digest and place in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to SHA3 context </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to location to place the message digest </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5170f85cd0b33c67b3294cbee8f1ce28" name="a5170f85cd0b33c67b3294cbee8f1ce28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5170f85cd0b33c67b3294cbee8f1ce28">&#9670;&nbsp;</a></span>sha3_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sha3_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>outlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize a SHA3 context. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to SHA3 context </td></tr>
+    <tr><td class="paramname">outlen</td><td>Length* of desired message digest, in bytes<br  />
+ <sup><em>*compatible message digest lengths are 28, 32, 48 and 64</em></sup> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9ab1403eec14b3230c2bd9c27eb6d53f" name="a9ab1403eec14b3230c2bd9c27eb6d53f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ab1403eec14b3230c2bd9c27eb6d53f">&#9670;&nbsp;</a></span>sha3_update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sha3_update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_h_a3___k_e_c_c_a_k___c_t_x.html">SHA3_KECCAK_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add <em>inlen</em> bytes from <em>in</em> to a SHA3 context for hashing. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to SHA3 context </td></tr>
+    <tr><td class="paramname">in</td><td>Pointer to data to hash </td></tr>
+    <tr><td class="paramname">inlen</td><td>Length of <em>in</em> data, in bytes </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

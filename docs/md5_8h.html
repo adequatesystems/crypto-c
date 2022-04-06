@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C/C++ Project Name: md5.h File Reference</title>
+<title>CRYPTO-C: md5.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,9 +27,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">C/C++ Project Name<span id="projectnumber">&#160;v1.0.0</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.0</span>
    </div>
-   <div id="projectbrief">C/C++ Project Description</div>
+   <div id="projectbrief">C/C++ Documentation</div>
   </td>
  </tr>
  </tbody>
@@ -86,26 +86,22 @@ $(document).ready(function(){initNavTree('md5_8h.html',''); initResizable(); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">md5.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><a href="md5_8h_source.html">Go to the source code of this file.</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &quot;<a class="el" href="utildev_8h_source.html">utildev.h</a>&quot;</code><br />
+</div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >MD5 hash function support. </p>
 <p >This file is based on Brad Conte's basic implementations of cryptography algorithms... </p><blockquote class="doxtable">
 <p >&zwj;<a href="https://github.com/B-Con/crypto-algorithms">https://github.com/B-Con/crypto-algorithms</a> </p>
 </blockquote>
 <p>... which was released into the Public Domain. </p><dl class="section copyright"><dt>Copyright</dt><dd>This file is released into the Public Domain under the Creative Commons Zero v1.0 Universal license. </dd></dl>
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a24c645b643ef4755c7b4e9afb237bdf6"><td class="memItemLeft" align="right" valign="top"><a id="a24c645b643ef4755c7b4e9afb237bdf6" name="a24c645b643ef4755c7b4e9afb237bdf6"></a>
@@ -113,30 +109,35 @@ Macros</h2></td></tr>
 <tr class="memdesc:a24c645b643ef4755c7b4e9afb237bdf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">MD5 message digest length, in bytes. <br /></td></tr>
 <tr class="separator:a24c645b643ef4755c7b4e9afb237bdf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a49851c726238e2bf46cd0eeaaaa2788e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#a49851c726238e2bf46cd0eeaaaa2788e">md5_init</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx)</td></tr>
-<tr class="memdesc:a49851c726238e2bf46cd0eeaaaa2788e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a MD5 context.  <a href="md5_8h.html#a49851c726238e2bf46cd0eeaaaa2788e">More...</a><br /></td></tr>
-<tr class="separator:a49851c726238e2bf46cd0eeaaaa2788e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a420bf401f2cb9179c2602cb1f76dc5e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#a420bf401f2cb9179c2602cb1f76dc5e2">md5_update</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
-<tr class="memdesc:a420bf401f2cb9179c2602cb1f76dc5e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a MD5 context for hashing.  <a href="md5_8h.html#a420bf401f2cb9179c2602cb1f76dc5e2">More...</a><br /></td></tr>
-<tr class="separator:a420bf401f2cb9179c2602cb1f76dc5e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade1beece8880fa217b29101c96fa0f1d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#ade1beece8880fa217b29101c96fa0f1d">md5_final</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx, void *out)</td></tr>
-<tr class="memdesc:ade1beece8880fa217b29101c96fa0f1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a MD5 message digest.  <a href="md5_8h.html#ade1beece8880fa217b29101c96fa0f1d">More...</a><br /></td></tr>
-<tr class="separator:ade1beece8880fa217b29101c96fa0f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ce3d671ca70af1fda4039bdd1e39c4e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#a6ce3d671ca70af1fda4039bdd1e39c4e">md5</a> (const void *in, size_t inlen, void *out)</td></tr>
-<tr class="memdesc:a6ce3d671ca70af1fda4039bdd1e39c4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one MD5 computation.  <a href="md5_8h.html#a6ce3d671ca70af1fda4039bdd1e39c4e">More...</a><br /></td></tr>
-<tr class="separator:a6ce3d671ca70af1fda4039bdd1e39c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467468da0de1b9d42de01865beccafe4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#a467468da0de1b9d42de01865beccafe4">md5_init</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx)</td></tr>
+<tr class="memdesc:a467468da0de1b9d42de01865beccafe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a MD5 context.  <a href="md5_8h.html#a467468da0de1b9d42de01865beccafe4">More...</a><br /></td></tr>
+<tr class="separator:a467468da0de1b9d42de01865beccafe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3bd7a79062e4094f402ce38ef1d0d02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#ac3bd7a79062e4094f402ce38ef1d0d02">md5_update</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx, const void *in, size_t inlen)</td></tr>
+<tr class="memdesc:ac3bd7a79062e4094f402ce38ef1d0d02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add <em>inlen</em> bytes from <em>in</em> to a MD5 context for hashing.  <a href="md5_8h.html#ac3bd7a79062e4094f402ce38ef1d0d02">More...</a><br /></td></tr>
+<tr class="separator:ac3bd7a79062e4094f402ce38ef1d0d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9edd034ea2731533fd4e1a1cbd1e4a61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#a9edd034ea2731533fd4e1a1cbd1e4a61">md5_final</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx, void *out)</td></tr>
+<tr class="memdesc:a9edd034ea2731533fd4e1a1cbd1e4a61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a MD5 message digest.  <a href="md5_8h.html#a9edd034ea2731533fd4e1a1cbd1e4a61">More...</a><br /></td></tr>
+<tr class="separator:a9edd034ea2731533fd4e1a1cbd1e4a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01019b1b8911f9c802dc604e4c5af871"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8h.html#a01019b1b8911f9c802dc604e4c5af871">md5</a> (const void *in, size_t inlen, void *out)</td></tr>
+<tr class="memdesc:a01019b1b8911f9c802dc604e4c5af871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient all-in-one MD5 computation.  <a href="md5_8h.html#a01019b1b8911f9c802dc604e4c5af871">More...</a><br /></td></tr>
+<tr class="separator:a01019b1b8911f9c802dc604e4c5af871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a6ce3d671ca70af1fda4039bdd1e39c4e" name="a6ce3d671ca70af1fda4039bdd1e39c4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ce3d671ca70af1fda4039bdd1e39c4e">&#9670;&nbsp;</a></span>md5()</h2>
+<a id="a01019b1b8911f9c802dc604e4c5af871" name="a01019b1b8911f9c802dc604e4c5af871"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01019b1b8911f9c802dc604e4c5af871">&#9670;&nbsp;</a></span>md5()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void md5 </td>
+          <td class="memname">void md5 </td>
           <td>(</td>
           <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -162,7 +163,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convenient all-in-one MD5 computation. </p>
-<p >Performs <a class="el" href="md5_8h.html#a49851c726238e2bf46cd0eeaaaa2788e" title="Initialize a MD5 context.">md5_init()</a>, <a class="el" href="md5_8h.html#a420bf401f2cb9179c2602cb1f76dc5e2" title="Add inlen bytes from in to a MD5 context for hashing.">md5_update()</a> and <a class="el" href="md5_8h.html#ade1beece8880fa217b29101c96fa0f1d" title="Finalize a MD5 message digest.">md5_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Performs <a class="el" href="md5_8h.html#a467468da0de1b9d42de01865beccafe4" title="Initialize a MD5 context.">md5_init()</a>, <a class="el" href="md5_8h.html#ac3bd7a79062e4094f402ce38ef1d0d02" title="Add inlen bytes from in to a MD5 context for hashing.">md5_update()</a> and <a class="el" href="md5_8h.html#a9edd034ea2731533fd4e1a1cbd1e4a61" title="Finalize a MD5 message digest.">md5_final()</a>, and places the resulting hash in <em>out</em>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>Pointer to data to hash </td></tr>
     <tr><td class="paramname">inlen</td><td>Length of <em>in</em> data, in bytes </td></tr>
@@ -173,14 +174,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ade1beece8880fa217b29101c96fa0f1d" name="ade1beece8880fa217b29101c96fa0f1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade1beece8880fa217b29101c96fa0f1d">&#9670;&nbsp;</a></span>md5_final()</h2>
+<a id="a9edd034ea2731533fd4e1a1cbd1e4a61" name="a9edd034ea2731533fd4e1a1cbd1e4a61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9edd034ea2731533fd4e1a1cbd1e4a61">&#9670;&nbsp;</a></span>md5_final()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void md5_final </td>
+          <td class="memname">void md5_final </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>
@@ -210,14 +211,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a49851c726238e2bf46cd0eeaaaa2788e" name="a49851c726238e2bf46cd0eeaaaa2788e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49851c726238e2bf46cd0eeaaaa2788e">&#9670;&nbsp;</a></span>md5_init()</h2>
+<a id="a467468da0de1b9d42de01865beccafe4" name="a467468da0de1b9d42de01865beccafe4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a467468da0de1b9d42de01865beccafe4">&#9670;&nbsp;</a></span>md5_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void md5_init </td>
+          <td class="memname">void md5_init </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em></td><td>)</td>
@@ -236,14 +237,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a420bf401f2cb9179c2602cb1f76dc5e2" name="a420bf401f2cb9179c2602cb1f76dc5e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a420bf401f2cb9179c2602cb1f76dc5e2">&#9670;&nbsp;</a></span>md5_update()</h2>
+<a id="ac3bd7a79062e4094f402ce38ef1d0d02" name="ac3bd7a79062e4094f402ce38ef1d0d02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3bd7a79062e4094f402ce38ef1d0d02">&#9670;&nbsp;</a></span>md5_update()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> void md5_update </td>
+          <td class="memname">void md5_update </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>

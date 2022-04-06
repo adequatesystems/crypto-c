@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['rol32_0',['rol32',['../utildev_8h.html#ad9b5cddcc2a2da7348b3040c3896804b',1,'utildev.h']]],
-  ['rol64_1',['rol64',['../utildev_8h.html#a2de78941db7508d687124d99f75f804b',1,'utildev.h']]],
-  ['ror32_2',['ror32',['../utildev_8h.html#a8088d28bca3cbb1770bb7e052230fd20',1,'utildev.h']]],
-  ['ror64_3',['ror64',['../utildev_8h.html#a974e579f5a25d31888bfe9b54f06f645',1,'utildev.h']]]
+  ['xandx_0',['xandx',['../utildev_8h.html#a135a4c68893253e627e4692dbb3ce970',1,'utildev.h']]],
+  ['xor3_1',['xor3',['../utildev_8h.html#a43199943f9f06f2b2d6eada8d1e0a4eb',1,'utildev.h']]],
+  ['xor4_2',['xor4',['../utildev_8h.html#a4d493401419c66875c60f19c1832736b',1,'utildev.h']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C/C++ Project Name: md2.h Source File</title>
+<title>CRYPTO-C: md2.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,9 +27,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">C/C++ Project Name<span id="projectnumber">&#160;v1.0.0</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.0</span>
    </div>
-   <div id="projectbrief">C/C++ Project Description</div>
+   <div id="projectbrief">C/C++ Documentation</div>
   </td>
  </tr>
  </tbody>
@@ -109,26 +109,31 @@ $(document).ready(function(){initNavTree('md2_8h_source.html',''); initResizable
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">/* Function prototypes for md2.c */</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><a class="code hl_define" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> <span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#a633f1c0e8a43a0eff03d2252551c6c15">md2_init</a>(<a class="code hl_struct" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><a class="code hl_define" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> <span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#a403db758d247be49b59c416ab799f789">md2_update</a>(<a class="code hl_struct" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx, <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><a class="code hl_define" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> <span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#a87fa9d36c9545f700299f6c582a4c74e">md2_final</a>(<a class="code hl_struct" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx, <span class="keywordtype">void</span> *out);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><a class="code hl_define" href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a> <span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#ac03a42b08efc3f0e165c9e7a1bd43617">md2</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen, <span class="keywordtype">void</span> *out);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#ac90c7a6702c8bde7a1252a604e21d3b6">md2_init</a>(<a class="code hl_struct" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#ac8747767a832b4b49fb94bcf1334eb7d">md2_update</a>(<a class="code hl_struct" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx, <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#a2e57f285a4e7f82b2a192bb3fa1faf94">md2_final</a>(<a class="code hl_struct" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx, <span class="keywordtype">void</span> *out);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keywordtype">void</span> <a class="code hl_function" href="md2_8h.html#a3967d2b6ea55308839d96f167ba71bfd">md2</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen, <span class="keywordtype">void</span> *out);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">/* end extern &quot;C&quot; {} for C++ */</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">/* end include guard */</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="amd2_8h_html_a403db758d247be49b59c416ab799f789"><div class="ttname"><a href="md2_8h.html#a403db758d247be49b59c416ab799f789">md2_update</a></div><div class="ttdeci">HOST_DEVICE_FN void md2_update(MD2_CTX *ctx, const void *in, size_t inlen)</div><div class="ttdoc">Add inlen bytes from in to a MD2 context for hashing.</div><div class="ttdef"><b>Definition:</b> md2.c:87</div></div>
-<div class="ttc" id="amd2_8h_html_a633f1c0e8a43a0eff03d2252551c6c15"><div class="ttname"><a href="md2_8h.html#a633f1c0e8a43a0eff03d2252551c6c15">md2_init</a></div><div class="ttdeci">HOST_DEVICE_FN void md2_init(MD2_CTX *ctx)</div><div class="ttdoc">Initialize a MD2 context.</div><div class="ttdef"><b>Definition:</b> md2.c:74</div></div>
-<div class="ttc" id="amd2_8h_html_a87fa9d36c9545f700299f6c582a4c74e"><div class="ttname"><a href="md2_8h.html#a87fa9d36c9545f700299f6c582a4c74e">md2_final</a></div><div class="ttdeci">HOST_DEVICE_FN void md2_final(MD2_CTX *ctx, void *out)</div><div class="ttdoc">Finalize a MD2 message digest.</div><div class="ttdef"><b>Definition:</b> md2.c:110</div></div>
-<div class="ttc" id="amd2_8h_html_ac03a42b08efc3f0e165c9e7a1bd43617"><div class="ttname"><a href="md2_8h.html#ac03a42b08efc3f0e165c9e7a1bd43617">md2</a></div><div class="ttdeci">HOST_DEVICE_FN void md2(const void *in, size_t inlen, void *out)</div><div class="ttdoc">Convenient all-in-one MD2 computation.</div><div class="ttdef"><b>Definition:</b> md2.c:134</div></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">/* CUDA testing functions */</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#ifdef CUDA</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>   <span class="keywordtype">void</span> test_kcu_md2(<span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> *inlen, <span class="keywordtype">size_t</span> max_inlen,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="keywordtype">void</span> *out, <span class="keywordtype">int</span> num);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">/* end extern &quot;C&quot; {} for C++ */</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">/* end include guard */</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="amd2_8h_html_a2e57f285a4e7f82b2a192bb3fa1faf94"><div class="ttname"><a href="md2_8h.html#a2e57f285a4e7f82b2a192bb3fa1faf94">md2_final</a></div><div class="ttdeci">void md2_final(MD2_CTX *ctx, void *out)</div><div class="ttdoc">Finalize a MD2 message digest.</div><div class="ttdef"><b>Definition:</b> md2.c:114</div></div>
+<div class="ttc" id="amd2_8h_html_a3967d2b6ea55308839d96f167ba71bfd"><div class="ttname"><a href="md2_8h.html#a3967d2b6ea55308839d96f167ba71bfd">md2</a></div><div class="ttdeci">void md2(const void *in, size_t inlen, void *out)</div><div class="ttdoc">Convenient all-in-one MD2 computation.</div><div class="ttdef"><b>Definition:</b> md2.c:138</div></div>
+<div class="ttc" id="amd2_8h_html_ac8747767a832b4b49fb94bcf1334eb7d"><div class="ttname"><a href="md2_8h.html#ac8747767a832b4b49fb94bcf1334eb7d">md2_update</a></div><div class="ttdeci">void md2_update(MD2_CTX *ctx, const void *in, size_t inlen)</div><div class="ttdoc">Add inlen bytes from in to a MD2 context for hashing.</div><div class="ttdef"><b>Definition:</b> md2.c:91</div></div>
+<div class="ttc" id="amd2_8h_html_ac90c7a6702c8bde7a1252a604e21d3b6"><div class="ttname"><a href="md2_8h.html#ac90c7a6702c8bde7a1252a604e21d3b6">md2_init</a></div><div class="ttdeci">void md2_init(MD2_CTX *ctx)</div><div class="ttdoc">Initialize a MD2 context.</div><div class="ttdef"><b>Definition:</b> md2.c:78</div></div>
 <div class="ttc" id="astruct_m_d2___c_t_x_html"><div class="ttname"><a href="struct_m_d2___c_t_x.html">MD2_CTX</a></div><div class="ttdef"><b>Definition:</b> md2.h:20</div></div>
 <div class="ttc" id="astruct_m_d2___c_t_x_html_a20ef2f8b0dc25d28c0c76be72919a60a"><div class="ttname"><a href="struct_m_d2___c_t_x.html#a20ef2f8b0dc25d28c0c76be72919a60a">MD2_CTX::datalen</a></div><div class="ttdeci">uint32_t datalen</div><div class="ttdoc">Length of buffered input.</div><div class="ttdef"><b>Definition:</b> md2.h:24</div></div>
 <div class="ttc" id="autildev_8h_html"><div class="ttname"><a href="utildev_8h.html">utildev.h</a></div><div class="ttdoc">Device utilities and includes support.</div></div>
-<div class="ttc" id="autildev_8h_html_a081a0945313fea91e93571507cb8d7e4"><div class="ttname"><a href="utildev_8h.html#a081a0945313fea91e93571507cb8d7e4">HOST_DEVICE_FN</a></div><div class="ttdeci">#define HOST_DEVICE_FN</div><div class="ttdoc">Declare function as capable of both &quot;host&quot; and &quot;device&quot; execution.</div><div class="ttdef"><b>Definition:</b> utildev.h:90</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
