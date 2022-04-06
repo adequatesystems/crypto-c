@@ -1,20 +1,23 @@
 /**
  * @private
- * @headerfile sha1.h <sha1.h>
+ * @headerfile sha1.cuh <sha1.cuh>
  * @copyright This file is released into the Public Domain under
  * the Creative Commons Zero v1.0 Universal license.
 */
 
 /* include guard */
-#ifndef CRYPTO_SHA1_C
-#define CRYPTO_SHA1_C
+#ifndef CRYPTO_SHA1_CU
+#define CRYPTO_SHA1_CU
 
 
-#include "sha1.h"
+#include "sha1.cuh"
 #include <string.h>
 
-/* SHA1 transformation constant */
-static const uint32_t k[4] = {
+/**
+ * @private
+ * SHA1 transformation constant.
+*/
+__device__ __constant__ __align__(32) static uint32_t k[4] = {
    0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6
 };
 
@@ -24,9 +27,9 @@ static const uint32_t k[4] = {
  * @param ctx Pointer to SHA1 context
  * @param data Pointer to input to be transformed
 */
-void sha1_transform(SHA1_CTX *ctx, const uint8_t data[])
+__device__ void cu_sha1_transform(SHA1_CTX *ctx, const uint8_t data[])
 {
-   uint32_t W[16];
+   __align__(8) uint32_t W[16];
    uint32_t a, b, c, d, e;
 
    /* copy data into intermediate state */
@@ -132,13 +135,13 @@ void sha1_transform(SHA1_CTX *ctx, const uint8_t data[])
 	ctx->state[2] += c;
 	ctx->state[3] += d;
 	ctx->state[4] += e;
-}  /* end sha1_transform() */
+}  /* end cu_sha1_transform() */
 
 /**
  * Initialize a SHA1 context.
  * @param ctx Pointer to SHA1 context
 */
-void sha1_init(SHA1_CTX *ctx)
+__device__ void cu_sha1_init(SHA1_CTX *ctx)
 {
    ctx->datalen = 0;
    ctx->bitlen[0] = ctx->bitlen[1] = 0;
@@ -147,7 +150,7 @@ void sha1_init(SHA1_CTX *ctx)
    ctx->state[2] = 0x98BADCFE;
    ctx->state[3] = 0x10325476;
    ctx->state[4] = 0xc3d2e1f0;
-}  /* end sha1_init() */
+}  /* end cu_sha1_init() */
 
 /**
  * Add @a inlen bytes from @a in to a SHA1 context for hashing.
@@ -155,7 +158,7 @@ void sha1_init(SHA1_CTX *ctx)
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
 */
-void sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen)
+__device__ void cu_sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen)
 {
    size_t i, n;
    uint32_t old;
@@ -167,14 +170,14 @@ void sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen)
       ctx->datalen += n;
       /* process input buffer */
       if (ctx->datalen == 64) {
-         sha1_transform(ctx, ctx->data);
+         cu_sha1_transform(ctx, ctx->data);
          ctx->datalen = 0;
          old = ctx->bitlen[0];
          ctx->bitlen[0] += 512;
          if (ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
       }
    }
-}  /* end sha1_update() */
+}  /* end cu_sha1_update() */
 
 /**
  * Finalize a SHA1 message digest.
@@ -182,7 +185,7 @@ void sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen)
  * @param ctx Pointer to SHA1 context
  * @param out Pointer to location to place the message digest
 */
-void sha1_final(SHA1_CTX *ctx, void *out)
+__device__ void cu_sha1_final(SHA1_CTX *ctx, void *out)
 {
    uint32_t i, old;
 
@@ -195,7 +198,7 @@ void sha1_final(SHA1_CTX *ctx, void *out)
    } else if (ctx->datalen >= 56) {
       ctx->data[i++] = 0x80;
       if (i < 64) memset(ctx->data + i, 0, 64 - i);
-      sha1_transform(ctx, ctx->data);
+      cu_sha1_transform(ctx, ctx->data);
       memset(ctx->data, 0, 56);
    }
 
@@ -207,7 +210,7 @@ void sha1_final(SHA1_CTX *ctx, void *out)
    /* immitate bswap64() for bitlen */
    ((uint32_t *) ctx->data)[15] = bswap32(ctx->bitlen[0]);
    ((uint32_t *) ctx->data)[14] = bswap32(ctx->bitlen[1]);
-   sha1_transform(ctx, ctx->data);
+   cu_sha1_transform(ctx, ctx->data);
 
    /* Since this implementation uses little endian byte ordering and
     * SHA uses big endian, reverse all the bytes when copying the
@@ -217,24 +220,57 @@ void sha1_final(SHA1_CTX *ctx, void *out)
    ((uint32_t *) out)[2] = bswap32(ctx->state[2]);
    ((uint32_t *) out)[3] = bswap32(ctx->state[3]);
    ((uint32_t *) out)[4] = bswap32(ctx->state[4]);
-}  /* end sha1_final() */
+}  /* end cu_sha1_final() */
 
 /**
  * Convenient all-in-one SHA1 computation.
- * Performs sha1_init(), sha1_update() and sha1_final(),
+ * Performs cu_sha1_init(), cu_sha1_update() and cu_sha1_final(),
  * and places the resulting hash in @a out.
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
  * @param out Pointer to location to place the message digest
 */
-void sha1(const void *in, size_t inlen, void *out)
+__device__ void cu_sha1(const void *in, size_t inlen, void *out)
 {
    SHA1_CTX ctx;
 
-   sha1_init(&ctx);
-   sha1_update(&ctx, in, inlen);
-   sha1_final(&ctx, out);
-}  /* end sha1() */
+   cu_sha1_init(&ctx);
+   cu_sha1_update(&ctx, in, inlen);
+   cu_sha1_final(&ctx, out);
+}  /* end cu_sha1() */
+
+/* CUDA kernel function */
+__global__ static void kcu_sha1(const void *d_in, size_t *d_inlen,
+   size_t max_inlen, void *d_out, int num)
+{
+   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+   if (tid >= num) return;
+
+   uint8_t *in = ((uint8_t *) d_in) + (tid * max_inlen);
+   uint8_t *out = ((uint8_t *) d_out) + (tid * SHA1LEN);
+
+   cu_sha1(in, d_inlen[tid], out);
+}  /* end kcu_sha1() */
+
+/* CUDA kernel testing function */
+void test_kcu_sha1(const void *in, size_t *inlen, size_t max_inlen,
+   void *out, int num)
+{
+   uint8_t *d_in, *d_out;
+   size_t *d_inlen;
+
+   cudaMalloc(&d_in, num * max_inlen);
+   cudaMalloc(&d_inlen, num * sizeof(size_t));
+   cudaMalloc(&d_out, num * SHA1LEN);
+
+   cudaMemcpy(d_in, in, num * max_inlen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_inlen, inlen, num * sizeof(size_t), cudaMemcpyHostToDevice);
+   cudaMemset(d_out, 0, num * SHA1LEN);
+
+   kcu_sha1<<<1, num>>>(d_in, d_inlen, max_inlen, d_out, num);
+
+   cudaMemcpy(out, d_out, num * SHA1LEN, cudaMemcpyDeviceToHost);
+}  /* end test_kcu_sha1() */
 
 /* end include guard */
 #endif

@@ -1,23 +1,23 @@
 /**
  * @private
- * @headerfile md2.h <md2.h>
+ * @headerfile md2.cuh <md2.cuh>
  * @copyright This file is released into the Public Domain under
  * the Creative Commons Zero v1.0 Universal license.
 */
 
 /* include guard */
-#ifndef CRYPTO_MD2_C
-#define CRYPTO_MD2_C
+#ifndef CRYPTO_MD2_CU
+#define CRYPTO_MD2_CU
 
 
-#include "md2.h"
+#include "md2.cuh"
 #include <string.h>  /* for memory handling */
 
 /**
  * @private
  * MD2 transformation constant.
 */
-static const uint8_t s[256] = {
+__device__ __constant__ __align__(32) static uint8_t s[256] = {
    41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6,
    19, 98, 167, 5, 243, 192, 199, 115, 140, 152, 147, 43, 217, 188,
    76, 130, 202, 30, 155, 87, 60, 253, 212, 224, 22, 103, 66, 111, 24,
@@ -44,7 +44,7 @@ static const uint8_t s[256] = {
  * @param ctx Pointer to MD2 context
  * @param data Pointer to input to be transformed
 */
-void md2_transform(MD2_CTX *ctx, uint8_t data[])
+__device__ void cu_md2_transform(MD2_CTX *ctx, uint8_t data[])
 {
    int j, k;
 
@@ -69,18 +69,18 @@ void md2_transform(MD2_CTX *ctx, uint8_t data[])
 	for (j = 1; j < 16; ++j) {
 		ctx->checksum[j] ^= s[data[j] ^ ctx->checksum[j - 1]];
 	}
-}  /* md2_transform() */
+}  /* cu_md2_transform() */
 
 /**
  * Initialize a MD2 context.
  * @param ctx Pointer to MD2 context
 */
-void md2_init(MD2_CTX *ctx)
+__device__ void cu_md2_init(MD2_CTX *ctx)
 {
    memset(ctx->state, 0, 48);
    memset(ctx->checksum, 0, 16);
    ctx->datalen = 0;
-}  /* end md2_init() */
+}  /* end cu_md2_init() */
 
 /**
  * Add @a inlen bytes from @a in to a MD2 context for hashing.
@@ -88,7 +88,7 @@ void md2_init(MD2_CTX *ctx)
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
 */
-void md2_update(MD2_CTX *ctx, const void *in, size_t inlen)
+__device__ void cu_md2_update(MD2_CTX *ctx, const void *in, size_t inlen)
 {
    size_t i, n;
 
@@ -99,11 +99,11 @@ void md2_update(MD2_CTX *ctx, const void *in, size_t inlen)
       ctx->datalen += n;
       /* process input buffer */
       if (ctx->datalen == 16) {
-         md2_transform(ctx, ctx->data);
+         cu_md2_transform(ctx, ctx->data);
          ctx->datalen = 0;
       }
    }
-}  /* md2_update() */
+}  /* cu_md2_update() */
 
 /**
  * Finalize a MD2 message digest.
@@ -111,7 +111,7 @@ void md2_update(MD2_CTX *ctx, const void *in, size_t inlen)
  * @param ctx Pointer to MD2 context
  * @param out Pointer to location to place the message digest
 */
-void md2_final(MD2_CTX *ctx, void *out)
+__device__ void cu_md2_final(MD2_CTX *ctx, void *out)
 {
    size_t to_pad;
 
@@ -120,29 +120,63 @@ void md2_final(MD2_CTX *ctx, void *out)
    memset(ctx->data + ctx->datalen, (int) to_pad, to_pad);
 
    /* perform final transform */
-   md2_transform(ctx, ctx->data);
-   md2_transform(ctx, ctx->checksum);
+   cu_md2_transform(ctx, ctx->data);
+   cu_md2_transform(ctx, ctx->checksum);
 
    /* copy digest to out */
    memcpy(out, ctx->state, MD2LEN);
-}  /* md2_final() */
+}  /* cu_md2_final() */
 
 /**
  * Convenient all-in-one MD2 computation.
- * Performs md2_init(), md2_update() and md2_final(),
+ * Performs cu_md2_init(), cu_md2_update() and cu_md2_final(),
  * and places the resulting hash in @a out.
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
  * @param out Pointer to location to place the message digest
 */
-void md2(const void *in, size_t inlen, void *out)
+__device__ void cu_md2(const void *in, size_t inlen, void *out)
 {
    MD2_CTX ctx;
 
-   md2_init(&ctx);
-   md2_update(&ctx, in, inlen);
-   md2_final(&ctx, out);
-}  /* md2() */
+   cu_md2_init(&ctx);
+   cu_md2_update(&ctx, in, inlen);
+   cu_md2_final(&ctx, out);
+}  /* cu_md2() */
+
+/* CUDA kernel function */
+__global__ static void kcu_md2(
+   const void *d_in, size_t *d_inlen, size_t max_inlen,
+   void *d_out, int num)
+{
+   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+   if (tid >= num) return;
+
+   uint8_t *in = ((uint8_t *) d_in) + (tid * max_inlen);
+   uint8_t *out = ((uint8_t *) d_out) + (tid * MD2LEN);
+
+   cu_md2(in, d_inlen[tid], out);
+}  /* end kcu_md2() */
+
+/* CUDA kernel testing function */
+void test_kcu_md2(const void *in, size_t *inlen, size_t max_inlen,
+   void *out, int num)
+{
+   uint8_t *d_in, *d_out;
+   size_t *d_inlen;
+
+   cudaMalloc(&d_in, num * max_inlen);
+   cudaMalloc(&d_inlen, num * sizeof(size_t));
+   cudaMalloc(&d_out, num * MD2LEN);
+
+   cudaMemcpy(d_in, in, num * max_inlen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_inlen, inlen, num * sizeof(size_t), cudaMemcpyHostToDevice);
+   cudaMemset(d_out, 0, num * MD2LEN);
+
+   kcu_md2<<<1, num>>>(d_in, d_inlen, max_inlen, d_out, num);
+
+   cudaMemcpy(out, d_out, num * MD2LEN, cudaMemcpyDeviceToHost);
+}  /* end test_kcu_md2() */
 
 /* end include guard */
 #endif

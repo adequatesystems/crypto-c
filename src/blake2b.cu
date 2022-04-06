@@ -1,23 +1,23 @@
 /**
  * @private
- * @headerfile blake2b.h <blake2b.h>
+ * @headerfile blake2b.cuh <blake2b.cuh>
  * @copyright This file is released into the Public Domain under
  * the Creative Commons Zero v1.0 Universal license.
 */
 
 /* include guard */
-#ifndef CRYPTO_BLAKE2B_C
-#define CRYPTO_BLAKE2B_C
+#ifndef CRYPTO_BLAKE2B_CU
+#define CRYPTO_BLAKE2B_CU
 
 
-#include "blake2b.h"
+#include "blake2b.cuh"
 #include <string.h>  /* for memory handling */
 
 /**
  * @private
  * Blake2b compression Sigma. Used in compression rounds.
 */
-static const uint8_t Sigma[12][16] = {
+__device__ __constant__ __align__(32) static uint8_t Sigma[12][16] = {
    { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
    { 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 },
    { 11, 8, 12, 0, 5, 2, 15, 13, 10, 14, 3, 6, 7, 1, 9, 4 },
@@ -38,9 +38,9 @@ static const uint8_t Sigma[12][16] = {
  * @param ctx Pointer to Blake2b context
  * @param last Flag indicating the final compression
 */
-static void blake2b_compress(BLAKE2B_CTX *ctx, int last)
+__device__ static void cu_blake2b_compress(BLAKE2B_CTX *ctx, int last)
 {
-   uint64_t v[16];
+   __align__(8) uint64_t v[16];
    int i;
 
    v[0] = ctx->h[0];
@@ -80,7 +80,7 @@ static void blake2b_compress(BLAKE2B_CTX *ctx, int last)
    ctx->h[5] ^= v[5] ^ v[13];
    ctx->h[6] ^= v[6] ^ v[14];
    ctx->h[7] ^= v[7] ^ v[15];
-}  /* end blake2b_compress() */
+}  /* end cu_blake2b_compress() */
 
 /**
  * Add @a inlen bytes from @a in to a Blake2b context for hashing.
@@ -88,7 +88,8 @@ static void blake2b_compress(BLAKE2B_CTX *ctx, int last)
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
 */
-void blake2b_update(BLAKE2B_CTX *ctx, const void *in, size_t inlen)
+__device__ void cu_blake2b_update(BLAKE2B_CTX *ctx, const void *in,
+   size_t inlen)
 {
    size_t i, n;
 
@@ -96,7 +97,7 @@ void blake2b_update(BLAKE2B_CTX *ctx, const void *in, size_t inlen)
       if (ctx->c == 128) {
          ctx->t[0] += ctx->c;
          if (ctx->t[0] < ctx->c) ctx->t[1]++;
-         blake2b_compress(ctx, 0);
+         cu_blake2b_compress(ctx, 0);
          ctx->c = 0;
       }
       /* copy memory in chunks */
@@ -104,7 +105,7 @@ void blake2b_update(BLAKE2B_CTX *ctx, const void *in, size_t inlen)
       memcpy(ctx->in.b + ctx->c, (const uint8_t *) in + i, n);
       ctx->c += n;
    }
-}  /* end blake2b_update() */
+}  /* end cu_blake2b_update() */
 
 /**
  * Initialize a Blake2b context with optional @a key.
@@ -119,7 +120,8 @@ void blake2b_update(BLAKE2B_CTX *ctx, const void *in, size_t inlen)
  * than 64 or outlen is not a supported digest length. Supported
  * lengths include: 32 (256-bits), 48 (384-bits) or 64 (512-bits).
 */
-int blake2b_init(BLAKE2B_CTX *ctx, const void *key, int keylen, int outlen)
+__device__ int cu_blake2b_init(BLAKE2B_CTX *ctx, const void *key,
+   int keylen, int outlen)
 {
    if (keylen > 64) return -1;
    if (outlen != 32 && outlen != 48 && outlen != 64) return -1;
@@ -142,12 +144,12 @@ int blake2b_init(BLAKE2B_CTX *ctx, const void *key, int keylen, int outlen)
    memset(&ctx->in.b[keylen], 0, 128 - keylen);
 
    if (keylen > 0) {
-      blake2b_update(ctx, key, keylen);
+      cu_blake2b_update(ctx, key, keylen);
       ctx->c = 128;
    }
 
    return 0;
-}  /* end blake2b_init() */
+}  /* end cu_blake2b_init() */
 
 /**
  * Finalize a Blake2b message digest.
@@ -155,7 +157,7 @@ int blake2b_init(BLAKE2B_CTX *ctx, const void *key, int keylen, int outlen)
  * @param ctx Pointer to Blake2b context
  * @param out Pointer to location to place the message digest
 */
-void blake2b_final(BLAKE2B_CTX *ctx, void *out)
+__device__ void cu_blake2b_final(BLAKE2B_CTX *ctx, void *out)
 {
    ctx->t[0] += ctx->c;
    if (ctx->t[0] < ctx->c) ctx->t[1]++;
@@ -164,15 +166,15 @@ void blake2b_final(BLAKE2B_CTX *ctx, void *out)
    if (ctx->c < 128) memset(&ctx->in.b[ctx->c], 0, 128 - ctx->c);
 
    /* final compression */
-   blake2b_compress(ctx, 1);
+   cu_blake2b_compress(ctx, 1);
 
    /* copy digest to out */
    memcpy(out, ctx->h, ctx->outlen);
-}  /* end blake2b_final() */
+}  /* end cu_blake2b_final() */
 
 /**
  * Convenient all-in-one Blake2b computation.
- * Performs blake2b_init(), blake2b_update() and blake2b_final(),
+ * Performs cu_blake2b_init(), cu_blake2b_update() and cu_blake2b_final(),
  * and places the resulting hash in @a out.
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
@@ -182,19 +184,68 @@ void blake2b_final(BLAKE2B_CTX *ctx, void *out)
  * @param outlen Length* of desired message digest, in bytes<br/>
  * <sup>_*compatible message digest lengths are 32, 48 and 64_</sup>
 */
-int blake2b(const void *in, size_t inlen, const void *key, int keylen,
-   void *out, int outlen)
+__device__ int cu_blake2b(const void *in, size_t inlen,
+   const void *key, int keylen, void *out, int outlen)
 {
    BLAKE2B_CTX ctx;
 
-   if (blake2b_init(&ctx, key, keylen, outlen)) {
+   if (cu_blake2b_init(&ctx, key, keylen, outlen)) {
       return -1;
    }
-   blake2b_update(&ctx, in, inlen);
-   blake2b_final(&ctx, out);
+   cu_blake2b_update(&ctx, in, inlen);
+   cu_blake2b_final(&ctx, out);
 
    return 0;
-}  /* end blake2b() */
+}  /* end cu_blake2b() */
+
+/* CUDA kernel function */
+__global__ static void kcu_blake2b(
+   const void *d_in, size_t *d_inlen, size_t max_inlen,
+   const void *d_key, int *d_keylen, int max_keylen,
+   void *d_out, int outlen, int *d_ret, int num)
+{
+   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+   if (tid >= num) return;
+
+   uint8_t *in = ((uint8_t *) d_in) + (tid * max_inlen);
+   uint8_t *key = ((uint8_t *) d_key) + (tid * max_keylen);
+   uint8_t *out = ((uint8_t *) d_out) + (tid * outlen);
+
+   d_ret[tid] = cu_blake2b(in, d_inlen[tid], key, d_keylen[tid], out, outlen);
+}  /* end kcu_blake2b() */
+
+/* CUDA kernel testing function */
+void test_kcu_blake2b(
+   const void *in, size_t *inlen, size_t max_inlen,
+   const void *key, int *keylen, int max_keylen,
+   void *out, int outlen, int *ret, int num)
+{
+   uint8_t *d_in, *d_key, *d_out;
+   size_t *d_inlen;
+   int *d_keylen, *d_ret;
+
+   cudaMalloc(&d_ret, num * sizeof(int));
+   cudaMalloc(&d_in, num * max_inlen);
+   cudaMalloc(&d_inlen, num * sizeof(size_t));
+   cudaMalloc(&d_key, num * max_keylen);
+   cudaMalloc(&d_keylen, num * sizeof(int));
+   cudaMalloc(&d_out, num * outlen);
+
+   cudaMemset(d_ret, 0, num * sizeof(int));
+   cudaMemcpy(d_in, in, num * max_inlen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_inlen, inlen, num * sizeof(size_t), cudaMemcpyHostToDevice);
+   cudaMemcpy(d_key, key, num * max_keylen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_keylen, keylen, num * sizeof(int), cudaMemcpyHostToDevice);
+   cudaMemset(d_out, 0, num * outlen);
+
+   kcu_blake2b<<<1, num>>>(
+      d_in, d_inlen, max_inlen,
+      d_key, d_keylen, max_keylen,
+      d_out, outlen, d_ret, num);
+
+   cudaMemcpy(ret, d_ret, num * sizeof(int), cudaMemcpyDeviceToHost);
+   cudaMemcpy(out, d_out, num * outlen, cudaMemcpyDeviceToHost);
+}  /* end test_kcu_blake2b() */
 
 /* end include guard */
 #endif

@@ -19,82 +19,43 @@
 #include <stddef.h>  /* for size_t */
 #include <stdint.h>  /* for standard integer types */
 
-/* check for CUDA compilation or definition `-DCUDA` */
-#if defined(__NVCC__) || defined(CUDA)
-   #pragma comment(lib, "cudart.lib")
-   #pragma comment(lib, "nvml.lib")
+/* check for CUDA compiler */
+#if defined(__NVCC__)
+   /* ensure CUDA definition exists */
+   #undef CUDA
+   #define CUDA
+   /* dynamic library includes for MSVC */
+   #ifdef _WIN32
+      #pragma comment(lib, "cudart.lib")
+      #pragma comment(lib, "nvml.lib")
+   #endif
+   /* library header includes */
    #include <cuda_runtime.h>
    #include <nvml.h>
 
 /* end CUDA compilation */
-/* #elif defined(__OPENCL_CPP_VERSION__) || defined(OPENCL) */
+/* #elif defined(__OPENCL_CPP_VERSION__) */
    /* currently NOT IMPLEMENTED */
+   /* #define OPENCL_ENABLED */
 
 /* end OPENCL compilation */
 #endif
 
-/* check for CUDA architecture */
-#ifdef __CUDA_ARCH__
-   #define CRYPTO_ALIGN(x)          __align__(x)
-   #define CRYPTO_HOST_DEVICE_FN    __host__ __device__
-   #define CRYPTO_BSWAP32(x)        __byte_perm(x, 0, 0x0123);
-   /* CUDA is clever enough to automagically recognise these...
-   #define CRYPTO_ROTL32(x, n)      __funnelshift_l((x), (x), (n))
-   #define CRYPTO_ROTL64(x, n)      ( ((x) << (n)) | ((x) >> (64 - (n))) )
-   #define CRYPTO_ROTL32(x, n)      __funnelshift_r((x), (x), (n))
-   #define CRYPTO_ROTR64(x, n)      ( ((x) >> (n)) | ((x) << (64 - (n))) )
-   #define CRYPTO_XANDX(a, b, c)    ( ((a) & ((b) ^ (c))) ^ (c) )
-   #define CRYPTO_XOR3(a, b, c)     ( (a) ^ (b) ^ (c) )
-   #define CRYPTO_XOR4(a, b, c, d)  ( (a) ^ (b) ^ (c) ^ (d) ) */
-
-/* end CUDA artchitecture */
-/* #elif defined(UNKNOWN_OPENCL_MACRO) */
-   /* currently NOT IMPLEMENTED */
-
-/* end OPENCL artchitecture */
-#else
-   #define CRYPTO_ALIGN(x)   /* no additional declarations */
-   #define CRYPTO_HOST_DEVICE_FN    /* no additional declarations */
-   #define CRYPTO_BSWAP32(x) \
-      ( (rol32(x, 24) & 0xFF00FF00) | (rol32(x, 8) & 0x00FF00FF) )
-   /* unnecessary...
-   #define CRYPTO_ROTL32(x, n)      ( ((x) << (n)) | ((x) >> (32 - (n))) )
-   #define CRYPTO_ROTL64(x, n)      ( ((x) << (n)) | ((x) >> (64 - (n))) )
-   #define CRYPTO_ROTR32(x, n)      ( ((x) >> (n)) | ((x) << (32 - (n))) )
-   #define CRYPTO_ROTR64(x, n)      ( ((x) >> (n)) | ((x) << (64 - (n))) )
-   #define CRYPTO_XANDX(a, b, c)    ( ((a) & ((b) ^ (c))) ^ (c) )
-   #define CRYPTO_XOR3(a, b, c)     ( (a) ^ (b) ^ (c) )
-   #define CRYPTO_XOR4(a, b, c, d)  ( (a) ^ (b) ^ (c) ^ (d) ) */
-
-/* end CPU compilation */
-#endif
-
-/**
- * Declare variable alignment of @a x bytes.
- * Used during the declaration of a variable, indicates to the
- * device compiler that a variable should be aligned to the
- * byte value represented by @a x.
- * <br/>For example, to declare a 32 byte aligned integer constant:
- * @code ALIGN(32) const int aligned_integer = 123; @endcode
- * @param x byte value to align variable to
-*/
-#define ALIGN(x) CRYPTO_ALIGN(x)
-
-/**
- * Declare function as capable of both "host" and "device" execution.
- * Used during the declaration of a function, indicates to the
- * device compiler that a function is capable of both "host" and
- * "device" execution.<br/>For example:
- * @code HOST_DEVICE_FN int multiarch_function(int x); @endcode
-*/
-#define HOST_DEVICE_FN  CRYPTO_HOST_DEVICE_FN
-
 /**
  * Swap the byte order of a 32-bit word.
+ * @details Alternate expansion for `nvcc`: `__byte_perm(x, 0, 0x0123)`
  * @param x 32-bit word to be swapped
  * @returns 32-bit word with swapped byte ordering.
 */
-#define bswap32(x)     CRYPTO_BSWAP32(x)
+#ifdef __CUDA_ARCH__
+   #define bswap32(x)   __byte_perm(x, 0, 0x0123)
+
+#else
+   #define bswap32(x) \
+      ( (rol32(x, 24) & 0xFF00FF00) | (rol32(x, 8) & 0x00FF00FF) )
+
+/* end #ifdef __CUDA_ARCH__... else... */
+#endif
 
 /**
  * Rotate a 32-bit word left by @a n bits.

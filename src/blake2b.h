@@ -21,6 +21,20 @@
 #define BLAKE2BLEN384   48  /**< 384-bit Blake2b digest length in bytes */
 #define BLAKE2BLEN512   64  /**< 512-bit Blake2b digest length in bytes */
 
+/* Number of Blake2b rounds */
+#define BLAKE2BROUNDS  12
+
+/* G Mixing function */
+#define B2B_G(a, b, c, d, x, y)  \
+   v[a] = v[a] + v[b] + x;          \
+   v[d] = ror64(v[d] ^ v[a], 32);   \
+   v[c] = v[c] + v[d];              \
+   v[b] = ror64(v[b] ^ v[c], 24);   \
+   v[a] = v[a] + v[b] + y;          \
+   v[d] = ror64(v[d] ^ v[a], 16);   \
+   v[c] = v[c] + v[d];              \
+   v[b] = ror64(v[b] ^ v[c], 63);
+
 typedef struct {
    union {
       uint8_t b[128];   /**< 8-bit input buffer */
@@ -37,14 +51,20 @@ typedef struct {
 extern "C" {
 #endif
 
-HOST_DEVICE_FN int blake2b_init(
-   BLAKE2B_CTX *ctx, const void *key, int keylen, int outlen);
-HOST_DEVICE_FN void blake2b_update(
-   BLAKE2B_CTX *ctx, const void *in, size_t inlen);
-HOST_DEVICE_FN void blake2b_final(BLAKE2B_CTX *ctx, void *out);
-HOST_DEVICE_FN int blake2b(
-   const void *in, size_t inlen, const void *key, int keylen,
-   void *out, int outlen);
+int blake2b_init(BLAKE2B_CTX *ctx, const void *key, int keylen,
+   int outlen);
+void blake2b_update(BLAKE2B_CTX *ctx, const void *in, size_t inlen);
+void blake2b_final(BLAKE2B_CTX *ctx, void *out);
+int blake2b(const void *in, size_t inlen, const void *key,
+   int keylen, void *out, int outlen);
+
+/* CUDA testing functions */
+#ifdef CUDA
+   void test_kcu_blake2b(
+      const void *in, size_t *inlen, size_t max_inlen,
+      const void *key, int *keylen, int max_keylen,
+      void *out, int outlen, int *ret, int num);
+#endif
 
 /* end extern "C" {} for C++ */
 #ifdef __cplusplus

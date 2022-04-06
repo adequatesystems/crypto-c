@@ -1,16 +1,16 @@
 /**
  * @private
- * @headerfile md5.h <md5.h>
+ * @headerfile md5.cuh <md5.cuh>
  * @copyright This file is released into the Public Domain under
  * the Creative Commons Zero v1.0 Universal license.
 */
 
 /* include guard */
-#ifndef CRYPTO_MD5_C
-#define CRYPTO_MD5_C
+#ifndef CRYPTO_MD5_CU
+#define CRYPTO_MD5_CU
 
 
-#include "md5.h"
+#include "md5.cuh"
 #include <string.h>  /* for memory handling */
 
 /**
@@ -19,9 +19,9 @@
  * @param ctx Pointer to MD5 context
  * @param data Pointer to input to be transformed
 */
-void md5_transform(MD5_CTX *ctx, const uint8_t data[])
+__device__ void cu_md5_transform(MD5_CTX *ctx, const uint8_t data[])
 {
-   uint32_t a, b, c, d;
+   __align__(8) uint32_t a, b, c, d;
    uint32_t *m = (uint32_t *) data;
 
    a = ctx->state[0];
@@ -101,13 +101,13 @@ void md5_transform(MD5_CTX *ctx, const uint8_t data[])
    ctx->state[1] += b;
    ctx->state[2] += c;
    ctx->state[3] += d;
-}  /* end md5_transform() */
+}  /* end cu_md5_transform() */
 
 /**
  * Initialize a MD5 context.
  * @param ctx Pointer to MD5 context
 */
-void md5_init(MD5_CTX *ctx)
+__device__ void cu_md5_init(MD5_CTX *ctx)
 {
    ctx->datalen = 0;
    ctx->bitlen[0] = ctx->bitlen[1] = 0;
@@ -115,7 +115,7 @@ void md5_init(MD5_CTX *ctx)
    ctx->state[1] = 0xEFCDAB89;
    ctx->state[2] = 0x98BADCFE;
    ctx->state[3] = 0x10325476;
-}  /* end md5_init() */
+}  /* end cu_md5_init() */
 
 /**
  * Add @a inlen bytes from @a in to a MD5 context for hashing.
@@ -123,7 +123,7 @@ void md5_init(MD5_CTX *ctx)
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
 */
-void md5_update(MD5_CTX *ctx, const void *in, size_t inlen)
+__device__ void cu_md5_update(MD5_CTX *ctx, const void *in, size_t inlen)
 {
    size_t i, n;
    uint32_t old;
@@ -135,14 +135,14 @@ void md5_update(MD5_CTX *ctx, const void *in, size_t inlen)
       ctx->datalen += n;
       /* process input buffer */
       if (ctx->datalen == 64) {
-         md5_transform(ctx, ctx->data);
+         cu_md5_transform(ctx, ctx->data);
          ctx->datalen = 0;
          old = ctx->bitlen[0];
          ctx->bitlen[0] += 512;
          if (ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
       }
    }
-}  /* end md5_update() */
+}  /* end cu_md5_update() */
 
 /**
  * Finalize a MD5 message digest.
@@ -150,7 +150,7 @@ void md5_update(MD5_CTX *ctx, const void *in, size_t inlen)
  * @param ctx Pointer to MD5 context
  * @param out Pointer to location to place the message digest
 */
-void md5_final(MD5_CTX *ctx, void *out)
+__device__ void cu_md5_final(MD5_CTX *ctx, void *out)
 {
    uint32_t i, old;
 
@@ -163,7 +163,7 @@ void md5_final(MD5_CTX *ctx, void *out)
    } else if (ctx->datalen >= 56) {
       ctx->data[i++] = 0x80;
       if (i < 64) memset(ctx->data + i, 0, 64 - i);
-      md5_transform(ctx, ctx->data);
+      cu_md5_transform(ctx, ctx->data);
       memset(ctx->data, 0, 56);
    }
 
@@ -175,28 +175,61 @@ void md5_final(MD5_CTX *ctx, void *out)
    ((uint32_t *) ctx->data)[15] = ctx->bitlen[1];
 
    /* perform final transform */
-   md5_transform(ctx, ctx->data);
+   cu_md5_transform(ctx, ctx->data);
 
    /* copy digest to out */
    memcpy(out, ctx->state, MD5LEN);
-}  /* end md5_final() */
+}  /* end cu_md5_final() */
 
 /**
  * Convenient all-in-one MD5 computation.
- * Performs md5_init(), md5_update() and md5_final(),
+ * Performs cu_md5_init(), cu_md5_update() and cu_md5_final(),
  * and places the resulting hash in @a out.
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
  * @param out Pointer to location to place the message digest
 */
-void md5(const void *in, size_t inlen, void *out)
+__device__ void cu_md5(const void *in, size_t inlen, void *out)
 {
    MD5_CTX ctx;
 
-   md5_init(&ctx);
-   md5_update(&ctx, in, inlen);
-   md5_final(&ctx, out);
-}  /* end md5() */
+   cu_md5_init(&ctx);
+   cu_md5_update(&ctx, in, inlen);
+   cu_md5_final(&ctx, out);
+}  /* end cu_md5() */
+
+/* CUDA kernel function */
+__global__ static void kcu_md5(const void *d_in, size_t *d_inlen,
+   size_t max_inlen, void *d_out, int num)
+{
+   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+   if (tid >= num) return;
+
+   uint8_t *in = ((uint8_t *) d_in) + (tid * max_inlen);
+   uint8_t *out = ((uint8_t *) d_out) + (tid * MD5LEN);
+
+   cu_md5(in, d_inlen[tid], out);
+}  /* end kcu_md5() */
+
+/* CUDA kernel testing function */
+void test_kcu_md5(const void *in, size_t *inlen, size_t max_inlen,
+   void *out, int num)
+{
+   uint8_t *d_in, *d_out;
+   size_t *d_inlen;
+
+   cudaMalloc(&d_in, num * max_inlen);
+   cudaMalloc(&d_inlen, num * sizeof(size_t));
+   cudaMalloc(&d_out, num * MD5LEN);
+
+   cudaMemcpy(d_in, in, num * max_inlen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_inlen, inlen, num * sizeof(size_t), cudaMemcpyHostToDevice);
+   cudaMemset(d_out, 0, num * MD5LEN);
+
+   kcu_md5<<<1, num>>>(d_in, d_inlen, max_inlen, d_out, num);
+
+   cudaMemcpy(out, d_out, num * MD5LEN, cudaMemcpyDeviceToHost);
+}  /* end test_kcu_md5() */
 
 /* end include guard */
 #endif

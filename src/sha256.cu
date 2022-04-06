@@ -1,20 +1,20 @@
 /**
  * @private
- * @headerfile sha256.h <sha256.h>
+ * @headerfile sha256.cuh <sha256.cuh>
  * @copyright This file is released into the Public Domain under
  * the Creative Commons Zero v1.0 Universal license.
 */
 
 /* include guard */
-#ifndef CRYPTO_SHA256_C
-#define CRYPTO_SHA256_C
+#ifndef CRYPTO_SHA256_CU
+#define CRYPTO_SHA256_CU
 
 
-#include "sha256.h"
+#include "sha256.cuh"
 #include <string.h>
 
 /* SHA256 transformation constant */
-static const uint32_t k[64] = {
+__device__ __constant__ __align__(32) static uint32_t k[64] = {
    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
    0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -39,10 +39,10 @@ static const uint32_t k[64] = {
  * @param ctx Pointer to SHA256 context
  * @param data Pointer to input to be transformed
 */
-static void sha256_transform(
+__device__ static void cu_sha256_transform(
    SHA256_CTX *ctx, const uint8_t data[])
 {
-   uint32_t W[16];
+   __align__(8) uint32_t W[16];
    uint32_t a, b, c, d, e, f, g, h;
 
    memcpy(W, data, 64);
@@ -73,13 +73,13 @@ static void sha256_transform(
    ctx->state[5] += f;
    ctx->state[6] += g;
    ctx->state[7] += h;
-}  /* end sha256_transform() */
+}  /* end cu_sha256_transform() */
 
 /**
  * Initialize a SHA256 context.
  * @param ctx Pointer to SHA256 context
 */
-void sha256_init(SHA256_CTX *ctx)
+__device__ void cu_sha256_init(SHA256_CTX *ctx)
 {
    ctx->datalen = 0;
    ctx->bitlen[0] = ctx->bitlen[1] = 0;
@@ -91,7 +91,7 @@ void sha256_init(SHA256_CTX *ctx)
    ctx->state[5] = 0x9b05688c;
    ctx->state[6] = 0x1f83d9ab;
    ctx->state[7] = 0x5be0cd19;
-}  /* end sha256_init() */
+}  /* end cu_sha256_init() */
 
 /**
  * Add @a inlen bytes from @a in to a SHA256 context for hashing.
@@ -99,7 +99,8 @@ void sha256_init(SHA256_CTX *ctx)
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
 */
-void sha256_update(SHA256_CTX *ctx, const void *in, size_t inlen)
+__device__ void cu_sha256_update(SHA256_CTX *ctx, const void *in,
+   size_t inlen)
 {
    size_t i, n;
    uint32_t old;
@@ -111,14 +112,14 @@ void sha256_update(SHA256_CTX *ctx, const void *in, size_t inlen)
       ctx->datalen += n;
       /* process input buffer */
       if (ctx->datalen == 64) {
-         sha256_transform(ctx, ctx->data);
+         cu_sha256_transform(ctx, ctx->data);
          ctx->datalen = 0;
          old = ctx->bitlen[0];
          ctx->bitlen[0] += 512;
          if (ctx->bitlen[0] < old) ctx->bitlen[1]++;  /* add in carry */
       }
    }
-}  /* end sha256_update() */
+}  /* end cu_sha256_update() */
 
 /**
  * Finalize a SHA256 message digest.
@@ -126,7 +127,7 @@ void sha256_update(SHA256_CTX *ctx, const void *in, size_t inlen)
  * @param ctx Pointer to SHA256 context
  * @param out Pointer to location to place the message digest
 */
-void sha256_final(SHA256_CTX *ctx, void *out)
+__device__ void cu_sha256_final(SHA256_CTX *ctx, void *out)
 {
    uint32_t i, old;
 
@@ -139,7 +140,7 @@ void sha256_final(SHA256_CTX *ctx, void *out)
    } else if (ctx->datalen >= 56) {
       ctx->data[i++] = 0x80;
       if (i < 64) memset(ctx->data + i, 0, 64 - i);
-      sha256_transform(ctx, ctx->data);
+      cu_sha256_transform(ctx, ctx->data);
       memset(ctx->data, 0, 56);
    }
 
@@ -151,7 +152,7 @@ void sha256_final(SHA256_CTX *ctx, void *out)
    /* immitate bswap64() for bitlen */
    ((uint32_t *) ctx->data)[15] = bswap32(ctx->bitlen[0]);
    ((uint32_t *) ctx->data)[14] = bswap32(ctx->bitlen[1]);
-   sha256_transform(ctx, ctx->data);
+   cu_sha256_transform(ctx, ctx->data);
 
    /* Since this implementation uses little endian byte ordering and
     * SHA uses big endian, reverse all the bytes when copying the
@@ -164,24 +165,57 @@ void sha256_final(SHA256_CTX *ctx, void *out)
    ((uint32_t *) out)[5] = bswap32(ctx->state[5]);
    ((uint32_t *) out)[6] = bswap32(ctx->state[6]);
    ((uint32_t *) out)[7] = bswap32(ctx->state[7]);
-}  /* end sha256_final() */
+}  /* end cu_sha256_final() */
 
 /**
  * Convenient all-in-one SHA256 computation.
- * Performs sha256_init(), sha256_update() and sha256_final(),
+ * Performs cu_sha256_init(), cu_sha256_update() and cu_sha256_final(),
  * and places the resulting hash in @a out.
  * @param in Pointer to data to hash
  * @param inlen Length of @a in data, in bytes
  * @param out Pointer to location to place the message digest
 */
-void sha256(const void *in, size_t inlen, void *out)
+__device__ void cu_sha256(const void *in, size_t inlen, void *out)
 {
    SHA256_CTX ctx;
 
-   sha256_init(&ctx);
-   sha256_update(&ctx, in, inlen);
-   sha256_final(&ctx, out);
-}  /* end sha256() */
+   cu_sha256_init(&ctx);
+   cu_sha256_update(&ctx, in, inlen);
+   cu_sha256_final(&ctx, out);
+}  /* end cu_sha256() */
+
+/* CUDA kernel function */
+__global__ static void kcu_sha256(const void *d_in, size_t *d_inlen,
+   size_t max_inlen, void *d_out, int num)
+{
+   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+   if (tid >= num) return;
+
+   uint8_t *in = ((uint8_t *) d_in) + (tid * max_inlen);
+   uint8_t *out = ((uint8_t *) d_out) + (tid * SHA256LEN);
+
+   cu_sha256(in, d_inlen[tid], out);
+}  /* end kcu_sha256() */
+
+/* CUDA kernel testing function */
+void test_kcu_sha256(const void *in, size_t *inlen, size_t max_inlen,
+   void *out, int num)
+{
+   uint8_t *d_in, *d_out;
+   size_t *d_inlen;
+
+   cudaMalloc(&d_in, num * max_inlen);
+   cudaMalloc(&d_inlen, num * sizeof(size_t));
+   cudaMalloc(&d_out, num * SHA256LEN);
+
+   cudaMemcpy(d_in, in, num * max_inlen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_inlen, inlen, num * sizeof(size_t), cudaMemcpyHostToDevice);
+   cudaMemset(d_out, 0, num * SHA256LEN);
+
+   kcu_sha256<<<1, num>>>(d_in, d_inlen, max_inlen, d_out, num);
+
+   cudaMemcpy(out, d_out, num * SHA256LEN, cudaMemcpyDeviceToHost);
+}  /* end test_kcu_sha256() */
 
 /* end include guard */
 #endif

@@ -1,6 +1,6 @@
 /**
- * @file sha3.h
- * @brief SHA3 hash function support.
+ * @file sha3.cuh
+ * @brief SHA3 CUDA hash function support.
  * @details This file is based on Dr. Markku-Juhani O. Saarinen's
  * "cooked up" compact and readable keccak implemetation...
  * > <https://github.com/mjosaarinen/tiny_sha3>
@@ -52,68 +52,24 @@
 */
 
 /* include guard */
-#ifndef CRYPTO_SHA3_H
-#define CRYPTO_SHA3_H
+#ifndef CRYPTO_SHA3_CUH
+#define CRYPTO_SHA3_CUH
 
 
-#include "utildev.h"
+#include "sha3.h"
 
-#define SHA3LEN224      28 /**< SHA3 224-bit digest length, in bytes */
-#define SHA3LEN256      32 /**< SHA3 256-bit digest length, in bytes */
-#define SHA3LEN384      48 /**< SHA3 384-bit digest length, in bytes */
-#define SHA3LEN512      64 /**< SHA3 512-bit digest length, in bytes */
-#define KECCAKLEN224    28 /**< KECCAK 224-bit digest length, in bytes */
-#define KECCAKLEN256    32 /**< KECCAK 256-bit digest length, in bytes */
-#define KECCAKLEN384    48 /**< KECCAK 384-bit digest length, in bytes */
-#define KECCAKLEN512    64 /**< KECCAK 512-bit digest length, in bytes */
-
-#define KECCAKFROUNDS   24
-
-/**
- * SHA3/Keccak hashing context
-*/
-typedef struct {
-   union {
-      uint8_t b[200];   /**< 8-bit input buffer */
-      uint64_t q[25];   /**< 64-bit input buffer */
-   } st;                /**< Input buffer union */
-   uint32_t outlen;     /**< Digest length, in bytes */
-   uint32_t rsiz;       /**< Rate size, in bytes */
-   uint32_t pt;         /**< Length of buffered input */
-   /**
-    * 256-bit alignment padding. Does nothing beyond ensuring
-    * a list of contexts that begin 256-bit aligned, remain
-    * similarly aligned for every item in said list.
-   */
-   uint32_t balign256[3];
-} SHA3_KECCAK_CTX;
-
-/* C/C++ compatible function prototypes */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void sha3_init(SHA3_KECCAK_CTX *ctx, int outlen);
-void sha3_update(SHA3_KECCAK_CTX *ctx, const void *in, size_t inlen);
-void sha3_final(SHA3_KECCAK_CTX *ctx, void *out);
-void sha3(const void *in, size_t inlen, void *out, int outlen);
-void keccak_init(SHA3_KECCAK_CTX *ctx, int outlen);
-void keccak_update(SHA3_KECCAK_CTX *ctx, const void *in, size_t inlen);
-void keccak_final(SHA3_KECCAK_CTX *ctx, void *out);
-void keccak(const void *in, size_t inlen, void *out, int outlen);
-
-/* CUDA testing functions */
-#ifdef CUDA
-   void test_kcu_sha3(const void *in, size_t *inlen, size_t max_inlen,
-      void *out, int outlen, int num);
-   void test_kcu_keccak(const void *in, size_t *inlen, size_t max_inlen,
-      void *out, int outlen, int num);
-#endif
-
-/* end extern "C" {} for C++ */
-#ifdef __cplusplus
-}
-#endif
+__device__ void cu_sha3_init(SHA3_KECCAK_CTX *ctx, int outlen);
+__device__ void cu_keccak_init(SHA3_KECCAK_CTX *ctx, int outlen);
+__device__ void cu_sha3_update(SHA3_KECCAK_CTX *ctx, const void *in,
+   size_t inlen);
+__device__ void cu_keccak_update(SHA3_KECCAK_CTX *ctx, const void *in,
+   size_t inlen);
+__device__ void cu_sha3_final(SHA3_KECCAK_CTX *ctx, void *out);
+__device__ void cu_keccak_final(SHA3_KECCAK_CTX *ctx, void *out);
+__device__ void cu_sha3(const void *in, size_t inlen, void *out,
+   int outlen);
+__device__ void cu_keccak(const void *in, size_t inlen, void *out,
+   int outlen);
 
 /* end include guard */
 #endif

@@ -1,22 +1,22 @@
 /**
  * @private
- * @headerfile crc32.h <crc32.h>
+ * @headerfile crc32.cuh <crc32.cuh>
  * @copyright This file is released into the Public Domain under
  * the Creative Commons Zero v1.0 Universal license.
 */
 
 /* include guard */
-#ifndef CRYPTO_CRC32_C
-#define CRYPTO_CRC32_C
+#ifndef CRYPTO_CRC32_CU
+#define CRYPTO_CRC32_CU
 
 
-#include "crc32.h"
+#include "crc32.cuh"
 
 /**
  * @private
  * 32-bit CRC table
 */
-static const uint32_t Crc32table[] = {
+__device__ __constant__ __align__(32) static uint32_t Crc32table[] = {
    0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419,
    0x706AF48F, 0xE963A535, 0x9E6495A3, 0x0EDB8832, 0x79DCB8A4,
    0xE0D5E91E, 0x97D2D988, 0x09B64C2B, 0x7EB17CBD, 0xE7B82D07,
@@ -77,7 +77,7 @@ static const uint32_t Crc32table[] = {
  * @param inlen Length in bytes of @a in data
  * @returns 32-bit unsigned integer result of CRC32 hash.
 */
-uint32_t crc32(void *in, size_t inlen)
+__device__ uint32_t cu_crc32(void *in, size_t inlen)
 {
    uint32_t crc = 0xffffffff;
    uint8_t *bp;
@@ -87,7 +87,40 @@ uint32_t crc32(void *in, size_t inlen)
    }
 
    return ~crc;
-} /* end crc32() */
+}  /* end cu_crc32() */
+
+/* CUDA kernel function */
+__global__ static void kcu_crc32(const void *d_in, size_t *d_inlen,
+   size_t max_inlen, uint32_t *d_ret, int num)
+{
+   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+   if (tid >= num) return;
+
+   uint8_t *in = ((uint8_t *) d_in) + (tid * max_inlen);
+
+   d_ret[tid] = cu_crc32(in, d_inlen[tid]);
+}  /* end kcu_crc32() */
+
+/* CUDA kernel testing function */
+void test_kcu_crc32(const void *in, size_t *inlen, size_t max_inlen,
+   uint32_t *ret, int num)
+{
+   uint32_t *d_ret;
+   uint8_t *d_in;
+   size_t *d_inlen;
+
+   cudaMalloc(&d_ret, num * sizeof(int));
+   cudaMalloc(&d_in, num * max_inlen);
+   cudaMalloc(&d_inlen, num * sizeof(size_t));
+
+   cudaMemset(d_ret, 0, num * sizeof(int));
+   cudaMemcpy(d_in, in, num * max_inlen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_inlen, inlen, num * sizeof(size_t), cudaMemcpyHostToDevice);
+
+   kcu_crc32<<<1, num>>>(d_in, d_inlen, max_inlen, d_ret, num);
+
+   cudaMemcpy(ret, d_ret, num * sizeof(uint32_t), cudaMemcpyDeviceToHost);
+}  /* end test_kcu_crc32() */
 
 /* end include guard */
 #endif

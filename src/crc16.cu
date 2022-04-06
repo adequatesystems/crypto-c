@@ -1,22 +1,22 @@
 /**
  * @private
- * @headerfile crc16.h <crc16.h>
+ * @headerfile crc16.cuh <crc16.cuh>
  * @copyright This file is released into the Public Domain under
  * the Creative Commons Zero v1.0 Universal license.
 */
 
 /* include guard */
-#ifndef CRYPTO_CRC16_C
-#define CRYPTO_CRC16_C
+#ifndef CRYPTO_CRC16_CU
+#define CRYPTO_CRC16_CU
 
 
-#include "crc16.h"
+#include "crc16.cuh"
 
 /**
  * @private
  * 16-bit CRC table
 */
-static const uint16_t Crc16table[] = {
+__device__ __constant__ __align__(32) static uint16_t Crc16table[] = {
    0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7, 
    0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef, 
    0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6, 
@@ -57,7 +57,7 @@ static const uint16_t Crc16table[] = {
  * @param inlen Length in bytes of @a in data
  * @returns 16-bit unsigned integer result of CRC16 hash.
 */
-uint16_t crc16(void *in, size_t inlen)
+__device__ uint16_t cu_crc16(void *in, size_t inlen)
 {
    uint16_t crc = 0x0000;
    uint8_t *bp;
@@ -67,7 +67,40 @@ uint16_t crc16(void *in, size_t inlen)
    }
 
    return crc;
-}  /* end crc16() */
+}  /* end cu_crc16() */
+
+/* CUDA kernel function */
+__global__ static void kcu_crc16(const void *d_in, size_t *d_inlen,
+   size_t max_inlen, uint16_t *d_ret, int num)
+{
+   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+   if (tid >= num) return;
+
+   uint8_t *in = ((uint8_t *) d_in) + (tid * max_inlen);
+
+   d_ret[tid] = cu_crc16(in, d_inlen[tid]);
+}  /* end kcu_crc16() */
+
+/* CUDA kernel testing function */
+void test_kcu_crc16(const void *in, size_t *inlen, size_t max_inlen,
+   uint16_t *ret, int num)
+{
+   uint16_t *d_ret;
+   uint8_t *d_in;
+   size_t *d_inlen;
+
+   cudaMalloc(&d_ret, num * sizeof(int));
+   cudaMalloc(&d_in, num * max_inlen);
+   cudaMalloc(&d_inlen, num * sizeof(size_t));
+
+   cudaMemset(d_ret, 0, num * sizeof(int));
+   cudaMemcpy(d_in, in, num * max_inlen, cudaMemcpyHostToDevice);
+   cudaMemcpy(d_inlen, inlen, num * sizeof(size_t), cudaMemcpyHostToDevice);
+
+   kcu_crc16<<<1, num>>>(d_in, d_inlen, max_inlen, d_ret, num);
+
+   cudaMemcpy(ret, d_ret, num * sizeof(uint16_t), cudaMemcpyDeviceToHost);
+}  /* end test_kcu_crc16() */
 
 /* end include guard */
 #endif

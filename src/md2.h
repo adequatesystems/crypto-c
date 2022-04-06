@@ -36,10 +36,16 @@ extern "C" {
 #endif
 
 /* Function prototypes for md2.c */
-HOST_DEVICE_FN void md2_init(MD2_CTX *ctx);
-HOST_DEVICE_FN void md2_update(MD2_CTX *ctx, const void *in, size_t inlen);
-HOST_DEVICE_FN void md2_final(MD2_CTX *ctx, void *out);
-HOST_DEVICE_FN void md2(const void *in, size_t inlen, void *out);
+void md2_init(MD2_CTX *ctx);
+void md2_update(MD2_CTX *ctx, const void *in, size_t inlen);
+void md2_final(MD2_CTX *ctx, void *out);
+void md2(const void *in, size_t inlen, void *out);
+
+/* CUDA testing functions */
+#ifdef CUDA
+   void test_kcu_md2(const void *in, size_t *inlen, size_t max_inlen,
+      void *out, int num);
+#endif
 
 /* end extern "C" {} for C++ */
 #ifdef __cplusplus

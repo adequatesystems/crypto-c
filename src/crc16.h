@@ -29,7 +29,13 @@
 extern "C" {
 #endif
 
-HOST_DEVICE_FN uint16_t crc16(void *in, size_t inlen);
+uint16_t crc16(void *in, size_t inlen);
+
+/* CUDA testing functions */
+#ifdef CUDA
+   void test_kcu_crc16(const void *in, size_t *inlen, size_t max_inlen,
+      uint16_t *ret, int num);
+#endif
 
 /* end extern "C" {} for C++ */
 #ifdef __cplusplus
