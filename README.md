@@ -1,7 +1,7 @@
 <h1 align="center">
    <a href="http://adequate.biz">
       <img alt="Adequate Systems" src="https://raw.githubusercontent.com/adequatesystems/.github/main/media/adqlogo_banner.svg" /></a>
-   <br/>Crypto C/C++ Library<br/>
+   <br/>Crypto C/C++/CUDA Library<br/>
    <a href="https://github.com/adequatesystems/crypto-c/actions/workflows/tests.yaml">
       <img src="https://github.com/adequatesystems/crypto-c/actions/workflows/tests.yaml/badge.svg" alt="tests status" /></a>
    <a href="https://github.com/adequatesystems/crypto-c/actions/workflows/codeql.yaml">
@@ -70,8 +70,8 @@ git commit -m "checkout crypto-c submodule to <hash or version tag>"
 ```
 
 ## License
-The Makefile and Extended C/C++ library used for convenient building and testing of cryptographic algorithms is licensed separately to this repository. See <https://github.com/adequatesystems/extended-c/> for more information on that license.
+The source for Blake2b, CRC16, CRC32, MD2, MD5, SHA1, SHA256 and the associated device utility header is released into the Public Domain under the Creative Commons Zero v1.0 Universal [license](LICENSE.md).
 
 The source for SHA3 is (re)released under the MIT license (MIT) which can be viewed in the relevant [sha3.c](src/sha3.c) and [sha3.h](src/sha3.h) files.
 
-The source for Blake2b, CRC16, CRC32, MD2, MD5, SHA1, SHA256 and the associated device utility header is released into the Public Domain under the Creative Commons Zero v1.0 Universal [license](LICENSE.md).
+The remaining build and workflow utilities are components of Adequate Systems' `build-c` repository, which is licensed separately to this repository. See <https://github.com/adequatesystems/build-c/> for more information on that license.
