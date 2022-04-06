@@ -1,8 +1,13 @@
 
+/* must be declared before includes */
+#ifndef CUDA
+   #define CUDA
+#endif
+
 #include <string.h>
 #include <stdint.h>
 
-#include "extassert.h"
+#include "_assert.h"
 #include "../blake2b.h"
 
 #define NUMVECTORS    7
@@ -77,16 +82,33 @@ static uint8_t expect[NUMVECTORS][DIGESTLEN] = {
 
 int main()
 {  /* check 512-bit blake2b(), without key, digest results match expected */
-   size_t inlen;
-   uint8_t digest[DIGESTLEN];
-   char *in;
-   int j;
+   size_t size_digest, size_ret;
+   size_t inlen[NUMVECTORS];
+   uint8_t digest[NUMVECTORS][DIGESTLEN];
+   int j, ret[NUMVECTORS], keylen[NUMVECTORS];
+
+   /* calc sizes */
+   size_digest = sizeof(digest);
+   size_ret = sizeof(ret);
+
+   /* init memory (synchronous) */
+   memset(ret, 0, size_ret);
+   memset(digest, 0, size_digest);
 
    for (j = 0; j < NUMVECTORS; j++) {
-      in = rfc_1321_vectors[j];
-      inlen = strlen(rfc_1321_vectors[j]);
-      memset(digest, 0, DIGESTLEN);
-      ASSERT_EQ(blake2b(in, inlen, NULL, 0, digest, DIGESTLEN), 0);
-      ASSERT_CMP(digest, expect[j], DIGESTLEN);
+      inlen[j] = strlen(rfc_1321_vectors[j]);
+      keylen[j] = 0;
+   }
+
+   /* perform bulk hash */
+   test_kcu_blake2b(
+      rfc_1321_vectors, inlen, MAXVECTORLEN,
+      rfc_1321_vectors, keylen, MAXVECTORLEN,
+      digest, DIGESTLEN, ret, NUMVECTORS);
+
+   /* analyze results */
+   for (j = 0; j < NUMVECTORS; j++) {
+      ASSERT_EQ(ret[j], 0);
+      ASSERT_CMP(digest[j], expect[j], DIGESTLEN);
    }
 }
