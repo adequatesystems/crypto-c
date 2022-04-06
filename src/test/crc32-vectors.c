@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include "extassert.h"
+#include "_assert.h"
 #include "../crc32.h"
 
 #define NUMVECTORS    7

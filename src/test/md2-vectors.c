@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include "extassert.h"
+#include "_assert.h"
 #include "../md2.h"
 
 #define NUMVECTORS    7

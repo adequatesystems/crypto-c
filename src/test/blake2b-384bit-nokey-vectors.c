@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "extassert.h"
+#include "_assert.h"
 #include "../blake2b.h"
 
 #define NUMVECTORS    7
