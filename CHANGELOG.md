@@ -6,29 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.1] - 2022-04-06
-Visual fixes and change of tag scheme to `build-c-<version>` to avoid conflict with dependency projects version numbers.
-
 ## [1.1.0] - 2022-04-06
-CUDA Device compilation and testing support.
+CUDA source code separation.
 
 ### Added
-- Automatic CUDA device compilation, triggered by `CFLAGS=-DCUDA`
-- Additional GNUmakefile recipes targeted at CUDA-only opertations
-- Auto-recognised file extensions for targeted compilation and testing
-- VERSION file, supporting auto-documentation version numbers
-- CHANGELOG.md for chronological changes to the repository
-- (re)Integrate testing assertion header as a testing utility
+- Separate CUDA source code files for all Cryptographic Hashing functions
+- Test files for all CUDA variant Cryptographic Hashing functions
+
+### Changed
+- Upated build-c to v1.1.1
 
 ## [1.0.0] - 2022-01-26
 Initial repository release.
 
 ### Added
-- Automatic build utility GNUmakefile
-- Automatic CI/CD workflows for testing, coverage reports and code quality
-- Automatic documentation generation via doxygen configuration
+- Cryptographic hasing functions:
+  - blake2b
+  - crc16
+  - crc32
+  - md2
+  - md5
+  - sha1
+  - sha256
+  - sha3/keccak
 
-[Unreleased]: https://github.com/adequatesystems/build-c/compare/build-c-1.1.0...HEAD
-[1.1.1]: https://github.com/adequatesystems/build-c/compare/build-c-1.1.0...build-c-1.1.1
-[1.1.0]: https://github.com/adequatesystems/build-c/compare/build-c-1.0.0...build-c-1.1.0
-[1.0.0]: https://github.com/adequatesystems/build-c/releases/tag/build-c-1.0.0
+[Unreleased]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.1.0...HEAD
+[1.1.0]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.0.0...crypto-c-1.1.0
+[1.0.0]: https://github.com/adequatesystems/crypto-c/releases/tag/crypto-c-1.0.0
