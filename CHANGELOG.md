@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2022-04-13
+Update to build-c-1.1.2 for CUDA build fixes and docs config adjustments.
+
 ## [1.1.0] - 2022-04-06
 CUDA source code separation.
 
@@ -30,6 +33,7 @@ Initial repository release.
   - sha256
   - sha3/keccak
 
-[Unreleased]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.1.0...HEAD
+[Unreleased]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.1.1...HEAD
+[1.1.1]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.1.0...crypto-c-1.1.1
 [1.1.0]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.0.0...crypto-c-1.1.0
 [1.0.0]: https://github.com/adequatesystems/crypto-c/releases/tag/crypto-c-1.0.0
