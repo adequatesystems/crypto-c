@@ -93,7 +93,7 @@ Crypto C/C++/CUDA Library<br  />
  <a href="https://github.com/adequatesystems/crypto-c/actions/workflows/tests.yaml"><img src="https://github.com/adequatesystems/crypto-c/actions/workflows/tests.yaml/badge.svg" alt="tests status" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/adequatesystems/crypto-c/actions/workflows/codeql.yaml"><img src="https://github.com/adequatesystems/crypto-c/actions/workflows/codeql.yaml/badge.svg" alt="codeql status" style="pointer-events: none;" class="inline"/></a> <a href="https://codecov.io/gh/adequatesystems/crypto-c"><img src="https://codecov.io/gh/adequatesystems/crypto-c/graph/badge.svg" alt="coverage status" style="pointer-events: none;" class="inline"/></a> <br  />
  <a href="https://github.com/adequatesystems/crypto-c/tags"><img src="https://img.shields.io/github/v/tag/adequatesystems/crypto-c.svg?logo=github&amp;logoColor=lightgray&amp;labelColor=2d3339&amp;label=Latest&amp;color=%230059ff" alt="GitHub tag (latest by date)" style="pointer-events: none;" class="inline"/></a> <a href="LICENSE.md"><img src="https://img.shields.io/github/license/adequatesystems/crypto-c?label=License&amp;logoColor=lightgreen&amp;logo=open%20source%20initiative&amp;labelColor=2d3339&amp;color=0059ff" alt="Creative Commons Zero v1.0 Universal" class="inline"/></a> </h1>
 <p >Originally based on various contributions released into the Public Domain, this repository contains Cryptographic C/C++/CUDA support intended for continued use in the Open Source community.</p>
-<h3><a class="anchor" id="autotoc_md14"></a>
+<h3><a class="anchor" id="autotoc_md7"></a>
 Usage</h3>
 <p >Generally, hashing functions may be used by declaring an algorithms "context", and calling initial, update and final hash functions as required, OR; by simply calling the convenient "all-in-one" function that handles the algorithm's steps internally.</p>
 <p >For example, the popular SHA256 algorithm may be used with a single call: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="sha256_8h.html">sha256.h</a>&quot;</span></div>
@@ -121,23 +121,23 @@ Usage</h3>
 <div class="ttc" id="asha256_8h_html_ae4b9a7aacc055d5330daa9ef4b3fdafa"><div class="ttname"><a href="sha256_8h.html#ae4b9a7aacc055d5330daa9ef4b3fdafa">sha256_update</a></div><div class="ttdeci">void sha256_update(SHA256_CTX *ctx, const void *in, size_t inlen)</div><div class="ttdoc">Add inlen bytes from in to a SHA256 context for hashing.</div><div class="ttdef"><b>Definition:</b> sha256.c:102</div></div>
 <div class="ttc" id="astruct_s_h_a256___c_t_x_html"><div class="ttname"><a href="struct_s_h_a256___c_t_x.html">SHA256_CTX</a></div><div class="ttdef"><b>Definition:</b> sha256.h:66</div></div>
 </div><!-- fragment --><p >Most hashing algorithms follow the same syntax. For specific usage information, see the <a href="https://adequatesystems.github.io/crypto-c/">documentation</a>.</p>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Module Installation</h2>
 <p >The Crypto C/C++ Library was designed to be included in other projects as a <a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">Git Submodule</a>. For C projects utilizing a similar structure and makefile, it is recommended to add submodules to the <code>include/</code> directory of "superproject".</p>
-<h3><a class="anchor" id="autotoc_md16"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Add Crypto C as Submodule</h3>
 <div class="fragment"><div class="line">git submodule add https://github.com/adequatesystems/crypto-c include/crypto-c</div>
 <div class="line">git commit -m &quot;include crypto-c submodule&quot;</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md17"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md10"></a>
 Update Crypto C Submodule to latest revision</h3>
 <div class="fragment"><div class="line">git -C include/crypto-c pull origin main</div>
 <div class="line">git commit -m &quot;update crypto-c to latest revision&quot;</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md18"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md11"></a>
 Change Crypto C Submodule to specific hash or version tag</h3>
 <div class="fragment"><div class="line">git -C include/crypto-c fetch</div>
 <div class="line">git -C include/crypto-c checkout &lt;hash or version tag&gt;</div>
 <div class="line">git commit -m &quot;checkout crypto-c submodule to &lt;hash or version tag&gt;&quot;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md19"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
 License</h2>
 <p >The source for Blake2b, CRC16, CRC32, MD2, MD5, SHA1, SHA256 and the associated device utility header is released into the Public Domain under the Creative Commons Zero v1.0 Universal <a class="el" href="md__l_i_c_e_n_s_e.html">license</a>.</p>
 <p >The source for SHA3 is (re)released under the MIT license (MIT) which can be viewed in the relevant <a href="src/sha3.c">sha3.c</a> and <a href="src/sha3.h">sha3.h</a> files.</p>
