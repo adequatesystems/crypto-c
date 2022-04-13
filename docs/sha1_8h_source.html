@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.0</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.1</span>
    </div>
    <div id="projectbrief">C/C++ Documentation</div>
   </td>
@@ -126,31 +126,30 @@ $(document).ready(function(){initNavTree('sha1_8h_source.html',''); initResizabl
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="struct_s_h_a1___c_t_x.html#a0d98945b478e7ae383387caf768802c4">   50</a></span>   uint32_t bitlen[2];  </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="struct_s_h_a1___c_t_x.html#a81e965b2e6a5e3da77038538085d264a">   51</a></span>   uint32_t state[5];   </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="struct_s_h_a1___c_t_x.html#a20ef2f8b0dc25d28c0c76be72919a60a">   52</a></span>   uint32_t <a class="code hl_variable" href="struct_s_h_a1___c_t_x.html#a20ef2f8b0dc25d28c0c76be72919a60a">datalen</a>;    </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="struct_s_h_a1___c_t_x.html#a5b30118934ab55991273fe5ceb6974d4">   58</a></span>   uint32_t balign256[3];</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a>;  </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">/* C/C++ compatible function prototypes */</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#ac76f432bbb54af1e40dec5d695e5c6dc">sha1_init</a>(<a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a> *ctx);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#a7580385e8699def5a191f1ce4a8c6e93">sha1_update</a>(<a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a> *ctx, <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#a2696ee36905dcd8ddc7615c39da3b42c">sha1_final</a>(<a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a> *ctx, <span class="keywordtype">void</span> *out);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#aa541b59fa4b3dcf8461b060ca782cb50">sha1</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen, <span class="keywordtype">void</span> *out);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a>;  </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">/* C/C++ compatible function prototypes */</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#ac76f432bbb54af1e40dec5d695e5c6dc">sha1_init</a>(<a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a> *ctx);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#a7580385e8699def5a191f1ce4a8c6e93">sha1_update</a>(<a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a> *ctx, <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#a2696ee36905dcd8ddc7615c39da3b42c">sha1_final</a>(<a class="code hl_struct" href="struct_s_h_a1___c_t_x.html">SHA1_CTX</a> *ctx, <span class="keywordtype">void</span> *out);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keywordtype">void</span> <a class="code hl_function" href="sha1_8h.html#aa541b59fa4b3dcf8461b060ca782cb50">sha1</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> inlen, <span class="keywordtype">void</span> *out);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">/* CUDA testing functions */</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#ifdef CUDA</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>   <span class="keywordtype">void</span> test_kcu_sha1(<span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> *inlen, <span class="keywordtype">size_t</span> max_inlen,</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      <span class="keywordtype">void</span> *out, <span class="keywordtype">int</span> num);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">/* CUDA testing functions */</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#ifdef CUDA</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>   <span class="keywordtype">void</span> test_kcu_sha1(<span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> *inlen, <span class="keywordtype">size_t</span> max_inlen,</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <span class="keywordtype">void</span> *out, <span class="keywordtype">int</span> num);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment">/* end extern &quot;C&quot; {} for C++ */</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment">/* end include guard */</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">/* end extern &quot;C&quot; {} for C++ */</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">/* end include guard */</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="asha1_8h_html_a2696ee36905dcd8ddc7615c39da3b42c"><div class="ttname"><a href="sha1_8h.html#a2696ee36905dcd8ddc7615c39da3b42c">sha1_final</a></div><div class="ttdeci">void sha1_final(SHA1_CTX *ctx, void *out)</div><div class="ttdoc">Finalize a SHA1 message digest.</div><div class="ttdef"><b>Definition:</b> sha1.c:185</div></div>
 <div class="ttc" id="asha1_8h_html_a7580385e8699def5a191f1ce4a8c6e93"><div class="ttname"><a href="sha1_8h.html#a7580385e8699def5a191f1ce4a8c6e93">sha1_update</a></div><div class="ttdeci">void sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen)</div><div class="ttdoc">Add inlen bytes from in to a SHA1 context for hashing.</div><div class="ttdef"><b>Definition:</b> sha1.c:158</div></div>
 <div class="ttc" id="asha1_8h_html_aa541b59fa4b3dcf8461b060ca782cb50"><div class="ttname"><a href="sha1_8h.html#aa541b59fa4b3dcf8461b060ca782cb50">sha1</a></div><div class="ttdeci">void sha1(const void *in, size_t inlen, void *out)</div><div class="ttdoc">Convenient all-in-one SHA1 computation.</div><div class="ttdef"><b>Definition:</b> sha1.c:230</div></div>
