@@ -80,12 +80,6 @@ typedef struct {
    uint32_t outlen;     /**< Digest length, in bytes */
    uint32_t rsiz;       /**< Rate size, in bytes */
    uint32_t pt;         /**< Length of buffered input */
-   /**
-    * 256-bit alignment padding. Does nothing beyond ensuring
-    * a list of contexts that begin 256-bit aligned, remain
-    * similarly aligned for every item in said list.
-   */
-   uint32_t balign256[3];
 } SHA3_KECCAK_CTX;
 
 /* C/C++ compatible function prototypes */

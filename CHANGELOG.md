@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+Addresses the naive padding within hashing structs.
+
+## Removed
+- Alignment padding within hashing contexts
+  - Such padding cannot be guarenteed by the C standard
 
 ## [1.1.1] - 2022-04-13
 Update to build-c-1.1.2 for CUDA build fixes and docs config adjustments.
@@ -33,7 +38,7 @@ Initial repository release.
   - sha256
   - sha3/keccak
 
-[Unreleased]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.1.1...HEAD
-[1.1.1]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.1.0...crypto-c-1.1.1
-[1.1.0]: https://github.com/adequatesystems/crypto-c/compare/crypto-c-1.0.0...crypto-c-1.1.0
-[1.0.0]: https://github.com/adequatesystems/crypto-c/releases/tag/crypto-c-1.0.0
+[Unreleased]: https://github.com/adequatesystems/crypto-c/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/adequatesystems/crypto-c/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/adequatesystems/crypto-c/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/adequatesystems/crypto-c/releases/tag/v1.0.0

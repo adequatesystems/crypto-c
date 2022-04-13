@@ -68,12 +68,6 @@ typedef struct {
    uint32_t bitlen[2];  /**< Total bit length of updated input */
    uint32_t state[8];   /**< Internal hashing state */
    uint32_t datalen;    /**< Length of buffered input */
-   /**
-    * 256-bit alignment padding. Does nothing beyond ensuring
-    * a list of contexts that begin 256-bit aligned, remain
-    * similarly aligned for every item in said list.
-   */
-   uint32_t balign256[5];
 } SHA256_CTX;  /**< SHA256 Context */
 
 /* C/C++ compatible function prototypes */

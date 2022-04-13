@@ -22,12 +22,6 @@ typedef struct {
    uint8_t checksum[16];   /**< Internal hashing checksum */
    uint8_t data[16];       /**< Input buffer */
    uint32_t datalen;       /**< Length of buffered input */
-   /**
-    * 256-bit alignment padding. Does nothing beyond ensuring
-    * a list of contexts that begin 256-bit aligned, remain
-    * similarly aligned for every item in said list.
-   */
-   uint32_t balign256[3];
 } MD2_CTX;  /**< MD2 context */
 
 /* C/C++ compatible function prototypes */
