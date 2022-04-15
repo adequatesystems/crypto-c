@@ -13,11 +13,6 @@
 #include "sha1.h"
 #include <string.h>
 
-/* SHA1 transformation constant */
-static const uint32_t k[4] = {
-   0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6
-};
-
 /**
  * @private
  * SHA1 transformation rounds.
@@ -26,6 +21,11 @@ static const uint32_t k[4] = {
 */
 void sha1_transform(SHA1_CTX *ctx, const uint8_t data[])
 {
+   /* SHA1 transformation constant */
+   static const uint32_t k[4] = {
+      0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6
+   };
+
    uint32_t W[16];
    uint32_t a, b, c, d, e;
 

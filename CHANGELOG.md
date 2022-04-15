@@ -6,12 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.2]
+## [1.1.2] - 2020-04-15
 Addresses the naive padding within hashing structs.
+Moved global static vars inside associated function scopes.
 Updated to `build-c-1.1.3`.
 
 ## Added
 - build-c-1.1.3 CUDA compilation (revert) changes
+
+## Changed
+- Moved static "global" variables inside associated function scopes
+  - due to issues with compilation units that include multiple source files
 
 ## Removed
 - Alignment padding within hashing contexts
