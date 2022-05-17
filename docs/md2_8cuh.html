@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.1</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.3</span>
    </div>
    <div id="projectbrief">C/C++ Documentation</div>
   </td>
@@ -100,6 +100,9 @@ $(document).ready(function(){initNavTree('md2_8cuh.html',''); initResizable(); }
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a3a333c6738bea4451bc2c8eedfa60ece"><td class="memItemLeft" align="right" valign="top">__device__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md2_8cuh.html#a3a333c6738bea4451bc2c8eedfa60ece">cu_md2_transform</a> (<a class="el" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx, uint8_t data[])</td></tr>
+<tr class="memdesc:a3a333c6738bea4451bc2c8eedfa60ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">MD2 transformation rounds.  <a href="md2_8cuh.html#a3a333c6738bea4451bc2c8eedfa60ece">More...</a><br /></td></tr>
+<tr class="separator:a3a333c6738bea4451bc2c8eedfa60ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbd3a9bae427c5a424aca54cd1494b39"><td class="memItemLeft" align="right" valign="top">__device__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md2_8cuh.html#adbd3a9bae427c5a424aca54cd1494b39">cu_md2_init</a> (<a class="el" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *ctx)</td></tr>
 <tr class="memdesc:adbd3a9bae427c5a424aca54cd1494b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a MD2 context.  <a href="md2_8cuh.html#adbd3a9bae427c5a424aca54cd1494b39">More...</a><br /></td></tr>
 <tr class="separator:adbd3a9bae427c5a424aca54cd1494b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -218,6 +221,44 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a3a333c6738bea4451bc2c8eedfa60ece" name="a3a333c6738bea4451bc2c8eedfa60ece"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a333c6738bea4451bc2c8eedfa60ece">&#9670;&nbsp;</a></span>cu_md2_transform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__device__ void cu_md2_transform </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_m_d2___c_t_x.html">MD2_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>data</em>[]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>MD2 transformation rounds. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to MD2 context </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to input to be transformed </td></tr>
+  </table>
+  </dd>
+</dl>
+<p >MD2 transformation constant.</p>
 
 </div>
 </div>

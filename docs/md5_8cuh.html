@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.1</span>
+   <div id="projectname">CRYPTO-C<span id="projectnumber">&#160;v1.1.3</span>
    </div>
    <div id="projectbrief">C/C++ Documentation</div>
   </td>
@@ -100,6 +100,9 @@ $(document).ready(function(){initNavTree('md5_8cuh.html',''); initResizable(); }
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ae44765a3ac61d8772cb21530b14ac936"><td class="memItemLeft" align="right" valign="top">__device__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8cuh.html#ae44765a3ac61d8772cb21530b14ac936">cu_md5_transform</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx, const uint8_t data[])</td></tr>
+<tr class="memdesc:ae44765a3ac61d8772cb21530b14ac936"><td class="mdescLeft">&#160;</td><td class="mdescRight">MD5 transformation rounds.  <a href="md5_8cuh.html#ae44765a3ac61d8772cb21530b14ac936">More...</a><br /></td></tr>
+<tr class="separator:ae44765a3ac61d8772cb21530b14ac936"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a827d72789b8587276a9f52b6096910c6"><td class="memItemLeft" align="right" valign="top">__device__ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="md5_8cuh.html#a827d72789b8587276a9f52b6096910c6">cu_md5_init</a> (<a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *ctx)</td></tr>
 <tr class="memdesc:a827d72789b8587276a9f52b6096910c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a MD5 context.  <a href="md5_8cuh.html#a827d72789b8587276a9f52b6096910c6">More...</a><br /></td></tr>
 <tr class="separator:a827d72789b8587276a9f52b6096910c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,6 +218,43 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ctx</td><td>Pointer to MD5 context </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae44765a3ac61d8772cb21530b14ac936" name="ae44765a3ac61d8772cb21530b14ac936"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae44765a3ac61d8772cb21530b14ac936">&#9670;&nbsp;</a></span>cu_md5_transform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__device__ void cu_md5_transform </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_m_d5___c_t_x.html">MD5_CTX</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t&#160;</td>
+          <td class="paramname"><em>data</em>[]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>MD5 transformation rounds. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>Pointer to MD5 context </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to input to be transformed </td></tr>
   </table>
   </dd>
 </dl>

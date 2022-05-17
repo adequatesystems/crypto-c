@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['keccaklen224_0',['KECCAKLEN224',['../sha3_8h.html#a8b1462e88784891b709a99b74839e427',1,'sha3.h']]],
-  ['keccaklen256_1',['KECCAKLEN256',['../sha3_8h.html#a5df112bfb98d8915ca08140c7902faef',1,'sha3.h']]],
-  ['keccaklen384_2',['KECCAKLEN384',['../sha3_8h.html#ac508d2ec504e73e65fce15ae46993628',1,'sha3.h']]],
-  ['keccaklen512_3',['KECCAKLEN512',['../sha3_8h.html#ac23418b8c41ee832bfd3d06050460ee0',1,'sha3.h']]]
+  ['md2len_0',['MD2LEN',['../md2_8h.html#ac6a2dbb2b555e7fa2f28247177f5abe2',1,'md2.h']]],
+  ['md5len_1',['MD5LEN',['../md5_8h.html#a24c645b643ef4755c7b4e9afb237bdf6',1,'md5.h']]]
 ];

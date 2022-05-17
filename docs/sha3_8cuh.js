@@ -7,5 +7,6 @@ var sha3_8cuh =
     [ "cu_sha3", "sha3_8cuh.html#ace65db2c5c2dceb0f32791020381d11c", null ],
     [ "cu_sha3_final", "sha3_8cuh.html#a47794cdb7d0e547721abe3771b58784c", null ],
     [ "cu_sha3_init", "sha3_8cuh.html#a95eb45ace1efde25d8f067a5d2602c17", null ],
+    [ "cu_sha3_keccakf", "sha3_8cuh.html#ad8886d284fdebf02c67b9c9fb306d7bd", null ],
     [ "cu_sha3_update", "sha3_8cuh.html#a9101f2bb082ea3a654fc800ea01317e5", null ]
 ];
