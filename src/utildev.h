@@ -119,12 +119,5 @@
 */
 #define xor4(a, b, c, d)   ( (a) ^ (b) ^ (c) ^ (d) )
 
-/* device modes */
-#define DEV_FAIL  (-1)  /**< Indicates device failure */
-#define DEV_NULL  (0)   /**< Indicates initial state of device */
-#define DEV_IDLE  (1)   /**< Indicates idling device */
-#define DEV_INIT  (2)   /**< Indicates work initialization */
-#define DEV_WORK  (3)   /**< Indicates working */
-
 /* end include guard */
 #endif
