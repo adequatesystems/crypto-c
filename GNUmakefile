@@ -1,3 +1,4 @@
+
 ##
 # GNUmakefile - C/C++ makefile for GNU Make
 # Copyright 2021-2022 Adequate Systems, LLC. All Rights Reserved.
@@ -23,6 +24,10 @@ INCLUDEDIR:= include
 SOURCEDIR:= src
 TESTBUILDDIR:= $(BUILDDIR)/test
 TESTSOURCEDIR:= $(SOURCEDIR)/test
+
+# build definitions
+GITVERSION:=$(shell git describe --always --dirty --tags || echo "<no-ver>")
+VERDEF:=-DGIT_VERSION="\"$(GITVERSION)\""
 
 # input flags
 CUDEF:= $(filter -DCUDA,$(CFLAGS))
@@ -83,8 +88,8 @@ NVCCFLAGS:= $(addprefix -I,$(INCLUDEDIRS)) -Xptxas -Werror
 ##########################
 
 .SUFFIXES: # disable rules predefined by MAKE
-.PHONY: help all allcuda allopencl clean cleanall coverage docs \
-	library libraries report test
+.PHONY: help all allcuda clean cleanall coverage docs library report \
+	sublibraries test version
 
 help: # default rule prints help information
 	@echo ""
@@ -96,12 +101,13 @@ help: # default rule prints help information
 	@echo "   make cleanall      removes (all) build directories and files"
 	@echo "   make coverage      build test coverage file"
 	@echo "   make docs          build documentation files"
-	@echo "   make library       build a library file containing all objects"
-	@echo "   make libraries     build all library files (incl. submodules)"
 	@echo "   make report        build html report from test coverage"
+	@echo "   make library       build a library file containing all objects"
+	@echo "   make sublibraries  build all library files (incl. submodules)"
 	@echo "   make test          build and run tests"
 	@echo "   make test-*        build and run sub tests matching *"
 	@echo "   make variable-*    show the value of a variable matching *"
+	@echo "   make version       show the git repository version string"
 	@echo ""
 
 # build "all" base objects; redirect (DEFAULT RULE)
@@ -127,17 +133,17 @@ docs:
 	@mkdir -p docs
 	@doxygen <( cat .github/docs/config; \
 	 echo "PROJECT_NAME=$(MODULE)" | tr '[:lower:]' '[:upper:]'; \
-	 echo "PROJECT_NUMBER=v$$(cat VERSION)" )
+	 echo "PROJECT_NUMBER=$(GITVERSION)" )
 
 # build library file; redirect
 library: $(MODLIB)
 
-# build all libraries (incl. submodules); redirect
-libraries: $(SUBLIBS) $(MODLIB)
-
 # build local html coverage report from coverage data
 report: $(COVERAGE)
 	genhtml $(COVERAGE) --output-directory $(BUILDDIR)
+
+# initialize and build build submodule libraries; redirect
+sublibraries: $(SUBLIBS)
 
 # build and run specific tests matching pattern
 test-%: $(SUBLIBS) $(MODLIB)
@@ -165,6 +171,10 @@ test: $(SUBLIBS) $(MODLIB) $(TESTOBJECTS)
 # echo the value of a variable matching pattern
 variable-%:
 	@echo $* = $($*)
+
+# echo the value of the GITVERSION
+version:
+	@echo $(GITVERSION)
 
 ############################
 # vv RECIPE CONFIGURATION vv
@@ -199,19 +209,19 @@ $(COVERAGE):
 		make coverage -C $(INC) DEPTH=$$(($(DEPTH) - 1)); fi; )
 
 # build binaries, within build directory, from associated objects
-$(BUILDDIR)/%: $(BUILDDIR)/%.o $(MODLIB) $(SUBLIBS)
+$(BUILDDIR)/%: $(SUBLIBS) $(MODLIB) $(BUILDDIR)/%.o
 	@mkdir -p $(dir $@)
-	$(CC) $< -o $@ $(LDFLAGS) $(LFLAGS) $(CFLAGS)
+	$(CC) $(BUILDDIR)/$*.o -o $@ $(LDFLAGS) $(LFLAGS) $(CFLAGS) $(VERDEF)
 
 # build cuda objects, within build directory, from *.cu files
-$(BUILDDIR)/%.cu.o: $(SOURCEDIR)/%.cu
+$(BUILDDIR)/%.cu.o: $(SUBLIBS) $(SOURCEDIR)/%.cu
 	@mkdir -p $(dir $@)
-	$(NVCC) -c $< -o $@ $(NVCCFLAGS) $(NVCFLAGS)
+	$(NVCC) -c $(SOURCEDIR)/$*.cu -o $@ $(NVCCFLAGS) $(NVCFLAGS) $(VERDEF)
 
 # build c objects, within build directory, from *.c files
-$(BUILDDIR)/%.o: $(SOURCEDIR)/%.c
+$(BUILDDIR)/%.o: $(SUBLIBS) $(SOURCEDIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -c $< -o $@ $(CCFLAGS) $(CFLAGS)
+	$(CC) -c $(SOURCEDIR)/$*.c -o $@ $(CCFLAGS) $(CFLAGS) $(VERDEF)
 
 # include depends rules created during "build object file" process
 -include $(DEPENDS)
