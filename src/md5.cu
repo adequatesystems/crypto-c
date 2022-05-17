@@ -14,14 +14,13 @@
 #include <string.h>  /* for memory handling */
 
 /**
- * @private
  * MD5 transformation rounds.
  * @param ctx Pointer to MD5 context
  * @param data Pointer to input to be transformed
 */
 __device__ void cu_md5_transform(MD5_CTX *ctx, const uint8_t data[])
 {
-   __align__(8) uint32_t a, b, c, d;
+   uint32_t a, b, c, d;
    uint32_t *m = (uint32_t *) data;
 
    a = ctx->state[0];

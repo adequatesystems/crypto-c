@@ -14,18 +14,16 @@
 #include <string.h>
 
 /**
- * @private
- * SHA3_Keccak permutation.
+ * SHA3_Keccak permutation rounds.
  * @param st Pointer to context state array
 */
-__device__ static void cu_sha3_keccakf(uint64_t st[])
+__device__ void cu_sha3_keccakf(uint64_t st[])
 {
 	/**
 	 * @private
 	 * Keccakf round constant.
 	*/
-	__device__ __constant__ __align__(32)
-	static uint64_t keccakf_rndc[24] = {
+	__constant__ static uint64_t keccakf_rndc[24] = {
 		0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
 		0x8000000080008000, 0x000000000000808b, 0x0000000080000001,
 		0x8000000080008081, 0x8000000000008009, 0x000000000000008a,
@@ -36,9 +34,9 @@ __device__ static void cu_sha3_keccakf(uint64_t st[])
 		0x8000000000008080, 0x0000000080000001, 0x8000000080008008
 	};
 
-	__align__(8) uint64_t Ba, Be, Bi, Bo, Bu;
-	__align__(8) uint64_t Ca, Ce, Ci, Co, Cu;
-	__align__(8) uint64_t Da, De, Di, Do, Du;
+	uint64_t Ba, Be, Bi, Bo, Bu;
+	uint64_t Ca, Ce, Ci, Co, Cu;
+	uint64_t Da, De, Di, Do, Du;
 	int r;
 
 	for (r = 0; r < KECCAKFROUNDS; r += 4) {

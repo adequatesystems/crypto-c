@@ -58,6 +58,7 @@
 
 #include "sha3.h"
 
+__device__ void cu_sha3_keccakf(uint64_t st[]);
 __device__ void cu_sha3_init(SHA3_KECCAK_CTX *ctx, int outlen);
 __device__ void cu_keccak_init(SHA3_KECCAK_CTX *ctx, int outlen);
 __device__ void cu_sha3_update(SHA3_KECCAK_CTX *ctx, const void *in,

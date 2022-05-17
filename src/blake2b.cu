@@ -14,18 +14,17 @@
 #include <string.h>  /* for memory handling */
 
 /**
- * @private
  * Blake2b compression rounds.
  * @param ctx Pointer to Blake2b context
  * @param last Flag indicating the final compression
 */
-__device__ static void cu_blake2b_compress(BLAKE2B_CTX *ctx, int last)
+__device__ void cu_blake2b_compress(BLAKE2B_CTX *ctx, int last)
 {
    /**
     * @private
     * Blake2b compression Sigma. Used in compression rounds.
    */
-   __device__ __constant__ __align__(32) static uint8_t Sigma[12][16] = {
+   __constant__ static uint8_t Sigma[12][16] = {
       { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
       { 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 },
       { 11, 8, 12, 0, 5, 2, 15, 13, 10, 14, 3, 6, 7, 1, 9, 4 },
@@ -40,7 +39,7 @@ __device__ static void cu_blake2b_compress(BLAKE2B_CTX *ctx, int last)
       { 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 }
    };
 
-   __align__(8) uint64_t v[16];
+   uint64_t v[16];
    int i;
 
    v[0] = ctx->h[0];

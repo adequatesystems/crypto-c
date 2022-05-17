@@ -15,6 +15,7 @@
 
 #include "md2.h"
 
+__device__ void cu_md2_transform(MD2_CTX *ctx, uint8_t data[]);
 __device__ void cu_md2_init(MD2_CTX *ctx);
 __device__ void cu_md2_update(MD2_CTX *ctx, const void *in, size_t inlen);
 __device__ void cu_md2_final(MD2_CTX *ctx, void *out);

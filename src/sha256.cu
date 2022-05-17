@@ -14,16 +14,17 @@
 #include <string.h>
 
 /**
- * @private
  * SHA256 transformation rounds.
  * @param ctx Pointer to SHA256 context
  * @param data Pointer to input to be transformed
 */
-__device__ static void cu_sha256_transform(
-   SHA256_CTX *ctx, const uint8_t data[])
+__device__ void cu_sha256_transform(SHA256_CTX *ctx, const uint8_t data[])
 {
-   /* SHA256 transformation constant */
-   __device__ __constant__ __align__(32) static uint32_t k[64] = {
+   /**
+    * @private
+    * SHA256 transformation constan
+   */
+   __constant__ static uint32_t k[64] = {
       0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
       0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
       0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -42,8 +43,7 @@ __device__ static void cu_sha256_transform(
       0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
    };
 
-   __align__(8) uint32_t W[16];
-   uint32_t a, b, c, d, e, f, g, h;
+   uint32_t W[16], a, b, c, d, e, f, g, h;
 
    memcpy(W, data, 64);
 

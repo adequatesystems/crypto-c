@@ -17,6 +17,7 @@
 
 #include "blake2b.h"
 
+__device__ void cu_blake2b_compress(BLAKE2B_CTX *ctx, int last);
 __device__ int cu_blake2b_init(BLAKE2B_CTX *ctx, const void *key,
    int keylen, int outlen);
 __device__ void cu_blake2b_update(BLAKE2B_CTX *ctx, const void *in,

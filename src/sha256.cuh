@@ -19,6 +19,7 @@
 
 #include "sha256.h"
 
+__device__ void cu_sha256_transform(SHA256_CTX *ctx, const uint8_t data[]);
 __device__ void cu_sha256_init(SHA256_CTX *ctx);
 __device__ void cu_sha256_update(SHA256_CTX *ctx, const void *in,
    size_t inlen);

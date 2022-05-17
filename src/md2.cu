@@ -14,7 +14,6 @@
 #include <string.h>  /* for memory handling */
 
 /**
- * @private
  * MD2 transformation rounds.
  * @param ctx Pointer to MD2 context
  * @param data Pointer to input to be transformed
@@ -25,7 +24,7 @@ __device__ void cu_md2_transform(MD2_CTX *ctx, uint8_t data[])
     * @private
     * MD2 transformation constant.
    */
-   __device__ __constant__ __align__(32) static uint8_t s[256] = {
+   __constant__ static uint8_t s[256] = {
       41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6,
       19, 98, 167, 5, 243, 192, 199, 115, 140, 152, 147, 43, 217, 188,
       76, 130, 202, 30, 155, 87, 60, 253, 212, 224, 22, 103, 66, 111, 24,
@@ -48,7 +47,8 @@ __device__ void cu_md2_transform(MD2_CTX *ctx, uint8_t data[])
 
    int j, k;
 
-   memcpy(ctx->state + 16, data, 16);
+   ((uint64_t *) ctx->state)[2] = ((uint64_t *) data)[0];
+   ((uint64_t *) ctx->state)[3] = ((uint64_t *) data)[1];
    ((uint64_t *) ctx->state)[4] = \
       (((uint64_t *) ctx->state)[2] ^ ((uint64_t *) ctx->state)[0]);
    ((uint64_t *) ctx->state)[5] = \
