@@ -17,6 +17,32 @@
 
 #define MD2LEN 16   /**< MD2 message digest length, in bytes */
 
+/* MD2 transformation initialization */
+#define md2_transform_init64(st, in) \
+{ st[4] = (st[2] = in[0]) ^ st[0]; st[5] = (st[3] = in[1]) ^ st[1]; }
+
+/* MD2 state transformation */
+#define md2_transform_state(st, s)                          \
+{                                                           \
+   int _j, _k;                                              \
+   st[0] ^= s[0];                                           \
+   for (_k = 1; _k < 48; _k++) st[_k] ^= s[st[_k - 1]];     \
+	for (_j = 1; _j < 18; _j++) {                            \
+      st[0] ^= s[(st[47] + (_j - 1)) & 0xFF];               \
+      for (_k = 1; _k < 48; _k++) st[_k] ^= s[st[_k - 1]];  \
+	}                                                        \
+}
+
+/* MD2 checksum transformation */
+#define md2_transform_checksum(c, in, s)  \
+{                                         \
+   int _j;                                \
+   c[0] ^= s[in[0] ^ c[15]];              \
+	for (_j = 1; _j < 16; ++_j) {          \
+      c[_j] ^= s[in[_j] ^ c[_j - 1]];     \
+   }                                      \
+}
+
 typedef struct {
    uint8_t state[48];      /**< Internal hashing state */
    uint8_t checksum[16];   /**< Internal hashing checksum */

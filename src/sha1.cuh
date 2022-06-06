@@ -19,7 +19,7 @@
 
 #include "sha1.h"
 
-__device__ void cu_sha1_transform(SHA1_CTX *ctx, const uint8_t data[]);
+__device__ void cu_sha1_transform(SHA1_CTX *ctx, const uint32_t data[]);
 __device__ void cu_sha1_init(SHA1_CTX *ctx);
 __device__ void cu_sha1_update(SHA1_CTX *ctx, const void *in, size_t inlen);
 __device__ void cu_sha1_final(SHA1_CTX *ctx, void *out);

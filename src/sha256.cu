@@ -20,10 +20,7 @@
 */
 __device__ void cu_sha256_transform(SHA256_CTX *ctx, const uint8_t data[])
 {
-   /**
-    * @private
-    * SHA256 transformation constan
-   */
+   /* SHA256 transformation constant */
    __constant__ static uint32_t k[64] = {
       0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
       0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -43,36 +40,7 @@ __device__ void cu_sha256_transform(SHA256_CTX *ctx, const uint8_t data[])
       0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
    };
 
-   uint32_t W[16], a, b, c, d, e, f, g, h;
-
-   memcpy(W, data, 64);
-
-   a = ctx->state[0];
-   b = ctx->state[1];
-   c = ctx->state[2];
-   d = ctx->state[3];
-   e = ctx->state[4];
-   f = ctx->state[5];
-   g = ctx->state[6];
-   h = ctx->state[7];
-
-   /* initial 16 rounds */
-   RX0_8(0); RX0_8(8);
-   /* rounds 16 - 32 */
-   RX_8(0, 16); RX_8(8, 16);
-   /* rounds 32 - 48 */
-   RX_8(0, 32); RX_8(8, 32);
-   /* rounds 48 - 64 */
-   RX_8(0, 48); RX_8(8, 48);
-
-   ctx->state[0] += a;
-   ctx->state[1] += b;
-   ctx->state[2] += c;
-   ctx->state[3] += d;
-   ctx->state[4] += e;
-   ctx->state[5] += f;
-   ctx->state[6] += g;
-   ctx->state[7] += h;
+   sha256_tranform_unrolled(ctx->state, ((uint32_t *) data), k);
 }  /* end cu_sha256_transform() */
 
 /**

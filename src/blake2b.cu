@@ -20,10 +20,7 @@
 */
 __device__ void cu_blake2b_compress(BLAKE2B_CTX *ctx, int last)
 {
-   /**
-    * @private
-    * Blake2b compression Sigma. Used in compression rounds.
-   */
+   /* Blake2b compression Sigma */
    __constant__ static uint8_t Sigma[12][16] = {
       { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
       { 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 },
@@ -38,47 +35,11 @@ __device__ void cu_blake2b_compress(BLAKE2B_CTX *ctx, int last)
       { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
       { 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 }
    };
-
    uint64_t v[16];
-   int i;
 
-   v[0] = ctx->h[0];
-   v[1] = ctx->h[1];
-   v[2] = ctx->h[2];
-   v[3] = ctx->h[3];
-   v[4] = ctx->h[4];
-   v[5] = ctx->h[5];
-   v[6] = ctx->h[6];
-   v[7] = ctx->h[7];
-   v[8] = 0x6A09E667F3BCC908ull/* Blake2b_iv[0] */;
-   v[9] = 0xBB67AE8584CAA73Bull/* Blake2b_iv[1] */;
-   v[10] = 0x3C6EF372FE94F82Bull/* Blake2b_iv[2] */;
-   v[11] = 0xA54FF53A5F1D36F1ull/* Blake2b_iv[3] */;
-   v[12] = 0x510E527FADE682D1ull/* Blake2b_iv[4] */ ^ ctx->t[0];
-   v[13] = 0x9B05688C2B3E6C1Full/* Blake2b_iv[5] */ ^ ctx->t[1];
-   v[14] = 0x1F83D9ABFB41BD6Bull/* Blake2b_iv[6] */;
-   if (last) v[14] = ~v[14];
-   v[15] = 0x5BE0CD19137E2179ull/* Blake2b_iv[7] */;
-
-   for(i = 0; i < BLAKE2BROUNDS; i++) {
-      B2B_G( 0, 4,  8, 12, ctx->in.q[Sigma[i][ 0]], ctx->in.q[Sigma[i][ 1]]);
-      B2B_G( 1, 5,  9, 13, ctx->in.q[Sigma[i][ 2]], ctx->in.q[Sigma[i][ 3]]);
-      B2B_G( 2, 6, 10, 14, ctx->in.q[Sigma[i][ 4]], ctx->in.q[Sigma[i][ 5]]);
-      B2B_G( 3, 7, 11, 15, ctx->in.q[Sigma[i][ 6]], ctx->in.q[Sigma[i][ 7]]);
-      B2B_G( 0, 5, 10, 15, ctx->in.q[Sigma[i][ 8]], ctx->in.q[Sigma[i][ 9]]);
-      B2B_G( 1, 6, 11, 12, ctx->in.q[Sigma[i][10]], ctx->in.q[Sigma[i][11]]);
-      B2B_G( 2, 7,  8, 13, ctx->in.q[Sigma[i][12]], ctx->in.q[Sigma[i][13]]);
-      B2B_G( 3, 4,  9, 14, ctx->in.q[Sigma[i][14]], ctx->in.q[Sigma[i][15]]);
-   }
-
-   ctx->h[0] ^= v[0] ^ v[8];
-   ctx->h[1] ^= v[1] ^ v[9];
-   ctx->h[2] ^= v[2] ^ v[10];
-   ctx->h[3] ^= v[3] ^ v[11];
-   ctx->h[4] ^= v[4] ^ v[12];
-   ctx->h[5] ^= v[5] ^ v[13];
-   ctx->h[6] ^= v[6] ^ v[14];
-   ctx->h[7] ^= v[7] ^ v[15];
+   blake2b_compress_init(v, ctx->h, ctx->t, last);
+   blake2b_compress_rounds(v, ctx->in.q, Sigma);
+   blake2b_compress_set(v, ctx->h);
 }  /* end cu_blake2b_compress() */
 
 /**

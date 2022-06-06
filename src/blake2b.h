@@ -24,16 +24,61 @@
 /* Number of Blake2b rounds */
 #define BLAKE2BROUNDS  12
 
+/* Initialivation vectors for Blake2b */
+#define BLAKE2B_IV0   0x6A09E667F3BCC908ull
+#define BLAKE2B_IV1   0xBB67AE8584CAA73Bull
+#define BLAKE2B_IV2   0x3C6EF372FE94F82Bull
+#define BLAKE2B_IV3   0xA54FF53A5F1D36F1ull
+#define BLAKE2B_IV4   0x510E527FADE682D1ull
+#define BLAKE2B_IV5   0x9B05688C2B3E6C1Full
+#define BLAKE2B_IV6   0x1F83D9ABFB41BD6Bull
+#define BLAKE2B_IV7   0x5BE0CD19137E2179ull
+
 /* G Mixing function */
-#define B2B_G(a, b, c, d, x, y)  \
-   v[a] = v[a] + v[b] + x;          \
-   v[d] = ror64(v[d] ^ v[a], 32);   \
-   v[c] = v[c] + v[d];              \
-   v[b] = ror64(v[b] ^ v[c], 24);   \
-   v[a] = v[a] + v[b] + y;          \
-   v[d] = ror64(v[d] ^ v[a], 16);   \
-   v[c] = v[c] + v[d];              \
-   v[b] = ror64(v[b] ^ v[c], 63);
+#define B2B_G(a, b, c, d, x, y) \
+{  \
+   v[a] = v[a] + v[b] + x; v[d] = ror64(v[d] ^ v[a], 32);   \
+   v[c] = v[c] + v[d]; v[b] = ror64(v[b] ^ v[c], 24);       \
+   v[a] = v[a] + v[b] + y; v[d] = ror64(v[d] ^ v[a], 16);   \
+   v[c] = v[c] + v[d]; v[b] = ror64(v[b] ^ v[c], 63);       \
+}
+
+/* Unrolled Blake2b compression initialization */
+#define blake2b_compress_init(v, st, t, last) \
+{  \
+   v[0] = st[0]; v[1] = st[1]; v[2] = st[2]; v[3] = st[3];  \
+   v[4] = st[4]; v[5] = st[5]; v[6] = st[6]; v[7] = st[7];  \
+   v[8] = BLAKE2B_IV0; v[9] = BLAKE2B_IV1;                  \
+   v[10] = BLAKE2B_IV2; v[11] = BLAKE2B_IV3;                \
+   v[12] = BLAKE2B_IV4 ^ t[0]; v[13] = BLAKE2B_IV5 ^ t[1];  \
+   v[14] = last ? ~(BLAKE2B_IV6) : BLAKE2B_IV6;             \
+   v[15] = BLAKE2B_IV7;                                     \
+}
+
+/* Unrolled Blake2b compression rounds */
+#define blake2b_compress_rounds(v, in, sigma) \
+{  \
+   int _i;  \
+   for (_i = 0; _i < BLAKE2BROUNDS; _i++) {   \
+      B2B_G( 0, 4,  8, 12, in[sigma[_i][ 0]], in[sigma[_i][ 1]]);   \
+      B2B_G( 1, 5,  9, 13, in[sigma[_i][ 2]], in[sigma[_i][ 3]]);   \
+      B2B_G( 2, 6, 10, 14, in[sigma[_i][ 4]], in[sigma[_i][ 5]]);   \
+      B2B_G( 3, 7, 11, 15, in[sigma[_i][ 6]], in[sigma[_i][ 7]]);   \
+      B2B_G( 0, 5, 10, 15, in[sigma[_i][ 8]], in[sigma[_i][ 9]]);   \
+      B2B_G( 1, 6, 11, 12, in[sigma[_i][10]], in[sigma[_i][11]]);   \
+      B2B_G( 2, 7,  8, 13, in[sigma[_i][12]], in[sigma[_i][13]]);   \
+      B2B_G( 3, 4,  9, 14, in[sigma[_i][14]], in[sigma[_i][15]]);   \
+   }  \
+}
+
+/* Unrolled Blake2b compression finalization */
+#define blake2b_compress_set(v, st) \
+{  \
+   st[0] ^= v[0] ^ v[8]; st[1] ^= v[1] ^ v[9];     \
+   st[2] ^= v[2] ^ v[10]; st[3] ^= v[3] ^ v[11];   \
+   st[4] ^= v[4] ^ v[12]; st[5] ^= v[5] ^ v[13];   \
+   st[6] ^= v[6] ^ v[14]; st[7] ^= v[7] ^ v[15];   \
+}
 
 typedef struct {
    union {

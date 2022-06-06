@@ -45,30 +45,9 @@ __device__ void cu_md2_transform(MD2_CTX *ctx, uint8_t data[])
       31, 26, 219, 153, 141, 51, 159, 17, 131, 20
    };  /* end static const uint8_t s[256] */
 
-   int j, k;
-
-   ((uint64_t *) ctx->state)[2] = ((uint64_t *) data)[0];
-   ((uint64_t *) ctx->state)[3] = ((uint64_t *) data)[1];
-   ((uint64_t *) ctx->state)[4] = \
-      (((uint64_t *) ctx->state)[2] ^ ((uint64_t *) ctx->state)[0]);
-   ((uint64_t *) ctx->state)[5] = \
-      (((uint64_t *) ctx->state)[3] ^ ((uint64_t *) ctx->state)[1]);
-
-	ctx->state[0] ^= s[0];
-   for (k = 1; k < 48; ++k) {
-		ctx->state[k] ^= s[ctx->state[k - 1]];
-	}
-	for (j = 1; j < 18; ++j) {
-      ctx->state[0] ^= s[(ctx->state[47] + (j - 1)) & 0xFF];
-      for (k = 1; k < 48; ++k) {
-         ctx->state[k] ^= s[ctx->state[k - 1]];
-      }
-	}
-
-   ctx->checksum[0] ^= s[data[0] ^ ctx->checksum[15]];
-	for (j = 1; j < 16; ++j) {
-		ctx->checksum[j] ^= s[data[j] ^ ctx->checksum[j - 1]];
-	}
+   md2_transform_init64(((uint64_t *) ctx->state), ((uint64_t *) data));
+   md2_transform_checksum(ctx->checksum, data, s);
+   md2_transform_state(ctx->state, s);
 }  /* cu_md2_transform() */
 
 /**

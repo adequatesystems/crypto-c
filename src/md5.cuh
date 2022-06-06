@@ -16,7 +16,7 @@
 
 #include "md5.h"
 
-__device__ void cu_md5_transform(MD5_CTX *ctx, const uint8_t data[]);
+__device__ void cu_md5_transform(MD5_CTX *ctx, const uint32_t m[]);
 __device__ void cu_md5_init(MD5_CTX *ctx);
 __device__ void cu_md5_update(MD5_CTX *ctx, const void *in, size_t inlen);
 __device__ void cu_md5_final(MD5_CTX *ctx, void *out);

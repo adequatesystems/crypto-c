@@ -27,41 +27,59 @@
 #define S0(x)  xor3(ror32(x, 7), ror32(x, 18), ((x) >> 3))
 #define S1(x)  xor3(ror32(x, 17), ror32(x, 19), ((x) >> 10))
 
-#define sha256_blk0(i)   ( W[i] = bswap32(W[i]) )
-#define sha256_blk(i)    ( W[i & 15] += \
+#define sha256_blk0(i, in) ( W[i] = bswap32(in[i]) )
+#define sha256_blk(i)      ( W[i & 15] += \
    S1(W[(i - 2) & 15]) + W[(i - 7) & 15] + S0(W[(i - 15) & 15]) )
 
 #define Ch(x, y, z)  xandx(x, y, z)
 #define Maj(x, y, z) ( (x & y) | (z & (x | y)) )
 
 /* initializer type round */
-#define R0(a, b, c, d, e, f, g, h, i) \
-   h += EP1(e) + Ch(e,f,g) + k[i] + sha256_blk0(i); \
+#define R0(a, b, c, d, e, f, g, h, i, k, in)             \
+   h += EP1(e) + Ch(e,f,g) + k[i] + sha256_blk0(i, in);  \
    d += h; h += EP0(a) + Maj(a, b, c)
 /* normal type round */
-#define R(a, b, c, d, e, f, g, h, i, j) \
-   h += EP1(e) + Ch(e,f,g) + k[i+j] + sha256_blk(i); \
+#define R(a, b, c, d, e, f, g, h, i, j, k)            \
+   h += EP1(e) + Ch(e,f,g) + k[i+j] + sha256_blk(i);  \
    d += h; h += EP0(a) + Maj(a, b, c)
 /* round expansion for initializer type rounds */
-#define RX0_8(i) \
-  R0(a, b, c, d, e, f, g, h, i); \
-  R0(h, a, b, c, d, e, f, g, (i + 1)); \
-  R0(g, h, a, b, c, d, e, f, (i + 2)); \
-  R0(f, g, h, a, b, c, d, e, (i + 3)); \
-  R0(e, f, g, h, a, b, c, d, (i + 4)); \
-  R0(d, e, f, g, h, a, b, c, (i + 5)); \
-  R0(c, d, e, f, g, h, a, b, (i + 6)); \
-  R0(b, c, d, e, f, g, h, a, (i + 7))
+#define RX0_8(i, k, in)                         \
+  R0(a, b, c, d, e, f, g, h, i, k, in);         \
+  R0(h, a, b, c, d, e, f, g, (i + 1), k, in);   \
+  R0(g, h, a, b, c, d, e, f, (i + 2), k, in);   \
+  R0(f, g, h, a, b, c, d, e, (i + 3), k, in);   \
+  R0(e, f, g, h, a, b, c, d, (i + 4), k, in);   \
+  R0(d, e, f, g, h, a, b, c, (i + 5), k, in);   \
+  R0(c, d, e, f, g, h, a, b, (i + 6), k, in);   \
+  R0(b, c, d, e, f, g, h, a, (i + 7), k, in)
 /* round expansion for normal type rounds */
-#define RX_8(i, j) \
-  R(a, b, c, d, e, f, g, h, i, j); \
-  R(h, a, b, c, d, e, f, g, (i + 1), j); \
-  R(g, h, a, b, c, d, e, f, (i + 2), j); \
-  R(f, g, h, a, b, c, d, e, (i + 3), j); \
-  R(e, f, g, h, a, b, c, d, (i + 4), j); \
-  R(d, e, f, g, h, a, b, c, (i + 5), j); \
-  R(c, d, e, f, g, h, a, b, (i + 6), j); \
-  R(b, c, d, e, f, g, h, a, (i + 7), j)
+#define RX_8(i, j, k)                        \
+  R(a, b, c, d, e, f, g, h, i, j, k);        \
+  R(h, a, b, c, d, e, f, g, (i + 1), j, k);  \
+  R(g, h, a, b, c, d, e, f, (i + 2), j, k);  \
+  R(f, g, h, a, b, c, d, e, (i + 3), j, k);  \
+  R(e, f, g, h, a, b, c, d, (i + 4), j, k);  \
+  R(d, e, f, g, h, a, b, c, (i + 5), j, k);  \
+  R(c, d, e, f, g, h, a, b, (i + 6), j, k);  \
+  R(b, c, d, e, f, g, h, a, (i + 7), j, k)
+
+/* Unrolled SHA256 transformation */
+#define sha256_tranform_unrolled(st, in, k)        \
+{                                                  \
+   uint32_t W[16], a, b, c, d, e, f, g, h;         \
+   a = st[0]; b = st[1]; c = st[2]; d = st[3];     \
+   e = st[4]; f = st[5]; g = st[6]; h = st[7];     \
+   /* initial 16 rounds */                         \
+   RX0_8(0, k, in); RX0_8(8, k, in);               \
+   /* rounds 16 - 32 */                            \
+   RX_8(0, 16, k); RX_8(8, 16, k);                 \
+   /* rounds 32 - 48 */                            \
+   RX_8(0, 32, k); RX_8(8, 32, k);                 \
+   /* rounds 48 - 64 */                            \
+   RX_8(0, 48, k); RX_8(8, 48, k);                 \
+   st[0] += a; st[1] += b; st[2] += c; st[3] += d; \
+   st[4] += e; st[5] += f; st[6] += g; st[7] += h; \
+}
 
 typedef struct {
    uint8_t data[64];    /**< Input buffer */
@@ -76,8 +94,7 @@ extern "C" {
 #endif
 
 void sha256_init(SHA256_CTX *ctx);
-void sha256_update(
-   SHA256_CTX *ctx, const void *in, size_t inlen);
+void sha256_update(SHA256_CTX *ctx, const void *in, size_t inlen);
 void sha256_final(SHA256_CTX *ctx, void *out);
 void sha256(const void *in, size_t inlen, void *out);
 
