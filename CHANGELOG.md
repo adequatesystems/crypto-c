@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.3] - 2020-05-18
+## [1.1.4] - 2022-06-06
+De-duplication of transformation and compression routines for the sake of sanity. It's also kinda useful for custom integration of hashing routines, without even more duplication.
+
+## [1.1.3] - 2022-05-18
 Update to `build-c-1.2.1` for GIT_VERSION def and improved makefile.
 Also updated Documentation.
 
@@ -15,7 +18,7 @@ Also updated Documentation.
 - Erroneous __align__ specifiers on variables within "device" functions
 - Unused DEV_* device mode definitions
 
-## [1.1.2] - 2020-04-15
+## [1.1.2] - 2022-04-15
 Addresses the naive padding within hashing structs.
 Moved global static vars inside associated function scopes.
 Updated to `build-c-1.1.3`.
@@ -58,7 +61,8 @@ Initial repository release.
   - sha256
   - sha3/keccak
 
-[Unreleased]: https://github.com/adequatesystems/crypto-c/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/adequatesystems/crypto-c/compare/v1.1.4...HEAD
+[1.1.3]: https://github.com/adequatesystems/crypto-c/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/adequatesystems/crypto-c/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/adequatesystems/crypto-c/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/adequatesystems/crypto-c/compare/v1.1.0...v1.1.1
