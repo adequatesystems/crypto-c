@@ -57,6 +57,33 @@
 /* end #ifdef __CUDA_ARCH__... else... */
 #endif
 
+#if defined(_WIN32) || defined(__LITTLE_ENDIAN__) || \
+   (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__ )
+
+   #ifndef get32le
+   #define get32le(ptr)  ( *((uint32_t *) (ptr)) )
+   #endif
+
+   #ifndef put32le
+   #define put32le(ptr, val) { \
+      *((uint32_t *) (ptr)) = (uint32_t) (val); \
+   }
+   #endif
+
+#else /* assume big endian */
+
+   #ifndef get32le
+   #define get32le(ptr)  ( bswap32(*((uint32_t *) (ptr))) )
+   #endif
+
+   #ifndef put32le
+   #define put32le(ptr, val) { \
+      *((uint32_t *) (ptr)) = bswap32((uint32_t) (val)); \
+   }
+   #endif
+
+#endif
+
 /**
  * Rotate a 32-bit word left by @a n bits.
  * @param x 32-bit word to rotate
@@ -99,6 +126,17 @@
  * @returns result of XANDX operation.
 */
 #define xandx(a, b, c)  ( ((a) & ((b) ^ (c))) ^ (c) )
+
+/**
+ * Perform an XOROR operation. An XOROR bitwise operation can be expressed
+ * as a bitwise XOR of a bitwise OR of the first two parameters in the form:
+ * @code ( ((a) | (b)) ^ (c) ) @endcode
+ * @param a first parameter
+ * @param b second parameter
+ * @param c third parameter
+ * @returns result of XOROR operation.
+ */
+#define xoror(a, b, c)  ( ((a) | (b)) ^ (c) )
 
 /**
  * XOR 3 values together. Performs 2x XOR operations.
