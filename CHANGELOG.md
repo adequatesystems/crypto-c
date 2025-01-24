@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `_vectors.h` header file for (eventual) de-duplication of vectors across tests
+- Base58 encode/decode support
+- RipeMD-160 hash support
+
 ## [1.1.4] - 2022-06-06
 De-duplication of transformation and compression routines for the sake of sanity. It's also kinda useful for custom integration of hashing routines, without even more duplication.
 
